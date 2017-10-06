@@ -1,4 +1,4 @@
-# BookXchange*
+# BookXchange
 
 **BookXchange** is an android app that allows a user to Share or exchange the spare books.
 
