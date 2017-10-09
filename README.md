@@ -6,26 +6,26 @@
 
 The following **required** functionality is completed:
 
-* []	User can **sign in to app** using Google/Facebook login
-* []	User can **Create Profile**
-* []	User can **List of books for sharing or exchange or the book user wants to read**
-* []	User can **Locate the books available on map(near by)**
-* []	User can **scan ISBN number to get the detail of books**
-* []	User can **send a message to another user**
-* []	User can **provide review to another user**
-* []	User can **search for a particular book by title/auther**
+* [ ]	User can **sign in to app** using Google/Facebook login
+* [ ]	User can **Create Profile**
+* [ ]	User can **List of books for sharing or exchange or the book user wants to read**
+* [ ]	User can **Locate the books available on map(near by)**
+* [ ]	User can **scan ISBN number to get the detail of books**
+* [ ]	User can **send a message to another user**
+* [ ]	User can **provide review to another user**
+* [ ]	User can **search for a particular book by title/auther**
 
 The following **optional** functionality
 
-* []	User can **see books from another book store if search book not available by another user**
-* []	User can **get a push notification if the interested book is put by some other user to share/exchange**
+* [ ]	User can **see books from another book store if search book not available by another user**
+* [ ]	User can **get a push notification if the interested book is put by some other user to share/exchange**
 
 
 ## Video Walkthrough
 
 Here's a walkthrough of implemented user stories:
 
-<img src='#' title='Video Walkthrough' width='' alt='Video Walkthrough' />
+<img src='https://i.imgur.com/J9nQm4T.gif' title='Video Walkthrough' width='' alt='Video Walkthrough' />
 
 GIF created with [LiceCap](http://www.cockos.com/licecap/).
 
