@@ -27,4 +27,8 @@
     <string name="book_description">Description</string>
     <string name="isbn_number">ISBN Number</string>
     <string name="add_photo">Add Photo</string>
+    <string name="first_name">First name</string>
+    <string name="last_name">Last Name</string>
+    <string name="email">Email</string>
+    <string name="register">Register</string>
 </resources>
