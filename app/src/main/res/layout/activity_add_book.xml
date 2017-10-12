@@ -7,46 +7,87 @@
     android:layout_height="match_parent"
     tools:context="com.fantastic.bookxchange.activities.AddBookActivity">
 
+    <Button
+        android:id="@+id/btnAddBook"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_marginBottom="22dp"
+        android:layout_marginLeft="@dimen/activity_horizontal_margin"
+        android:layout_marginRight="@dimen/activity_horizontal_margin"
+        android:background="@color/colorButton"
+        android:text="@string/add_book"
+        android:textColor="@color/common_google_signin_btn_text_dark_default" />
+
     <EditText
-        android:id="@+id/etBookISBN"
-        android:layout_width="320dp"
+        android:id="@+id/etBookAuthor"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_below="@+id/etBookTitle"
+        android:layout_marginLeft="@dimen/activity_horizontal_margin"
+        android:layout_marginRight="@dimen/activity_horizontal_margin"
+        android:layout_marginTop="20dp"
+        android:ems="10"
+        android:hint="@string/book_author"
+        android:inputType="textPersonName" />
+
+    <EditText
+        android:id="@+id/etBookTitle"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
         android:layout_alignParentTop="true"
-        android:layout_marginLeft="13dp"
-        android:layout_marginStart="13dp"
-        android:layout_marginTop="52dp"
-        android:hint="@string/insert_isbn" />
+        android:layout_marginLeft="@dimen/activity_horizontal_margin"
+        android:layout_marginRight="@dimen/activity_horizontal_margin"
+        android:layout_marginTop="47dp"
+        android:ems="10"
+        android:hint="@string/book_title"
+        android:inputType="textPersonName" />
 
-    <ImageButton
-        android:id="@+id/ibScanISBN"
-        android:layout_width="wrap_content"
+    <EditText
+        android:id="@+id/etISBNNumber"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        app:srcCompat="@drawable/ic_photo"
-        android:layout_alignTop="@+id/etBookISBN"
-        android:layout_alignParentRight="true"
-        android:layout_alignParentEnd="true" />
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_below="@+id/etBookAuthor"
+        android:layout_marginLeft="@dimen/activity_horizontal_margin"
+        android:layout_marginRight="@dimen/activity_horizontal_margin"
+        android:layout_marginTop="22dp"
+        android:ems="10"
+        android:hint="@string/isbn_number"
+        android:inputType="textPersonName" />
 
     <Button
-        android:id="@+id/btnAddBook"
-        android:layout_width="wrap_content"
+        android:id="@+id/btnAddPhoto"
+        style="@style/Widget.AppCompat.Button"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/ibScanISBN"
+        android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="40dp"
-        android:text="@string/add_book" />
+        android:layout_marginBottom="86dp"
+        android:layout_marginLeft="@dimen/activity_horizontal_margin"
+        android:layout_marginRight="@dimen/activity_horizontal_margin"
+        android:background="@color/colorButton"
+        android:text="@string/add_photo"
+        android:textColor="@color/common_google_signin_btn_text_dark_default" />
 
-    <ImageView
-        android:id="@+id/ivISBNPosition"
-        android:layout_width="wrap_content"
+    <EditText
+        android:id="@+id/etDescription"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_alignLeft="@+id/etBookISBN"
-        android:layout_alignStart="@+id/etBookISBN"
-        android:layout_below="@+id/btnAddBook"
-        android:layout_marginLeft="44dp"
-        android:layout_marginStart="44dp"
-        android:layout_marginTop="27dp"
-        app:srcCompat="@drawable/ISBN_position" />
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_centerVertical="true"
+        android:layout_marginLeft="@dimen/activity_horizontal_margin"
+        android:layout_marginRight="@dimen/activity_horizontal_margin"
+        android:ems="10"
+        android:hint="@string/book_description"
+        android:inputType="textPersonName" />
 
 </RelativeLayout>
