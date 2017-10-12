@@ -13,6 +13,7 @@ public class Book {
     public String author;
     public String publisher;
     public String isbn;
+    public String urlPicture;
 
 
     public String getTitle() {
@@ -29,6 +30,10 @@ public class Book {
 
     public String getIsbn() {
         return isbn;
+    }
+
+    public String getUrlPicture() {
+        return urlPicture;
     }
 
     public static Book fromJSON(JSONObject jsonObject){

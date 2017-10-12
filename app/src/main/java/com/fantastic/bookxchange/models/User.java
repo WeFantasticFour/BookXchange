@@ -17,6 +17,7 @@ public class User {
     public String username;
     public String emailAddress;
     public LatLng location;
+    public String urlProfileImage;
     public List<Book> books;
 
     public String getName() {
@@ -37,6 +38,10 @@ public class User {
 
     public List<Book> getBooks() {
         return books;
+    }
+
+    public String getUrlProfileImage() {
+        return urlProfileImage;
     }
 
     public static User fromJSON(JSONObject jsonObject){
