@@ -9,46 +9,50 @@
 
     <ImageView
         android:id="@+id/ivLargeImage"
-        android:layout_width="@android:dimen/notification_large_icon_height"
+        android:layout_width="match_parent"
         android:layout_height="100dp"
-        android:layout_marginLeft="25dp"
-        android:layout_marginStart="25dp"
-        android:layout_marginTop="25dp"
-        app:srcCompat="@drawable/common_ic_googleplayservices"
-        android:layout_alignParentTop="true"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true" />
+        android:layout_alignBottom="@+id/tvEdition"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentRight="true"
+        android:layout_margin="@dimen/activity_horizontal_margin"
+        app:srcCompat="@drawable/common_ic_googleplayservices" />
 
     <TextView
         android:id="@+id/tvTitle"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="22dp"
-        android:layout_marginStart="22dp"
+        android:layout_below="@+id/ivLargeImage"
+        android:layout_marginTop="@dimen/activity_horizontal_margin"
         android:text="@string/title"
         android:textAppearance="@style/TextAppearance.AppCompat.Large"
-        android:layout_alignTop="@+id/ivLargeImage"
-        android:layout_toRightOf="@+id/ivLargeImage"
-        android:layout_toEndOf="@+id/ivLargeImage" />
+        android:layout_marginLeft="@dimen/activity_horizontal_margin"
+        android:layout_marginBottom="@dimen/activity_horizontal_margin"
+        android:layout_alignRight="@+id/tvAuthor"
+        android:layout_alignEnd="@+id/tvAuthor" />
 
     <TextView
         android:id="@+id/tvAuthor"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_alignLeft="@+id/tvTitle"
-        android:layout_alignStart="@+id/tvTitle"
-        android:layout_below="@+id/tvTitle"
+        android:layout_above="@+id/tvDetailPage"
+        android:layout_alignEnd="@+id/tvDetailPage"
+        android:layout_alignRight="@+id/tvDetailPage"
+        android:layout_marginBottom="17dp"
+        android:layout_marginLeft="@dimen/activity_horizontal_margin"
+        android:layout_marginRight="@dimen/activity_horizontal_margin"
         android:text="@string/author"
         android:textAppearance="@style/TextAppearance.AppCompat.Light.SearchResult.Subtitle" />
 
     <TextView
         android:id="@+id/tvDetailPage"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="@string/detail_page"
-        android:layout_below="@+id/tvAuthor"
-        android:layout_alignLeft="@+id/tvAuthor"
-        android:layout_alignStart="@+id/tvAuthor" />
+        android:layout_above="@+id/tvEditorialReview"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="35dp"
+        android:layout_marginLeft="@dimen/activity_horizontal_margin"
+        android:layout_marginRight="@dimen/activity_horizontal_margin"
+        android:text="@string/detail_page" />
 
     <TextView
         android:id="@+id/tvEdition"
@@ -64,9 +68,11 @@
         android:id="@+id/tvEditorialReview"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/editorial_review"
-        android:layout_centerVertical="true"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true" />
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentRight="true"
+        android:layout_margin="@dimen/activity_horizontal_margin"
+        android:layout_marginBottom="56dp"
+        android:text="@string/editorial_review" />
 
 </RelativeLayout>
