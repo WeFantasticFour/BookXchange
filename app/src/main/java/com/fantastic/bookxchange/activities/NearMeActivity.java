@@ -1,5 +1,7 @@
 package com.fantastic.bookxchange.activities;
 
+import android.location.Address;
+import android.location.Geocoder;
 import android.location.Location;
 import android.os.Bundle;
 import android.os.Looper;
@@ -32,9 +34,11 @@ import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 
 import permissions.dispatcher.NeedsPermission;
 import permissions.dispatcher.RuntimePermissions;
@@ -81,14 +85,16 @@ public class NearMeActivity extends AppCompatActivity {
         books = new HashMap<>();
 
         for (User u : users) {
-            Marker marker = MapUtils.addMarker(map, u);
-            for (Book b : u.getBooks()) {
-                if (books.containsKey(b)) {
-                    books.get(b).add(marker);
-                } else {
-                    List<Marker> markersList = new ArrayList<>();
-                    markersList.add(marker);
-                    books.put(b, markersList);
+            if (!u.getBooks().isEmpty()){
+                Marker marker = MapUtils.addMarker(map, u);
+                for (Book b : u.getBooks()) {
+                    if (books.containsKey(b)) {
+                        books.get(b).add(marker);
+                    } else {
+                        List<Marker> markersList = new ArrayList<>();
+                        markersList.add(marker);
+                        books.put(b, markersList);
+                    }
                 }
             }
         }
@@ -124,8 +130,18 @@ public class NearMeActivity extends AppCompatActivity {
                 public boolean onMarkerClick(Marker marker) {
                     User u = (User)marker.getTag();
 
+                    Geocoder geocoder;
+                    List<Address> addresses;
+                    geocoder = new Geocoder(NearMeActivity.this, Locale.getDefault());
+
+                    try {
+                        addresses = geocoder.getFromLocation(u.getLocation().latitude, u.getLocation().longitude, 1);
+                        Log.d("NearMe", u.getName() + " location: " + addresses.get(0).getLocality() + ", " + addresses.get(0).getAdminArea());
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
                     //TODO Intent to User Profile
-                    Log.d("NearMe", u.getName());
+
                     return true;
                 }
             });
