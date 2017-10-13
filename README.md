@@ -35,6 +35,8 @@ Describe any challenges encountered while building the app.
 
 ## Open-source libraries used
 
+- [Parceler library](http://guides.codepath.com/android/Using-Parceler)
+
 ## License
 
     Copyright [2017] [Dharmesh Gohil]
