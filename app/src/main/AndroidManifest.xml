@@ -47,5 +47,4 @@
         <activity android:name=".activities.BookDetailActivity" />
         <activity android:name=".activities.NearMeActivity"/>
     </application>
-
 </manifest>
