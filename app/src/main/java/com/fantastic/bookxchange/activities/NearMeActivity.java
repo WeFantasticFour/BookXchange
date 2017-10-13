@@ -58,7 +58,8 @@ public class NearMeActivity extends BaseActivity {
     
     List<User> users;
     HashMap<Book, List<Marker>> books;
-    
+    private String TAG = "NearMeActivity";
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -104,7 +105,7 @@ public class NearMeActivity extends BaseActivity {
         if (mapFragment != null) {
             mapFragment.getMapAsync(map1 -> loadMap(map1));
         } else {
-            toast("Error - Map Fragment was null!!");
+            toast(R.string.map_null_error);
         }
 
     }
@@ -123,9 +124,9 @@ public class NearMeActivity extends BaseActivity {
 
                 try {
                     addresses = geocoder.getFromLocation(u.getLocation().latitude, u.getLocation().longitude, 1);
-                    Log.d("NearMe", u.getName() + " location: " + addresses.get(0).getLocality() + ", " + addresses.get(0).getAdminArea());
+                    Log.d(TAG, u.getName() + " location: " + addresses.get(0).getLocality() + ", " + addresses.get(0).getAdminArea());
                 } catch (IOException e) {
-                    e.printStackTrace();
+                    Log.e(TAG, e.getMessage(),e);
                 }
                 //TODO Intent to User Profile
 
@@ -133,7 +134,7 @@ public class NearMeActivity extends BaseActivity {
             });
             populateData();
         } else {
-            toast("Error - Map was null!!");
+            toast(R.string.map_null_error);
         }
     }
 
@@ -157,8 +158,7 @@ public class NearMeActivity extends BaseActivity {
                     }
                 })
                 .addOnFailureListener(e -> {
-                    Log.d("MapDemoActivity", "Error trying to get last GPS location");
-                    e.printStackTrace();
+                    Log.e(TAG, e.getMessage(),e);
                 });
     }
 
@@ -191,7 +191,7 @@ public class NearMeActivity extends BaseActivity {
             map.animateCamera(CameraUpdateFactory.zoomTo(10), 2000, null);
 
         } else {
-            toast("Current location was null, enable GPS");
+            toast(R.string.current_location_null);
         }
         NearMeActivityPermissionsDispatcher.startLocationUpdatesWithCheck(this);
     }
@@ -238,7 +238,5 @@ public class NearMeActivity extends BaseActivity {
         savedInstanceState.putParcelable(KEY_LOCATION, mCurrentLocation);
         super.onSaveInstanceState(savedInstanceState);
     }
-
-
 }
 
