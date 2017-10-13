@@ -16,7 +16,9 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".activities.MainActivity">
+        <activity
+            android:name=".activities.LoginActivity"
+            android:label="@string/title_activity_login">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -28,13 +30,11 @@
             android:name="io.fabric.ApiKey"
             android:value="3ad90c40d503aa8ac36769bc549cdc5443b39220" />
 
-        <activity
-            android:name=".activities.LoginActivity"
-            android:label="@string/title_activity_login" />
+        <activity android:name=".activities.MainActivity" />
         <activity android:name=".activities.RegistrationActivity" />
         <activity android:name=".activities.UserActivity" />
         <activity android:name=".activities.AddBookActivity" />
-        <activity android:name=".activities.BookDetailActivity"></activity>
+        <activity android:name=".activities.BookDetailActivity" />
     </application>
 
 </manifest>
