@@ -19,6 +19,12 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity android:name=".activities.MainActivity">
+        <activity
+            android:name=".activities.LoginActivity"
+            android:label="@string/title_activity_login">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+            </intent-filter>
 
         </activity>
 
@@ -34,9 +40,7 @@
 
         <uses-library android:required="true" android:name="com.google.android.maps" />
 
-        <activity
-            android:name=".activities.LoginActivity"
-            android:label="@string/title_activity_login" />
+        <activity android:name=".activities.MainActivity" />
         <activity android:name=".activities.RegistrationActivity" />
         <activity android:name=".activities.UserActivity" />
         <activity android:name=".activities.AddBookActivity" />

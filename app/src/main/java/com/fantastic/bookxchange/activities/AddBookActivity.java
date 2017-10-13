@@ -4,7 +4,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import com.fantastic.bookxchange.R;
 
-public class AddBookActivity extends AppCompatActivity {
+public class AddBookActivity extends BaseActivity  {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
