@@ -14,8 +14,7 @@
         android:layout_alignBottom="@+id/tvEdition"
         android:layout_alignParentEnd="true"
         android:layout_alignParentRight="true"
-        android:layout_margin="@dimen/activity_horizontal_margin"
-        app:srcCompat="@drawable/common_ic_googleplayservices" />
+        android:layout_margin="@dimen/activity_horizontal_margin"/>
 
     <TextView
         android:id="@+id/tvTitle"
