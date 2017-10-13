@@ -1,10 +1,10 @@
 package com.fantastic.bookxchange.activities;
 
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+
 import com.fantastic.bookxchange.R;
 
-public class UserActivity extends AppCompatActivity {
+public class UserActivity extends BaseActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
