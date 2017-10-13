@@ -6,7 +6,6 @@ import android.location.Location;
 import android.os.Bundle;
 import android.os.Looper;
 import android.support.annotation.NonNull;
-import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
 import android.util.Log;
 import android.widget.Toast;
@@ -46,7 +45,7 @@ import permissions.dispatcher.RuntimePermissions;
 import static com.google.android.gms.location.LocationServices.getFusedLocationProviderClient;
 
 @RuntimePermissions
-public class NearMeActivity extends AppCompatActivity {
+public class NearMeActivity extends BaseActivity {
 
     //Map Fragment related
     private SupportMapFragment mapFragment;

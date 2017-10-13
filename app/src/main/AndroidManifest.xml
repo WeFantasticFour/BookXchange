@@ -18,15 +18,7 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".activities.MainActivity">
-        <activity
-            android:name=".activities.LoginActivity"
-            android:label="@string/title_activity_login">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-            </intent-filter>
 
-        </activity>
 
         <meta-data
             android:name="io.fabric.ApiKey"
@@ -40,18 +32,20 @@
 
         <uses-library android:required="true" android:name="com.google.android.maps" />
 
-        <activity android:name=".activities.MainActivity" />
+        <activity android:name=".activities.MainActivity"/>
+        <activity
+            android:name=".activities.LoginActivity"
+            android:label="@string/title_activity_login">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
         <activity android:name=".activities.RegistrationActivity" />
         <activity android:name=".activities.UserActivity" />
         <activity android:name=".activities.AddBookActivity" />
         <activity android:name=".activities.BookDetailActivity" />
-        <activity android:name=".activities.NearMeActivity">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
-        </activity>
+        <activity android:name=".activities.NearMeActivity"/>
     </application>
 
 </manifest>
