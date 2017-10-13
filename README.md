@@ -13,7 +13,7 @@ The following **required** functionality is completed:
 * [ ]	User can **scan ISBN number to get the detail of books**
 * [ ]	User can **send a message to another user**
 * [ ]	User can **provide review to another user**
-* [ ]	User can **search for a particular book by title/auther**
+* [ ]	User can **search for a particular book by title/author**
 
 The following **optional** functionality
 
@@ -36,6 +36,7 @@ Describe any challenges encountered while building the app.
 ## Open-source libraries used
 
 - [Parceler library](http://guides.codepath.com/android/Using-Parceler)
+- [Google Maps Android API utility library](https://github.com/googlemaps/android-maps-utils)
 
 ## License
 
