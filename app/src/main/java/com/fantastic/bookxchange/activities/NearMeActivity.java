@@ -59,7 +59,7 @@ public class NearMeActivity extends AppCompatActivity {
     //Data
     
     List<User> users;
-    HashMap<Book, List<User>> books;
+    HashMap<Book, List<Marker>> books;
     
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -77,28 +77,23 @@ public class NearMeActivity extends AppCompatActivity {
 
     private void populateData() {
         users = DataTest.fakeData();
-        
+
         books = new HashMap<>();
-        
-        for(User u : users){
-            createMarker(u);
-            for(Book b :u.getBooks()){
-                if (books.containsKey(b)){
-                    books.get(b).add(u);
-                }else{
-                    List<User> listUsers = new ArrayList<>();
-                    listUsers.add(u);
-                    books.put(b, listUsers);
+
+        for (User u : users) {
+            Marker marker = MapUtils.addMarker(map, u);
+            for (Book b : u.getBooks()) {
+                if (books.containsKey(b)) {
+                    books.get(b).add(marker);
+                } else {
+                    List<Marker> markersList = new ArrayList<>();
+                    markersList.add(marker);
+                    books.put(b, markersList);
                 }
             }
         }
-        
-        //TODO Show data on fragment
-        
-    }
 
-    private void createMarker(User u) {
-        MapUtils.addMarker(map, u);
+        //TODO Show data on fragment
     }
 
     private void setupMap() {
