@@ -11,6 +11,10 @@ import android.widget.Toast;
 
 import com.fantastic.bookxchange.Manifest;
 import com.fantastic.bookxchange.R;
+import com.fantastic.bookxchange.models.Book;
+import com.fantastic.bookxchange.models.User;
+import com.fantastic.bookxchange.utils.DataTest;
+import com.fantastic.bookxchange.utils.MapUtils;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationCallback;
 import com.google.android.gms.location.LocationRequest;
@@ -27,6 +31,10 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+
 import permissions.dispatcher.NeedsPermission;
 import permissions.dispatcher.RuntimePermissions;
 
@@ -35,6 +43,7 @@ import static com.google.android.gms.location.LocationServices.getFusedLocationP
 @RuntimePermissions
 public class NearMeActivity extends AppCompatActivity {
 
+    //Map Fragment related
     private SupportMapFragment mapFragment;
     private GoogleMap map;
     private LocationRequest mLocationRequest;
@@ -43,13 +52,14 @@ public class NearMeActivity extends AppCompatActivity {
     private long FASTEST_INTERVAL = 5000; /* 5 secs */
 
     private final static String KEY_LOCATION = "location";
-
-    /*
-     * Define a request code to send to Google Play services This code is
-     * returned in Activity.onActivityResult
-     */
     private final static int CONNECTION_FAILURE_RESOLUTION_REQUEST = 9000;
 
+    
+    //Data
+    
+    List<User> users;
+    HashMap<Book, List<User>> books;
+    
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -62,12 +72,32 @@ public class NearMeActivity extends AppCompatActivity {
         }
         setupMap();
 
+    }
 
+    private void populateData() {
+        users = DataTest.fakeData();
+        
+        books = new HashMap<>();
+        
+        for(User u : users){
+            createMarker(u.getLocation());
+            for(Book b :u.getBooks()){
+                if (books.containsKey(b)){
+                    books.get(b).add(u);
+                }else{
+                    List<User> listUsers = new ArrayList<>();
+                    listUsers.add(u);
+                    books.put(b, listUsers);
+                }
+            }
+        }
+        
+        //TODO Show data on fragment
+        
+    }
 
-
-
-
-
+    private void createMarker(LatLng location) {
+        MapUtils.addMarker(map, location);
     }
 
     private void setupMap() {
@@ -93,6 +123,7 @@ public class NearMeActivity extends AppCompatActivity {
         if (map != null) {
             NearMeActivityPermissionsDispatcher.getMyLocationWithCheck(this);
             NearMeActivityPermissionsDispatcher.startLocationUpdatesWithCheck(this);
+            populateData();
         } else {
             Toast.makeText(this, "Error - Map was null!!", Toast.LENGTH_SHORT).show();
         }
