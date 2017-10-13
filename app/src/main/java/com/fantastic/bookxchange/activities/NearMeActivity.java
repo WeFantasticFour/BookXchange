@@ -232,6 +232,10 @@ public class NearMeActivity extends AppCompatActivity {
         // Report to the UI that the location was updated
 
         mCurrentLocation = location;
+
+        LatLng latLng = new LatLng(mCurrentLocation.getLatitude(), mCurrentLocation.getLongitude());
+        CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngZoom(latLng, 15);
+        map.moveCamera(cameraUpdate);
     }
 
     public void onSaveInstanceState(Bundle savedInstanceState) {
