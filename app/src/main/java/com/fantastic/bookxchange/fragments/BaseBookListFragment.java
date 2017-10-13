@@ -1,5 +1,6 @@
 package com.fantastic.bookxchange.fragments;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
@@ -17,7 +18,7 @@ import org.parceler.Parcels;
 
 import java.util.ArrayList;
 
-public class BaseBookListFragment extends Fragment {
+public class BaseBookListFragment extends Fragment implements BooksAdapter.BookClickListener {
 
     public static String BOOKS_LIST = "books";
     private ArrayList<Book> books;
@@ -25,7 +26,12 @@ public class BaseBookListFragment extends Fragment {
     private BooksAdapter aBooks;
     private RecyclerView rvBooks;
     private LinearLayoutManager lyManager;
+    private BookListClickListenr listener;
 
+
+    public interface BookListClickListenr{
+        void onClickListener(Book book);
+    }
     public BaseBookListFragment() {
         // Required empty public constructor
     }
@@ -63,13 +69,30 @@ public class BaseBookListFragment extends Fragment {
 
     private void setupReciclerView() {
         aBooks = new BooksAdapter(getContext(), books);
+        aBooks.setListener(this);
         rvBooks.setAdapter(aBooks);
         lyManager = new LinearLayoutManager(getContext());
         rvBooks.setLayoutManager(lyManager);
+
 
         //Line between rows
         ListDivider line = new ListDivider(getContext());
         rvBooks.addItemDecoration(line);
     }
 
+    @Override
+    public void onBookClickListener(Book book) {
+        listener.onClickListener(book);
+    }
+
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        if (context instanceof BookListClickListenr) {
+            listener = (BookListClickListenr) context;
+        } else {
+            throw new ClassCastException(context.toString()
+                    + " must implement onBookClickListener");
+        }
+    }
 }

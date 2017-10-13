@@ -1,10 +1,13 @@
 package com.fantastic.bookxchange.adapters;
 
 import android.content.Context;
+import android.graphics.Color;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.fantastic.bookxchange.R;
@@ -21,8 +24,21 @@ public class BooksAdapter extends RecyclerView.Adapter<BooksAdapter.ViewHolder>{
     private ArrayList<Book> books;
     private Context context;
 
+    BookClickListener listener;
+
+    int rowSelectedIndex = -1;
+
+    public interface BookClickListener{
+        void onBookClickListener(Book book);
+    }
+
+    public void setListener(BookClickListener listener) {
+        this.listener = listener;
+    }
+
     public class ViewHolder extends RecyclerView.ViewHolder {
 
+        LinearLayout llBook;
         TextView tvTitle;
         TextView tvAuthor;
 
@@ -31,6 +47,7 @@ public class BooksAdapter extends RecyclerView.Adapter<BooksAdapter.ViewHolder>{
 
             tvTitle = itemView.findViewById(R.id.tvTitle);
             tvAuthor = itemView.findViewById(R.id.tvAuthor);
+            llBook = itemView.findViewById(R.id.llBook);
         }
 
         public void bind(Book book){
@@ -56,8 +73,22 @@ public class BooksAdapter extends RecyclerView.Adapter<BooksAdapter.ViewHolder>{
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
         final Book book = books.get(position);
-
         holder.bind(book);
+
+        holder.llBook.setOnClickListener(view -> {
+            rowSelectedIndex=position;
+            listener.onBookClickListener(book);
+            notifyDataSetChanged();
+        });
+        if(rowSelectedIndex==position){
+            holder.llBook.setBackgroundColor(ContextCompat.getColor(context,R.color.colorPrimary));
+            holder.tvTitle.setTextColor(ContextCompat.getColor(context,R.color.white));
+        }
+        else
+        {
+            holder.llBook.setBackgroundColor(Color.TRANSPARENT);
+            holder.tvTitle.setTextColor(ContextCompat.getColor(context,R.color.textDark));
+        }
     }
 
     @Override

@@ -6,5 +6,6 @@
     <color name="colorButton">#f4511e</color>
     <color name="subtext">#616060</color>
     <color name="textDark">#000000</color>
+    <color name="white">#FFFFFF</color>
     <color name="separators">#c6c4c4</color>
 </resources>

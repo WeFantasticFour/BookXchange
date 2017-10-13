@@ -27,6 +27,7 @@ import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 
@@ -42,7 +43,7 @@ import permissions.dispatcher.RuntimePermissions;
 import static com.google.android.gms.location.LocationServices.getFusedLocationProviderClient;
 
 @RuntimePermissions
-public class NearMeActivity extends BaseActivity {
+public class NearMeActivity extends BaseActivity implements BaseBookListFragment.BookListClickListenr{
 
     //Map Fragment related
     private SupportMapFragment mapFragment;
@@ -61,6 +62,8 @@ public class NearMeActivity extends BaseActivity {
     List<User> users;
     HashMap<Book, List<Marker>> books;
     private String TAG = "NearMeActivity";
+
+    private List<Marker> previousMarkers = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -247,6 +250,23 @@ public class NearMeActivity extends BaseActivity {
     public void onSaveInstanceState(Bundle savedInstanceState) {
         savedInstanceState.putParcelable(KEY_LOCATION, mCurrentLocation);
         super.onSaveInstanceState(savedInstanceState);
+    }
+
+    @Override
+    public void onClickListener(Book book) {
+
+        //Reset the color of previous books
+        if(!previousMarkers.isEmpty()){
+            for(Marker m : previousMarkers){
+                m.setIcon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_ORANGE));
+            }
+        }
+        List<Marker> bookMarkers = books.get(book);
+        previousMarkers = bookMarkers;
+        for(Marker m : bookMarkers){
+            m.setIcon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_RED));
+        }
+
     }
 }
 
