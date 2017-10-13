@@ -7,7 +7,6 @@ import android.os.Bundle;
 import android.os.Looper;
 import android.text.TextUtils;
 import android.util.Log;
-import android.widget.Toast;
 
 import com.fantastic.bookxchange.Manifest;
 import com.fantastic.bookxchange.R;
@@ -25,7 +24,6 @@ import com.google.android.gms.location.SettingsClient;
 import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
-import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
@@ -104,14 +102,9 @@ public class NearMeActivity extends BaseActivity {
         }
         mapFragment = ((SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map));
         if (mapFragment != null) {
-            mapFragment.getMapAsync(new OnMapReadyCallback() {
-                @Override
-                public void onMapReady(GoogleMap map) {
-                    loadMap(map);
-                }
-            });
+            mapFragment.getMapAsync(map1 -> loadMap(map1));
         } else {
-            Toast.makeText(this, "Error - Map Fragment was null!!", Toast.LENGTH_SHORT).show();
+            toast("Error - Map Fragment was null!!");
         }
 
     }
@@ -121,29 +114,26 @@ public class NearMeActivity extends BaseActivity {
         if (map != null) {
             NearMeActivityPermissionsDispatcher.getMyLocationWithCheck(this);
             NearMeActivityPermissionsDispatcher.startLocationUpdatesWithCheck(this);
-            map.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
-                @Override
-                public boolean onMarkerClick(Marker marker) {
-                    User u = (User)marker.getTag();
+            map.setOnMarkerClickListener(marker -> {
+                User u = (User)marker.getTag();
 
-                    Geocoder geocoder;
-                    List<Address> addresses;
-                    geocoder = new Geocoder(NearMeActivity.this, Locale.getDefault());
+                Geocoder geocoder;
+                List<Address> addresses;
+                geocoder = new Geocoder(NearMeActivity.this, Locale.getDefault());
 
-                    try {
-                        addresses = geocoder.getFromLocation(u.getLocation().latitude, u.getLocation().longitude, 1);
-                        Log.d("NearMe", u.getName() + " location: " + addresses.get(0).getLocality() + ", " + addresses.get(0).getAdminArea());
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
-                    //TODO Intent to User Profile
-
-                    return true;
+                try {
+                    addresses = geocoder.getFromLocation(u.getLocation().latitude, u.getLocation().longitude, 1);
+                    Log.d("NearMe", u.getName() + " location: " + addresses.get(0).getLocality() + ", " + addresses.get(0).getAdminArea());
+                } catch (IOException e) {
+                    e.printStackTrace();
                 }
+                //TODO Intent to User Profile
+
+                return true;
             });
             populateData();
         } else {
-            Toast.makeText(this, "Error - Map was null!!", Toast.LENGTH_SHORT).show();
+            toast("Error - Map was null!!");
         }
     }
 
@@ -201,7 +191,7 @@ public class NearMeActivity extends BaseActivity {
             map.animateCamera(CameraUpdateFactory.zoomTo(10), 2000, null);
 
         } else {
-            Toast.makeText(this, "Current location was null, enable GPS", Toast.LENGTH_SHORT).show();
+            toast("Current location was null, enable GPS");
         }
         NearMeActivityPermissionsDispatcher.startLocationUpdatesWithCheck(this);
     }
