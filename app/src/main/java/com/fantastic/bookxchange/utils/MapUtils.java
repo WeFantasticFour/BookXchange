@@ -3,10 +3,10 @@ package com.fantastic.bookxchange.utils;
 import android.content.Context;
 import android.graphics.Bitmap;
 
+import com.fantastic.bookxchange.models.User;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.model.BitmapDescriptor;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
-import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.maps.android.ui.IconGenerator;
@@ -27,16 +27,17 @@ public class MapUtils {
 
     }
 
-    public static Marker addMarker(GoogleMap map, LatLng point) {
+    public static Marker addMarker(GoogleMap map, User u) {
         // Creates and adds marker to the map
 
-        BitmapDescriptor marker = BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_AZURE);
+        BitmapDescriptor marker = BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_ORANGE);
 
         MarkerOptions options = new MarkerOptions()
-                .position(point)
+                .position(u.getLocation())
                 .icon(marker);
 
         Marker result = map.addMarker(options);
+        result.setTag(u);
 
         return result;
     }

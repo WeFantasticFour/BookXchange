@@ -28,6 +28,7 @@ import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 
@@ -80,7 +81,7 @@ public class NearMeActivity extends AppCompatActivity {
         books = new HashMap<>();
         
         for(User u : users){
-            createMarker(u.getLocation());
+            createMarker(u);
             for(Book b :u.getBooks()){
                 if (books.containsKey(b)){
                     books.get(b).add(u);
@@ -96,8 +97,8 @@ public class NearMeActivity extends AppCompatActivity {
         
     }
 
-    private void createMarker(LatLng location) {
-        MapUtils.addMarker(map, location);
+    private void createMarker(User u) {
+        MapUtils.addMarker(map, u);
     }
 
     private void setupMap() {
@@ -123,6 +124,16 @@ public class NearMeActivity extends AppCompatActivity {
         if (map != null) {
             NearMeActivityPermissionsDispatcher.getMyLocationWithCheck(this);
             NearMeActivityPermissionsDispatcher.startLocationUpdatesWithCheck(this);
+            map.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
+                @Override
+                public boolean onMarkerClick(Marker marker) {
+                    User u = (User)marker.getTag();
+
+                    //TODO Intent to User Profile
+                    Log.d("NearMe", u.getName());
+                    return true;
+                }
+            });
             populateData();
         } else {
             Toast.makeText(this, "Error - Map was null!!", Toast.LENGTH_SHORT).show();
