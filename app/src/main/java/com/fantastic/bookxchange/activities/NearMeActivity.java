@@ -49,7 +49,7 @@ public class NearMeActivity extends AppCompatActivity {
     private GoogleMap map;
     private LocationRequest mLocationRequest;
     Location mCurrentLocation;
-    private long UPDATE_INTERVAL = 60000;  /* 60 secs */
+    private long UPDATE_INTERVAL = 10000;  /* 60 secs */
     private long FASTEST_INTERVAL = 5000; /* 5 secs */
 
     private final static String KEY_LOCATION = "location";
@@ -93,7 +93,7 @@ public class NearMeActivity extends AppCompatActivity {
             }
         }
 
-        //TODO Show data on fragment
+        //TODO Show book data on fragment
     }
 
     private void setupMap() {
