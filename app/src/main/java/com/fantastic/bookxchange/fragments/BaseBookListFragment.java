@@ -38,7 +38,8 @@ public class BaseBookListFragment extends Fragment implements BooksAdapter.BookC
     public enum FragmentType {
         SHARE,
         EXCHANGE,
-        WISHLIST
+        WISHLIST,
+        NEAR
     }
 
     public interface BookListReadyListener{
@@ -50,11 +51,8 @@ public class BaseBookListFragment extends Fragment implements BooksAdapter.BookC
         // Required empty public constructor
     }
 
-    public static BaseBookListFragment newInstance(ArrayList<Book> books) {
+    public static BaseBookListFragment newInstance() {
         BaseBookListFragment fragment = new BaseBookListFragment();
-        Bundle args = new Bundle();
-        args.putParcelable(BOOKS_LIST, Parcels.wrap(books));
-        fragment.setArguments(args);
         return fragment;
     }
 
@@ -118,6 +116,7 @@ public class BaseBookListFragment extends Fragment implements BooksAdapter.BookC
     }
 
     public void pushData(List<Book> books) {
+        this.books.clear();
         this.books.addAll(books);
         aBooks.notifyDataSetChanged();
     }

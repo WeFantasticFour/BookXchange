@@ -21,7 +21,8 @@ import com.fantastic.bookxchange.fragments.ShareListFragment;
 import com.fantastic.bookxchange.fragments.WishListFragment;
 import com.fantastic.bookxchange.models.Book;
 import com.fantastic.bookxchange.models.User;
-import com.fantastic.bookxchange.utils.DataTest;
+
+import org.parceler.Parcels;
 
 import java.io.IOException;
 import java.util.List;
@@ -41,9 +42,7 @@ public class UserActivity extends BaseActivity implements BaseBookListFragment.B
         setContentView(R.layout.activity_user);
 
         //Get user
-       // user = Parcels.unwrap(getIntent().getParcelableExtra("user"));
-
-        user = DataTest.fakeData().get(0);
+        user = Parcels.unwrap(getIntent().getParcelableExtra("user"));
 
         ivProfile = findViewById(R.id.ivProfile);
         tvLocation = findViewById(R.id.tvLocation);
@@ -82,6 +81,7 @@ public class UserActivity extends BaseActivity implements BaseBookListFragment.B
 
     private void setupToolbar() {
         enableToolbarBackButton();
+        showToolbarBackButton();
         setTitle(user.getName());
     }
 
