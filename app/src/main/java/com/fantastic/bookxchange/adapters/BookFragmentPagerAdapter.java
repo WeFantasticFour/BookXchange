@@ -1,0 +1,56 @@
+package com.fantastic.bookxchange.adapters;
+
+import android.content.Context;
+import android.support.v4.app.FragmentPagerAdapter;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+
+import com.fantastic.bookxchange.fragments.ExchangeListFragment;
+import com.fantastic.bookxchange.fragments.ShareListFragment;
+import com.fantastic.bookxchange.fragments.WishListFragment;
+
+/**
+ * Created by m3libea on 10/13/17.
+ */
+
+public class BookFragmentPagerAdapter extends FragmentPagerAdapter {
+        final int PAGE_COUNT = 3;
+        private String tabTitles[] = new String[] { "Share", "Exchange", "Wishlist" };
+        private Context context;
+
+        public BookFragmentPagerAdapter(FragmentManager fm, Context context) {
+            super(fm);
+            this.context = context;
+        }
+
+        @Override
+        public int getCount() {
+            return PAGE_COUNT;
+        }
+
+        @Override
+        public Fragment getItem(int position) {
+
+            Fragment fm;
+            switch (position){
+                case 0:
+                    fm = ShareListFragment.newInstance();
+                    break;
+                case 1:
+                    fm = ExchangeListFragment.newInstance();
+                    break;
+                case 2:
+                    fm = WishListFragment.newInstance();
+                    break;
+                default:
+                    fm = null;
+            }
+            return fm;
+        }
+
+        @Override
+        public CharSequence getPageTitle(int position) {
+            // Generate title based on item position
+            return tabTitles[position];
+        }
+    }
