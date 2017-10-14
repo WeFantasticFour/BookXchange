@@ -43,7 +43,7 @@ import permissions.dispatcher.RuntimePermissions;
 import static com.google.android.gms.location.LocationServices.getFusedLocationProviderClient;
 
 @RuntimePermissions
-public class NearMeActivity extends BaseActivity implements BaseBookListFragment.BookListClickListenr{
+public class NearMeActivity extends BaseActivity implements BaseBookListFragment.BookListClickListener {
 
     //Map Fragment related
     private SupportMapFragment mapFragment;

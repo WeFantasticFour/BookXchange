@@ -16,6 +16,9 @@ import com.bumptech.glide.request.target.BitmapImageViewTarget;
 import com.fantastic.bookxchange.R;
 import com.fantastic.bookxchange.adapters.BookFragmentPagerAdapter;
 import com.fantastic.bookxchange.fragments.BaseBookListFragment;
+import com.fantastic.bookxchange.fragments.ExchangeListFragment;
+import com.fantastic.bookxchange.fragments.ShareListFragment;
+import com.fantastic.bookxchange.fragments.WishListFragment;
 import com.fantastic.bookxchange.models.Book;
 import com.fantastic.bookxchange.models.User;
 import com.fantastic.bookxchange.utils.DataTest;
@@ -24,12 +27,14 @@ import java.io.IOException;
 import java.util.List;
 import java.util.Locale;
 
-public class UserActivity extends BaseActivity implements BaseBookListFragment.BookListClickListenr {
+public class UserActivity extends BaseActivity implements BaseBookListFragment.BookListClickListener, BaseBookListFragment.BookListReadyListener {
 
     ImageView ivProfile;
     TextView tvLocation;
 
     User user;
+    private BookFragmentPagerAdapter aPager;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -82,8 +87,8 @@ public class UserActivity extends BaseActivity implements BaseBookListFragment.B
 
     private void setupTab() {
         ViewPager viewPager = findViewById(R.id.viewpager);
-        viewPager.setAdapter(new BookFragmentPagerAdapter(getSupportFragmentManager(),
-                UserActivity.this));
+        aPager = new BookFragmentPagerAdapter(getSupportFragmentManager(), UserActivity.this);
+        viewPager.setAdapter(aPager);
 
         TabLayout tabLayout = findViewById(R.id.sliding_tabs);
         tabLayout.setupWithViewPager(viewPager);
@@ -94,5 +99,27 @@ public class UserActivity extends BaseActivity implements BaseBookListFragment.B
     @Override
     public void onClickListener(Book book) {
         //TODO Itent to Book Detail page
+    }
+
+    @Override
+    public void onReadyListener(BaseBookListFragment.FragmentType type) {
+
+        switch (type){
+            case SHARE:
+                ShareListFragment fmSh = (ShareListFragment) aPager.getRegisteredFragment(0);
+
+                fmSh.pushData(user.getShareBooks());
+                break;
+            case EXCHANGE:
+                ExchangeListFragment fmEx = (ExchangeListFragment) aPager.getRegisteredFragment(1);
+
+                fmEx.pushData(user.getExchangeBooks());
+                break;
+            case WISHLIST:
+                WishListFragment fmWs = (WishListFragment) aPager.getRegisteredFragment(2);
+
+                fmWs.pushData(user.getWishListBooks());
+                break;
+        }
     }
 }

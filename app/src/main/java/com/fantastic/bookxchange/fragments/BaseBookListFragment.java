@@ -17,21 +17,35 @@ import com.fantastic.bookxchange.utils.ListDivider;
 import org.parceler.Parcels;
 
 import java.util.ArrayList;
+import java.util.List;
 
-public class BaseBookListFragment extends Fragment implements BooksAdapter.BookClickListener {
+public class BaseBookListFragment extends Fragment implements BooksAdapter.BookClickListener, BookDataReceiver {
 
     public static String BOOKS_LIST = "books";
-    private ArrayList<Book> books;
+    public ArrayList<Book> books;
 
-    private BooksAdapter aBooks;
+    public BooksAdapter aBooks;
     private RecyclerView rvBooks;
     private LinearLayoutManager lyManager;
-    private BookListClickListenr listener;
+    private BookListClickListener clickListener;
+    protected BookListReadyListener readyListener;
 
 
-    public interface BookListClickListenr{
+    public interface BookListClickListener {
         void onClickListener(Book book);
     }
+
+    public enum FragmentType {
+        SHARE,
+        EXCHANGE,
+        WISHLIST
+    }
+
+    public interface BookListReadyListener{
+        void onReadyListener(FragmentType type);
+    }
+
+
     public BaseBookListFragment() {
         // Required empty public constructor
     }
@@ -82,17 +96,29 @@ public class BaseBookListFragment extends Fragment implements BooksAdapter.BookC
 
     @Override
     public void onBookClickListener(Book book) {
-        listener.onClickListener(book);
+        clickListener.onClickListener(book);
     }
 
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-        if (context instanceof BookListClickListenr) {
-            listener = (BookListClickListenr) context;
-        } else {
+        if (context instanceof BookListClickListener) {
+            clickListener = (BookListClickListener) context;
+        }else {
             throw new ClassCastException(context.toString()
                     + " must implement onBookClickListener");
         }
+
+        if (context instanceof BookListReadyListener) {
+            readyListener = (BookListReadyListener) context;
+        }else {
+            throw new ClassCastException(context.toString()
+                    + " must implement onReadyListener");
+        }
+    }
+
+    public void pushData(List<Book> books) {
+        this.books.addAll(books);
+        aBooks.notifyDataSetChanged();
     }
 }

@@ -18,7 +18,10 @@ public class ShareListFragment extends BaseBookListFragment{
         super.onCreate(savedInstanceState);
     }
 
-    private void fetchData() {
-        //TODO Sharelist from User
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        readyListener.onReadyListener(FragmentType.SHARE);
     }
 }

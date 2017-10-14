@@ -1,19 +1,19 @@
 package com.fantastic.bookxchange.adapters;
 
 import android.content.Context;
-import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 
 import com.fantastic.bookxchange.fragments.ExchangeListFragment;
 import com.fantastic.bookxchange.fragments.ShareListFragment;
 import com.fantastic.bookxchange.fragments.WishListFragment;
+import com.fantastic.bookxchange.utils.SmartFragmentStatePagerAdapter;
 
 /**
  * Created by m3libea on 10/13/17.
  */
 
-public class BookFragmentPagerAdapter extends FragmentPagerAdapter {
+public class BookFragmentPagerAdapter extends SmartFragmentStatePagerAdapter {
         final int PAGE_COUNT = 3;
         private String tabTitles[] = new String[] { "Share", "Exchange", "Wishlist" };
         private Context context;
