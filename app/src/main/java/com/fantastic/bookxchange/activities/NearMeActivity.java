@@ -85,22 +85,17 @@ public class NearMeActivity extends BaseActivity implements BaseBookListFragment
         books = new HashMap<>();
 
         for (User u : users) {
-            if (!u.getBooks().isEmpty()){
+            if (!u.getShareBooks().isEmpty()){
                 Marker marker = MapUtils.addMarker(map, u);
-                for (Book b : u.getBooks()) {
-                    if (books.containsKey(b)) {
-                        books.get(b).add(marker);
-                    } else {
-                        List<Marker> markersList = new ArrayList<>();
-                        markersList.add(marker);
-                        books.put(b, markersList);
-                    }
+                for (Book b : u.getShareBooks()) {
+                    saveMarker(marker, b);
+                }
+
+                for (Book b : u.getExchangeBooks()) {
+                    saveMarker(marker, b);
                 }
             }
         }
-
-        //TODO Show book data on fragment
-
 
         Fragment fragment = BaseBookListFragment.newInstance(new ArrayList(books.keySet()));
 
@@ -109,6 +104,17 @@ public class NearMeActivity extends BaseActivity implements BaseBookListFragment
                 .add(R.id.flBooks, fragment)
                 .commit();
     }
+
+    private void saveMarker(Marker marker, Book b) {
+        if (books.containsKey(b)) {
+            books.get(b).add(marker);
+        } else {
+            List<Marker> markersList = new ArrayList<>();
+            markersList.add(marker);
+            books.put(b, markersList);
+        }
+    }
+
 
     private void setupMap() {
         if (TextUtils.isEmpty(getResources().getString(R.string.google_maps_api_key))) {
