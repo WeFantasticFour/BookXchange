@@ -19,10 +19,14 @@ public class User {
     public String emailAddress;
     public LatLng location;
     public String urlProfileImage;
-    public List<Book> books;
+    public List<Book> shareBooks;
+    public List<Book> exchangeBooks;
+    public List<Book> wishListBooks;
 
     public User() {
-        this.books = new ArrayList<>();
+        this.shareBooks = new ArrayList<>();
+        this.exchangeBooks = new ArrayList<>();
+        this.wishListBooks = new ArrayList<>();
     }
 
     public String getName() {
@@ -41,14 +45,21 @@ public class User {
         return location;
     }
 
-    public List<Book> getBooks() {
-        return books;
-    }
-
     public String getUrlProfileImage() {
         return urlProfileImage;
     }
 
+    public List<Book> getShareBooks() {
+        return shareBooks;
+    }
+
+    public List<Book> getExchangeBooks() {
+        return exchangeBooks;
+    }
+
+    public List<Book> getWishListBooks() {
+        return wishListBooks;
+    }
 
     public void setName(String name) {
         this.name = name;
@@ -70,8 +81,16 @@ public class User {
         this.urlProfileImage = urlProfileImage;
     }
 
-    public void setBooks(List<Book> books) {
-        this.books = books;
+    public void setShareBooks(List<Book> shareBooks) {
+        this.shareBooks = shareBooks;
+    }
+
+    public void setExchangeBooks(List<Book> exchangeBooks) {
+        this.exchangeBooks = exchangeBooks;
+    }
+
+    public void setWishListBooks(List<Book> wishListBooks) {
+        this.wishListBooks = wishListBooks;
     }
 
     public static User fromJSON(JSONObject jsonObject){
