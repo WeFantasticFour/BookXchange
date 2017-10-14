@@ -55,5 +55,6 @@ dependencies {
     testCompile 'junit:junit:4.12'
     annotationProcessor 'org.parceler:parceler:1.1.6'
     annotationProcessor 'com.github.hotchemi:permissionsdispatcher-processor:2.4.0'
+
 }
 apply plugin: 'com.google.gms.google-services'
