@@ -5,11 +5,13 @@ import android.location.Geocoder;
 import android.location.Location;
 import android.os.Bundle;
 import android.os.Looper;
+import android.support.v4.app.Fragment;
 import android.text.TextUtils;
 import android.util.Log;
 
 import com.fantastic.bookxchange.Manifest;
 import com.fantastic.bookxchange.R;
+import com.fantastic.bookxchange.fragments.BaseBookListFragment;
 import com.fantastic.bookxchange.models.Book;
 import com.fantastic.bookxchange.models.User;
 import com.fantastic.bookxchange.utils.DataTest;
@@ -25,6 +27,7 @@ import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 
@@ -40,7 +43,7 @@ import permissions.dispatcher.RuntimePermissions;
 import static com.google.android.gms.location.LocationServices.getFusedLocationProviderClient;
 
 @RuntimePermissions
-public class NearMeActivity extends BaseActivity {
+public class NearMeActivity extends BaseActivity implements BaseBookListFragment.BookListClickListenr{
 
     //Map Fragment related
     private SupportMapFragment mapFragment;
@@ -59,6 +62,8 @@ public class NearMeActivity extends BaseActivity {
     List<User> users;
     HashMap<Book, List<Marker>> books;
     private String TAG = "NearMeActivity";
+
+    private List<Marker> previousMarkers = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -95,6 +100,14 @@ public class NearMeActivity extends BaseActivity {
         }
 
         //TODO Show book data on fragment
+
+
+        Fragment fragment = BaseBookListFragment.newInstance(new ArrayList(books.keySet()));
+
+        getSupportFragmentManager()
+                .beginTransaction()
+                .add(R.id.flBooks, fragment)
+                .commit();
     }
 
     private void setupMap() {
@@ -237,6 +250,23 @@ public class NearMeActivity extends BaseActivity {
     public void onSaveInstanceState(Bundle savedInstanceState) {
         savedInstanceState.putParcelable(KEY_LOCATION, mCurrentLocation);
         super.onSaveInstanceState(savedInstanceState);
+    }
+
+    @Override
+    public void onClickListener(Book book) {
+
+        //Reset the color of previous books
+        if(!previousMarkers.isEmpty()){
+            for(Marker m : previousMarkers){
+                m.setIcon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_ORANGE));
+            }
+        }
+        List<Marker> bookMarkers = books.get(book);
+        previousMarkers = bookMarkers;
+        for(Marker m : bookMarkers){
+            m.setIcon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_RED));
+        }
+
     }
 }
 
