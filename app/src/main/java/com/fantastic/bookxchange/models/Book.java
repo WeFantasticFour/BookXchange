@@ -1,7 +1,13 @@
 package com.fantastic.bookxchange.models;
 
+import android.text.TextUtils;
+
+import com.google.gson.annotations.SerializedName;
+
 import org.json.JSONObject;
 import org.parceler.Parcel;
+
+import java.util.List;
 
 /**
  * Created by m3libea on 10/11/17.
@@ -9,11 +15,19 @@ import org.parceler.Parcel;
 
 @Parcel
 public class Book {
+
+
+    @SerializedName("title")
     public String title;
-    public String author;
-    public String publisher;
+    @SerializedName("authors")
+    public List<String> authors;
+    @SerializedName("publishers")
+    public List<String> publishers;
+    @SerializedName("bib_key")
     public String isbn;
+    @SerializedName("thumbnail_url")
     public String urlPicture;
+    @SerializedName("description")
     public String shortDescription;
 
 
@@ -22,11 +36,19 @@ public class Book {
     }
 
     public String getAuthor() {
-        return author;
+        if (authors != null) {
+            return TextUtils.join(", ", authors);
+        }
+        return "No author";
     }
 
+
+
     public String getPublisher() {
-        return publisher;
+        if(publishers != null) {
+            return TextUtils.join(", ", publishers);
+        }
+        return "No Publishers";
     }
 
     public String getIsbn() {

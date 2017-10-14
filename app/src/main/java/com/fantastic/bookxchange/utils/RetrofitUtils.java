@@ -1,4 +1,4 @@
-package com.fantastic.bookxchange.activities.utils;
+package com.fantastic.bookxchange.utils;
 
 import java.util.concurrent.TimeUnit;
 
