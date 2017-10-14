@@ -37,6 +37,7 @@ Describe any challenges encountered while building the app.
 
 - [Parceler library](http://guides.codepath.com/android/Using-Parceler)
 - [Google Maps Android API utility library](https://github.com/googlemaps/android-maps-utils)
+- [Glide](http://inthecheesefactory.com/blog/get-to-know-glide-recommended-by-google/en) - Image loading and caching library for Android
 
 ## License
 
