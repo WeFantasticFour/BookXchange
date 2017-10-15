@@ -5,11 +5,12 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context="com.fantastic.bookxchange.activities.NearMeActivity">
-
+    <include layout="@layout/toolbar" android:id="@+id/toolbar_layout"/>
     <fragment
         android:id="@+id/map"
         class="com.google.android.gms.maps.SupportMapFragment"
         android:layout_width="match_parent"
+        android:layout_below="@+id/toolbar_layout"
         android:layout_height="300dp"/>
 
     <FrameLayout
