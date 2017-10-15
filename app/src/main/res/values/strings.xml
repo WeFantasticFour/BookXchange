@@ -19,9 +19,9 @@
     <string name="add_book">Add book</string>
     <string name="title">Book Title</string>
     <string name="author">Author</string>
-    <string name="detail_page">Detail Page Url</string>
+    <string name="publisher">Publisher</string>
     <string name="edition">Edition</string>
-    <string name="editorial_review">Editorial Review: I can read it all by myself is the Beginner Books motto, and behind it is an understanding of how important it is for children to take pride and pleasure in their early reading. Beginner Books have been designed to appeal directly to children through the use of humour, rhyme, and bright pictures that can be "read" even by the non-reading child. Some Beginner Books are simple stories, others are hilarious nonsense: both types have been designed to give children confidence and make them want to go on reading. Spot is an animal who first changed his spots in PUT ME IN THE ZOO, and this new story finds him changing his shape as well. He becomes an elephant, a giraffe, a mouse, and then discovers it\'s best to be himself.</string>
+    <string name="editorial_review">Editorial review </string>
     <string name="ISBN">ISBN</string>
     <string name="book_title">Book title</string>
     <string name="book_author">Book Author</string>
