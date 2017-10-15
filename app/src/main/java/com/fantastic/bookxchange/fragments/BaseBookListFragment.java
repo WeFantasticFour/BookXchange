@@ -70,16 +70,16 @@ public class BaseBookListFragment extends Fragment implements BooksAdapter.BookC
 
         View view = inflater.inflate(R.layout.fragment_base_book_list, container, false);
         if (books == null){
-            books = new ArrayList<Book>();
+            books = new ArrayList<>();
         }
 
         rvBooks = view.findViewById(R.id.rvBooks);
-        setupReciclerView();
+        setupRecyclerView();
 
         return view;
     }
 
-    private void setupReciclerView() {
+    private void setupRecyclerView() {
         aBooks = new BooksAdapter(getContext(), books);
         aBooks.setListener(this);
         rvBooks.setAdapter(aBooks);
