@@ -16,10 +16,12 @@ public class WishListFragment extends BaseBookListFragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        fetchData();
     }
 
-    private void fetchData() {
-        //TODO WishList from User
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        readyListener.onReadyListener(FragmentType.WISHLIST);
     }
 }

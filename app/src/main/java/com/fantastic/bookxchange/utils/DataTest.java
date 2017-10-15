@@ -47,24 +47,50 @@ public class DataTest {
         b.setTitle("Harry Potter 3");
         b.setAuthor("JKRowling");
 
+        Book b3 = new Book();
+        b.setTitle("Harry Potter 5");
+        b.setAuthor("JKRowling");
+
         Book b4 = new Book();
         b4.setTitle("Pride and Prejuice");
         b4.setAuthor("Jane Austen");
 
-        List<Book> l1 = new ArrayList<>();
+        Book b5 = new Book();
+        b5.setTitle("Alice In Wonderland");
+        b5.setAuthor("Carrol");
 
-        l1.add(b);
-        l1.add(b1);
+        List<Book> lshare1 = new ArrayList<>();
+        List<Book> lex1 = new ArrayList<>();
+        List<Book> lwish1 = new ArrayList<>();
 
-        List<Book> l2 = new ArrayList<>();
+        lshare1.add(b);
+        lshare1.add(b1);
+        lex1.add(b2);
+        lwish1.add(b5);
 
-        l2.add(b2);
-        l2.add(b4);
+        List<Book> lshare2 = new ArrayList<>();
+        List<Book> lex2 = new ArrayList<>();
+        List<Book> lwish2 = new ArrayList<>();
+
+        lshare2.add(b4);
+        lex2.add(b5);
+
+        List<Book> lex3 = new ArrayList<>();
+
+        lex3.add(b3);
+
 
         //Add the books to users
 
-        user.setBooks(l1);
-        user1.setBooks(l2);
+        user.setShareBooks(lshare1);
+        user.setExchangeBooks(lex1);
+        user.setWishListBooks(lwish1);
+
+        user1.setShareBooks(lshare2);
+        user1.setExchangeBooks(lex2);
+        user1.setWishListBooks(lwish2);
+
+        user2.setExchangeBooks(lex3);
 
         List<User> users = new ArrayList<>();
         users.add(user);

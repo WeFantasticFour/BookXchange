@@ -2,7 +2,7 @@ package com.fantastic.bookxchange.fragments;
 
 import android.os.Bundle;
 
-public class ExchangeListFragment extends BaseBookListFragment{
+public class ExchangeListFragment extends BaseBookListFragment {
 
 
     public ExchangeListFragment() {
@@ -19,7 +19,9 @@ public class ExchangeListFragment extends BaseBookListFragment{
 
     }
 
-    private void fetchData() {
-        //TODO ExchangeList from User
+    @Override
+    public void onStart() {
+        super.onStart();
+        readyListener.onReadyListener(FragmentType.EXCHANGE);
     }
 }

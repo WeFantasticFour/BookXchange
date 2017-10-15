@@ -1,17 +1,16 @@
 package com.fantastic.bookxchange.activities;
 
-import android.location.Address;
-import android.location.Geocoder;
+import android.content.Intent;
 import android.location.Location;
 import android.os.Bundle;
 import android.os.Looper;
-import android.support.v4.app.Fragment;
 import android.text.TextUtils;
 import android.util.Log;
 
 import com.fantastic.bookxchange.Manifest;
 import com.fantastic.bookxchange.R;
 import com.fantastic.bookxchange.fragments.BaseBookListFragment;
+import com.fantastic.bookxchange.fragments.NearListFragment;
 import com.fantastic.bookxchange.models.Book;
 import com.fantastic.bookxchange.models.User;
 import com.fantastic.bookxchange.utils.DataTest;
@@ -31,11 +30,11 @@ import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 
-import java.io.IOException;
+import org.parceler.Parcels;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Locale;
 
 import permissions.dispatcher.NeedsPermission;
 import permissions.dispatcher.RuntimePermissions;
@@ -43,7 +42,7 @@ import permissions.dispatcher.RuntimePermissions;
 import static com.google.android.gms.location.LocationServices.getFusedLocationProviderClient;
 
 @RuntimePermissions
-public class NearMeActivity extends BaseActivity implements BaseBookListFragment.BookListClickListenr{
+public class NearMeActivity extends BaseActivity implements BaseBookListFragment.BookListClickListener, BaseBookListFragment.BookListReadyListener {
 
     //Map Fragment related
     private SupportMapFragment mapFragment;
@@ -64,6 +63,7 @@ public class NearMeActivity extends BaseActivity implements BaseBookListFragment
     private String TAG = "NearMeActivity";
 
     private List<Marker> previousMarkers = new ArrayList<>();
+    private NearListFragment fragment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -85,30 +85,36 @@ public class NearMeActivity extends BaseActivity implements BaseBookListFragment
         books = new HashMap<>();
 
         for (User u : users) {
-            if (!u.getBooks().isEmpty()){
+            if (!u.getShareBooks().isEmpty()){
                 Marker marker = MapUtils.addMarker(map, u);
-                for (Book b : u.getBooks()) {
-                    if (books.containsKey(b)) {
-                        books.get(b).add(marker);
-                    } else {
-                        List<Marker> markersList = new ArrayList<>();
-                        markersList.add(marker);
-                        books.put(b, markersList);
-                    }
+                for (Book b : u.getShareBooks()) {
+                    saveMarker(marker, b);
+                }
+
+                for (Book b : u.getExchangeBooks()) {
+                    saveMarker(marker, b);
                 }
             }
         }
 
-        //TODO Show book data on fragment
-
-
-        Fragment fragment = BaseBookListFragment.newInstance(new ArrayList(books.keySet()));
+        fragment = NearListFragment.newInstance();
 
         getSupportFragmentManager()
                 .beginTransaction()
                 .add(R.id.flBooks, fragment)
                 .commit();
     }
+
+    private void saveMarker(Marker marker, Book b) {
+        if (books.containsKey(b)) {
+            books.get(b).add(marker);
+        } else {
+            List<Marker> markersList = new ArrayList<>();
+            markersList.add(marker);
+            books.put(b, markersList);
+        }
+    }
+
 
     private void setupMap() {
         if (TextUtils.isEmpty(getResources().getString(R.string.google_maps_api_key))) {
@@ -131,17 +137,9 @@ public class NearMeActivity extends BaseActivity implements BaseBookListFragment
             map.setOnMarkerClickListener(marker -> {
                 User u = (User)marker.getTag();
 
-                Geocoder geocoder;
-                List<Address> addresses;
-                geocoder = new Geocoder(NearMeActivity.this, Locale.getDefault());
-
-                try {
-                    addresses = geocoder.getFromLocation(u.getLocation().latitude, u.getLocation().longitude, 1);
-                    Log.d(TAG, u.getName() + " location: " + addresses.get(0).getLocality() + ", " + addresses.get(0).getAdminArea());
-                } catch (IOException e) {
-                    Log.e(TAG, e.getMessage(),e);
-                }
-                //TODO Intent to User Profile
+                Intent i = new Intent(this, UserActivity.class);
+                i.putExtra("user", Parcels.wrap(u));
+                startActivity(i);
 
                 return true;
             });
@@ -267,6 +265,11 @@ public class NearMeActivity extends BaseActivity implements BaseBookListFragment
             m.setIcon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_RED));
         }
 
+    }
+
+    @Override
+    public void onReadyListener(BaseBookListFragment.FragmentType type) {
+        fragment.pushData(new ArrayList(books.keySet()));
     }
 }
 
