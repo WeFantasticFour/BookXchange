@@ -1,20 +1,42 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.v4.widget.DrawerLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/drawer_layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.fantastic.bookxchange.activities.NearMeActivity">
+    android:fitsSystemWindows="true"
+    tools:context="com.fantastic.bookxchange.activities.NearMeActivity"
+    tools:openDrawer="start">
 
-    <fragment
-        android:id="@+id/map"
-        class="com.google.android.gms.maps.SupportMapFragment"
+    <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="300dp"/>
+        android:layout_height="match_parent">
 
-    <FrameLayout
-        android:id="@+id/flBooks"
-        android:layout_width="match_parent"
+        <include
+            android:id="@+id/toolbar_layout"
+            layout="@layout/toolbar" />
+
+        <fragment
+            android:id="@+id/map"
+            class="com.google.android.gms.maps.SupportMapFragment"
+            android:layout_width="match_parent"
+            android:layout_height="300dp"
+            android:layout_below="@+id/toolbar_layout" />
+
+        <FrameLayout
+            android:id="@+id/flBooks"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_below="@+id/map" />
+    </RelativeLayout>
+
+    <android.support.design.widget.NavigationView
+        android:id="@+id/nav_view"
+        android:layout_width="wrap_content"
         android:layout_height="match_parent"
-        android:layout_below="@+id/map"/>
-</RelativeLayout>
+        android:layout_gravity="start"
+        android:fitsSystemWindows="true"
+        app:headerLayout="@layout/nav_header_home"
+        app:menu="@menu/main_menu" />
+</android.support.v4.widget.DrawerLayout>

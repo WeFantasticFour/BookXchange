@@ -35,7 +35,7 @@ public class LoginActivity extends BaseActivity {
         // Check if user is signed in (non-null) and update UI accordingly.
         FirebaseUser currentUser = auth.getCurrentUser();
         if (currentUser != null) {
-            startActivity(MainActivity.class);
+            startActivity(NearMeActivity.class);
         }
     }
 
@@ -63,7 +63,6 @@ public class LoginActivity extends BaseActivity {
                     }
                 });
     }
-
 
 
     public void openRegistration(View view) {

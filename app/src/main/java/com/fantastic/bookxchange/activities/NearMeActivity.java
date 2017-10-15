@@ -4,8 +4,15 @@ import android.content.Intent;
 import android.location.Location;
 import android.os.Bundle;
 import android.os.Looper;
-import android.text.TextUtils;
+import android.support.design.widget.NavigationView;
+import android.support.v4.view.GravityCompat;
+import android.support.v4.widget.DrawerLayout;
+import android.support.v7.app.ActionBarDrawerToggle;
 import android.util.Log;
+import android.view.MenuItem;
+import android.view.View;
+import android.widget.ImageView;
+import android.widget.TextView;
 
 import com.fantastic.bookxchange.Manifest;
 import com.fantastic.bookxchange.R;
@@ -29,6 +36,7 @@ import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
+import com.vistrav.flow.Flow;
 
 import org.parceler.Parcels;
 
@@ -42,9 +50,11 @@ import permissions.dispatcher.RuntimePermissions;
 import static com.google.android.gms.location.LocationServices.getFusedLocationProviderClient;
 
 @RuntimePermissions
-public class NearMeActivity extends BaseActivity implements BaseBookListFragment.BookListClickListener, BaseBookListFragment.BookListReadyListener {
+public class NearMeActivity extends BaseActivity implements BaseBookListFragment.BookListClickListener,
+        BaseBookListFragment.BookListReadyListener,
+        NavigationView.OnNavigationItemSelectedListener {
 
-    //Map Fragment related
+    //Map BaseFragment related
     private SupportMapFragment mapFragment;
     private GoogleMap map;
     private LocationRequest mLocationRequest;
@@ -55,9 +65,9 @@ public class NearMeActivity extends BaseActivity implements BaseBookListFragment
     private final static String KEY_LOCATION = "location";
     private final static int CONNECTION_FAILURE_RESOLUTION_REQUEST = 9000;
 
-    
+
     //Data
-    
+
     List<User> users;
     HashMap<Book, List<Marker>> books;
     private String TAG = "NearMeActivity";
@@ -65,10 +75,14 @@ public class NearMeActivity extends BaseActivity implements BaseBookListFragment
     private List<Marker> previousMarkers = new ArrayList<>();
     private NearListFragment fragment;
 
+    private NavigationView navigationView;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_near_me);
+        navigationView = findViewById(R.id.nav_view);
+
 
         if (savedInstanceState != null && savedInstanceState.keySet().contains(KEY_LOCATION)) {
             // Since KEY_LOCATION was found in the Bundle, we can be sure that mCurrentLocation
@@ -77,6 +91,29 @@ public class NearMeActivity extends BaseActivity implements BaseBookListFragment
         }
         setupMap();
 
+        DrawerLayout drawer = findViewById(R.id.drawer_layout);
+        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
+                this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close) {
+            @Override
+            public void onDrawerOpened(View drawerView) {
+                super.onDrawerOpened(drawerView);
+                prepareHeader(drawerView);
+            }
+        };
+
+        drawer.addDrawerListener(toggle);
+        toggle.syncState();
+        navigationView.getMenu().getItem(0).setChecked(true);
+        navigationView.setNavigationItemSelectedListener(this);
+
+    }
+
+    private void prepareHeader(View navigationView) {
+        TextView tvEmail = navigationView.findViewById(R.id.tv_email);
+        tvEmail.setText("todo@bookxchange.com");
+        TextView tvName = navigationView.findViewById(R.id.tv_name);
+        ImageView imoji = navigationView.findViewById(R.id.imageView);
+        //TODO set user and email in header
     }
 
     private void populateData() {
@@ -85,7 +122,7 @@ public class NearMeActivity extends BaseActivity implements BaseBookListFragment
         books = new HashMap<>();
 
         for (User u : users) {
-            if (!u.getShareBooks().isEmpty()){
+            if (!u.getShareBooks().isEmpty()) {
                 Marker marker = MapUtils.addMarker(map, u);
                 for (Book b : u.getShareBooks()) {
                     saveMarker(marker, b);
@@ -117,12 +154,9 @@ public class NearMeActivity extends BaseActivity implements BaseBookListFragment
 
 
     private void setupMap() {
-        if (TextUtils.isEmpty(getResources().getString(R.string.google_maps_api_key))) {
-            throw new IllegalStateException("You forgot to supply a Google Maps API key");
-        }
         mapFragment = ((SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map));
         if (mapFragment != null) {
-            mapFragment.getMapAsync(map1 -> loadMap(map1));
+            mapFragment.getMapAsync(this::loadMap);
         } else {
             toast(R.string.map_null_error);
         }
@@ -135,12 +169,10 @@ public class NearMeActivity extends BaseActivity implements BaseBookListFragment
             NearMeActivityPermissionsDispatcher.getMyLocationWithCheck(this);
             NearMeActivityPermissionsDispatcher.startLocationUpdatesWithCheck(this);
             map.setOnMarkerClickListener(marker -> {
-                User u = (User)marker.getTag();
-
+                User u = (User) marker.getTag();
                 Intent i = new Intent(this, UserActivity.class);
                 i.putExtra("user", Parcels.wrap(u));
                 startActivity(i);
-
                 return true;
             });
             populateData();
@@ -169,38 +201,20 @@ public class NearMeActivity extends BaseActivity implements BaseBookListFragment
                     }
                 })
                 .addOnFailureListener(e -> {
-                    Log.e(TAG, e.getMessage(),e);
+                    Log.e(TAG, e.getMessage(), e);
                 });
     }
 
-    /*
-     * Called when the Activity becomes visible.
-    */
-    @Override
-    protected void onStart() {
-        super.onStart();
-    }
-
-    /*
-     * Called when the Activity is no longer visible.
-     */
-    @Override
-    protected void onStop() {
-        super.onStop();
-    }
 
     @Override
     protected void onResume() {
         super.onResume();
-
-        // Display the connection status
 
         if (mCurrentLocation != null) {
             LatLng latLng = new LatLng(mCurrentLocation.getLatitude(), mCurrentLocation.getLongitude());
             CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngZoom(latLng, 17);
             map.moveCamera(cameraUpdate);
             map.animateCamera(CameraUpdateFactory.zoomTo(10), 2000, null);
-
         } else {
             toast(R.string.current_location_null);
         }
@@ -221,13 +235,14 @@ public class NearMeActivity extends BaseActivity implements BaseBookListFragment
         SettingsClient settingsClient = LocationServices.getSettingsClient(this);
         settingsClient.checkLocationSettings(locationSettingsRequest);
         //noinspection MissingPermission
-        getFusedLocationProviderClient(this).requestLocationUpdates(mLocationRequest, new LocationCallback() {
-                    @Override
-                    public void onLocationResult(LocationResult locationResult) {
-                        onLocationChanged(locationResult.getLastLocation());
-                    }
-                },
-                Looper.myLooper());
+        getFusedLocationProviderClient(this)
+                .requestLocationUpdates(mLocationRequest, new LocationCallback() {
+                            @Override
+                            public void onLocationResult(LocationResult locationResult) {
+                                onLocationChanged(locationResult.getLastLocation());
+                            }
+                        },
+                        Looper.myLooper());
     }
 
     public void onLocationChanged(Location location) {
@@ -236,10 +251,7 @@ public class NearMeActivity extends BaseActivity implements BaseBookListFragment
             return;
         }
 
-        // Report to the UI that the location was updated
-
         mCurrentLocation = location;
-
         LatLng latLng = new LatLng(mCurrentLocation.getLatitude(), mCurrentLocation.getLongitude());
         CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngZoom(latLng, 15);
         map.moveCamera(cameraUpdate);
@@ -253,23 +265,36 @@ public class NearMeActivity extends BaseActivity implements BaseBookListFragment
     @Override
     public void onClickListener(Book book) {
 
-        //Reset the color of previous books
-        if(!previousMarkers.isEmpty()){
-            for(Marker m : previousMarkers){
-                m.setIcon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_ORANGE));
-            }
-        }
+        Flow.of(previousMarkers).forEach(m -> m.setIcon(BitmapDescriptorFactory
+                .defaultMarker(BitmapDescriptorFactory.HUE_ORANGE)));
         List<Marker> bookMarkers = books.get(book);
         previousMarkers = bookMarkers;
-        for(Marker m : bookMarkers){
-            m.setIcon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_RED));
-        }
+        Flow.of(bookMarkers).forEach(m -> m.setIcon(BitmapDescriptorFactory
+                .defaultMarker(BitmapDescriptorFactory.HUE_RED)));
 
     }
 
     @Override
     public void onReadyListener(BaseBookListFragment.FragmentType type) {
         fragment.pushData(new ArrayList(books.keySet()));
+    }
+
+    @Override
+    public boolean onNavigationItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.nav_share:
+                toast("Share");
+                break;
+            default:
+                toast(item.getTitle().toString());
+        }
+
+        DrawerLayout drawer = findViewById(R.id.drawer_layout);
+        drawer.closeDrawer(GravityCompat.START);
+        item.setChecked(true);
+        setTitle(item.getTitle());
+
+        return true;
     }
 }
 

@@ -3,12 +3,14 @@ package com.fantastic.bookxchange.activities;
 import android.content.Intent;
 import android.os.Build;
 import android.support.annotation.StringRes;
+import android.support.design.widget.Snackbar;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
 import android.view.MenuItem;
+import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.EditText;
@@ -65,7 +67,15 @@ public class BaseActivity extends AppCompatActivity {
     }
 
     public void toast(@StringRes int resId) {
-        toast(getResources().getString(resId));
+        toast(getString(resId));
+    }
+
+    public void snakebar(View view, String msg) {
+        Snackbar.make(view, msg, Snackbar.LENGTH_LONG).show();
+    }
+
+    public void snakebar(View view, @StringRes int resId) {
+        snakebar(view, getString(resId));
     }
 
     protected void matchStatusBarColor() {
@@ -76,6 +86,7 @@ public class BaseActivity extends AppCompatActivity {
             window.setStatusBarColor(ContextCompat.getColor(getBaseContext(), R.color.colorAccent));
         }
     }
+
 
     public boolean isLollipop() {
         return Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP;
