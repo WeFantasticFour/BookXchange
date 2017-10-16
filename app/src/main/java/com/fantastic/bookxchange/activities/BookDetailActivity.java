@@ -4,12 +4,13 @@ import android.os.Bundle;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
 import com.fantastic.bookxchange.R;
 import com.fantastic.bookxchange.models.Book;
 import com.fantastic.bookxchange.models.User;
 import com.fantastic.bookxchange.utils.DataTest;
 
-import static com.fantastic.bookxchange.R.id.tvEdition;
+
 import static com.fantastic.bookxchange.R.id.tvTitle;
 
 public class BookDetailActivity extends BaseActivity {
@@ -17,7 +18,6 @@ public class BookDetailActivity extends BaseActivity {
     private ImageView ivLargeImage;
     private TextView tvTitle;
     private TextView tvAuthor;
-    private TextView tvDetailPage;
     private TextView tvPublisher;
     private TextView tvEditorialReview;
 
@@ -37,7 +37,6 @@ public class BookDetailActivity extends BaseActivity {
         ivLargeImage = findViewById(R.id.ivLargeImage);
         tvTitle = findViewById(R.id.tvTitle);
         tvAuthor = findViewById(R.id.tvAuthor);
-        tvDetailPage = findViewById(tvEdition);
         tvEditorialReview = findViewById(R.id.tvEditorialReview);
         tvPublisher = findViewById(R.id.tvPublisher);
 
@@ -50,13 +49,12 @@ public class BookDetailActivity extends BaseActivity {
     private void setupView(){
         Glide.with(this)
                 .load(R.drawable.harry_potter_cover)
-                .asBitmap()
-                .centerCrop()
+               // .asBitmap()
+               // .centerCrop()
                 .into(ivLargeImage);
 
         tvTitle.setText(book.getTitle());
         tvAuthor.setText(book.getAuthor());
-        tvDetailPage.setText(book.getShortDescription());
         tvPublisher.setText(book.getPublisher());
         tvEditorialReview.setText(book.getShortDescription());
     }

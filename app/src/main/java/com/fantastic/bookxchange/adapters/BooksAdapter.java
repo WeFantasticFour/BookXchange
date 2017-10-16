@@ -1,6 +1,7 @@
 package com.fantastic.bookxchange.adapters;
 
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Color;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
@@ -11,7 +12,10 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.fantastic.bookxchange.R;
+import com.fantastic.bookxchange.activities.BookDetailActivity;
 import com.fantastic.bookxchange.models.Book;
+
+import org.parceler.Parcels;
 
 import java.util.ArrayList;
 
@@ -78,6 +82,12 @@ public class BooksAdapter extends RecyclerView.Adapter<BooksAdapter.ViewHolder>{
         holder.llBook.setOnClickListener(view -> {
             rowSelectedIndex=position;
             listener.onBookClickListener(book);
+            // call Detail fragment
+            Intent intent = new Intent(context, BookDetailActivity.class);
+            intent.putExtra("book", Parcels.wrap(book));
+            intent.putExtra("isbn", books.get(rowSelectedIndex).getIsbn());
+            context.startActivity(intent);
+
             notifyDataSetChanged();
         });
         if(rowSelectedIndex==position){
