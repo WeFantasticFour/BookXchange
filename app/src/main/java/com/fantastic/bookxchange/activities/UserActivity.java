@@ -105,9 +105,6 @@ public class UserActivity extends BaseActivity implements BaseBookListFragment.B
     @Override
     public void onClickListener(Book book) {
         //TODO Itent to Book Detail page
-        Log.i("Book", book.getTitle().toString());
-        Toast.makeText(this, book.getTitle().toString(), Toast.LENGTH_LONG).show();
-
 
         BookDetailFragment bookDetailFragment = new BookDetailFragment();
         Bundle bundle = new Bundle();

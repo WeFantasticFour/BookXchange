@@ -14,7 +14,9 @@ import retrofit2.http.QueryMap;
 
 public interface BookApi {
 
-    @GET("search.json")
+
+
+    @GET(Constant.SEARCH)
     Call<SearchResult> search(@QueryMap(encoded = true) Map<String, String> options);
 
 }
