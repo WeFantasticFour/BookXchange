@@ -1,9 +1,11 @@
 package com.fantastic.bookxchange.adapters;
 
+import android.app.FragmentManager;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
 import android.support.v4.content.ContextCompat;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -13,6 +15,7 @@ import android.widget.TextView;
 
 import com.fantastic.bookxchange.R;
 import com.fantastic.bookxchange.activities.BookDetailActivity;
+import com.fantastic.bookxchange.fragments.BookDetailFragment;
 import com.fantastic.bookxchange.models.Book;
 
 import org.parceler.Parcels;
@@ -27,6 +30,7 @@ public class BooksAdapter extends RecyclerView.Adapter<BooksAdapter.ViewHolder>{
 
     private ArrayList<Book> books;
     private Context context;
+
 
     BookClickListener listener;
 
@@ -79,14 +83,18 @@ public class BooksAdapter extends RecyclerView.Adapter<BooksAdapter.ViewHolder>{
         final Book book = books.get(position);
         holder.bind(book);
 
-        holder.llBook.setOnClickListener(view -> {
+        holder.llBook.setOnClickListener((View view) -> {
             rowSelectedIndex=position;
             listener.onBookClickListener(book);
             // call Detail fragment
-            Intent intent = new Intent(context, BookDetailActivity.class);
-            intent.putExtra("book", Parcels.wrap(book));
-            intent.putExtra("isbn", books.get(rowSelectedIndex).getIsbn());
-            context.startActivity(intent);
+//            Intent intent = new Intent(context, BookDetailActivity.class);
+//            intent.putExtra("book", Parcels.wrap(book));
+//            intent.putExtra("isbn", books.get(rowSelectedIndex).getIsbn());
+//            context.startActivity(intent);
+
+            android.support.v4.app.FragmentManager manager = ((AppCompatActivity) context).getSupportFragmentManager();
+            BookDetailFragment dialog = BookDetailFragment.newInstance(book);
+            dialog.show(manager, "Dialog");
 
             notifyDataSetChanged();
         });

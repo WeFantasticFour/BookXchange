@@ -16,9 +16,12 @@ import android.widget.TextView;
 import com.bumptech.glide.Glide;
 import com.fantastic.bookxchange.R;
 import com.fantastic.bookxchange.models.Book;
+import com.fantastic.bookxchange.utils.DataTest;
+
+import org.parceler.Parcels;
 
 
-public class BookDetailFragment extends BaseBookListFragment {
+public class BookDetailFragment extends DialogFragment {
 
     static final String TAG = BookDetailFragment.class.getSimpleName();
     public static final String EXTRA_BOOK = "book";
@@ -33,8 +36,6 @@ public class BookDetailFragment extends BaseBookListFragment {
 
 
 
-    private BookListClickListener mListener;
-
     public BookDetailFragment() {
         // Required empty public constructor
     }
@@ -42,9 +43,9 @@ public class BookDetailFragment extends BaseBookListFragment {
 
     public static BookDetailFragment newInstance(Book book) {
         BookDetailFragment fragment = new BookDetailFragment();
-        Bundle args = new Bundle();
-        args.putParcelable(EXTRA_BOOK, (Parcelable) book);
-        fragment.setArguments(args);
+       // Bundle args = new Bundle();
+       // args.putParcelable(EXTRA_BOOK, Parcels.unwrap((Parcelable) book));
+       // fragment.setArguments(args);
         return fragment;
     }
 
@@ -62,13 +63,15 @@ public class BookDetailFragment extends BaseBookListFragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
 
+        mBook = DataTest.getFakeBook().get(0);
+
         Bundle bundle = this.getArguments();
         if(bundle != null){
-            mBook = bundle.getParcelable("book");
-
+            mBook = bundle.getParcelable(EXTRA_BOOK);
         }
 
-        View view =  inflater.inflate(R.layout.fragment_book_detail, null);
+        View view =  inflater.inflate(R.layout.fragment_book_detail, container, false);
+
 
         ivLargeImage = view.findViewById(R.id.ivLargeImage);
         tvTitle = view.findViewById(R.id.tvTitle);
@@ -76,9 +79,10 @@ public class BookDetailFragment extends BaseBookListFragment {
         tvPublisher = view.findViewById(R.id.tvPublisher);
         tvEditorialReview = view.findViewById(R.id.tvEditorialReview);
 
+        getDialog().setTitle(tvTitle.getText().toString());
+
         if(mBook != null){
             setupView();
-
 
         }
         return view;
@@ -99,26 +103,12 @@ public class BookDetailFragment extends BaseBookListFragment {
     }
 
 
-    @Override
-    public void onAttach(Context context) {
-        super.onAttach(context);
-        if (context instanceof BookListClickListener) {
-            mListener = (BookListClickListener) context;
-        }else {
-            throw new ClassCastException(context.toString()
-                    + " must implement onBookClickListener");
-        }
-
-    }
 
     @Override
     public void onDetach() {
         super.onDetach();
-        mListener = null;
+
     }
 
 
-    public interface BookListClickListener {
-        void clickListener(Book book);
-    }
 }
