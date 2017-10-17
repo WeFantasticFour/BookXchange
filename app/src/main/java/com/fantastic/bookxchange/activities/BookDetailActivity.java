@@ -7,7 +7,6 @@ import android.widget.TextView;
 import com.bumptech.glide.Glide;
 import com.fantastic.bookxchange.R;
 import com.fantastic.bookxchange.models.Book;
-import com.fantastic.bookxchange.models.User;
 import com.fantastic.bookxchange.utils.DataTest;
 
 
@@ -38,6 +37,7 @@ public class BookDetailActivity extends BaseActivity {
         tvTitle = findViewById(R.id.tvTitle);
         tvAuthor = findViewById(R.id.tvAuthor);
      //   tvEditorialReview = findViewById(R.id.tvEditorialReview);
+
         tvPublisher = findViewById(R.id.tvPublisher);
 
         setupToolbar();
