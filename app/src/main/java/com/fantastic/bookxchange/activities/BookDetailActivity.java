@@ -7,9 +7,7 @@ import android.widget.TextView;
 import com.bumptech.glide.Glide;
 import com.fantastic.bookxchange.R;
 import com.fantastic.bookxchange.models.Book;
-import com.fantastic.bookxchange.models.User;
 import com.fantastic.bookxchange.utils.DataTest;
-
 
 import static com.fantastic.bookxchange.R.id.tvTitle;
 
@@ -37,6 +35,8 @@ public class BookDetailActivity extends BaseActivity {
         ivLargeImage = findViewById(R.id.ivLargeImage);
         tvTitle = findViewById(R.id.tvTitle);
         tvAuthor = findViewById(R.id.tvAuthor);
+
+        tvDetailPage = findViewById(tvEdition);
         tvEditorialReview = findViewById(R.id.tvEditorialReview);
         tvPublisher = findViewById(R.id.tvPublisher);
 
