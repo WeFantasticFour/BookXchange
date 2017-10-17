@@ -15,7 +15,9 @@ import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.fantastic.bookxchange.R;
+import com.fantastic.bookxchange.api.BookApi;
 import com.fantastic.bookxchange.models.Book;
+import com.fantastic.bookxchange.models.SearchRequest;
 import com.fantastic.bookxchange.utils.DataTest;
 
 import org.parceler.Parcels;
@@ -26,13 +28,14 @@ public class BookDetailFragment extends DialogFragment {
     static final String TAG = BookDetailFragment.class.getSimpleName();
     public static final String EXTRA_BOOK = "book";
 
+
     Book mBook;
 
     private ImageView ivLargeImage;
     private TextView tvTitle;
     private TextView tvAuthor;
     private TextView tvPublisher;
-    private TextView tvEditorialReview;
+   // private TextView tvEditorialReview;
 
 
 
@@ -44,7 +47,7 @@ public class BookDetailFragment extends DialogFragment {
     public static BookDetailFragment newInstance(Book book) {
         BookDetailFragment fragment = new BookDetailFragment();
        // Bundle args = new Bundle();
-       // args.putParcelable(EXTRA_BOOK, Parcels.unwrap((Parcelable) book));
+       // args.putParcelable(EXTRA_BOOK, Parcels.wrap(book));
        // fragment.setArguments(args);
         return fragment;
     }
@@ -65,6 +68,7 @@ public class BookDetailFragment extends DialogFragment {
 
         mBook = DataTest.getFakeBook().get(0);
 
+
         Bundle bundle = this.getArguments();
         if(bundle != null){
             mBook = bundle.getParcelable(EXTRA_BOOK);
@@ -77,7 +81,7 @@ public class BookDetailFragment extends DialogFragment {
         tvTitle = view.findViewById(R.id.tvTitle);
         tvAuthor = view.findViewById(R.id.tvAuthor);
         tvPublisher = view.findViewById(R.id.tvPublisher);
-        tvEditorialReview = view.findViewById(R.id.tvEditorialReview);
+       // tvEditorialReview = view.findViewById(R.id.tvEditorialReview);
 
         getDialog().setTitle(tvTitle.getText().toString());
 
@@ -86,6 +90,10 @@ public class BookDetailFragment extends DialogFragment {
 
         }
         return view;
+
+    }
+
+    private void setUpApi(){
 
     }
 
@@ -99,7 +107,7 @@ public class BookDetailFragment extends DialogFragment {
         tvTitle.setText(mBook.getTitle());
         tvAuthor.setText(mBook.getAuthor());
         tvPublisher.setText(mBook.getPublisher());
-        tvEditorialReview.setText(mBook.getShortDescription());
+       // tvEditorialReview.setText(mBook.getShortDescription());
     }
 
 

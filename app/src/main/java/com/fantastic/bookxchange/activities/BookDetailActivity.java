@@ -19,7 +19,7 @@ public class BookDetailActivity extends BaseActivity {
     private TextView tvTitle;
     private TextView tvAuthor;
     private TextView tvPublisher;
-    private TextView tvEditorialReview;
+  //  private TextView tvEditorialReview;
 
     Book book;
 
@@ -37,7 +37,7 @@ public class BookDetailActivity extends BaseActivity {
         ivLargeImage = findViewById(R.id.ivLargeImage);
         tvTitle = findViewById(R.id.tvTitle);
         tvAuthor = findViewById(R.id.tvAuthor);
-        tvEditorialReview = findViewById(R.id.tvEditorialReview);
+     //   tvEditorialReview = findViewById(R.id.tvEditorialReview);
         tvPublisher = findViewById(R.id.tvPublisher);
 
         setupToolbar();
@@ -56,7 +56,7 @@ public class BookDetailActivity extends BaseActivity {
         tvTitle.setText(book.getTitle());
         tvAuthor.setText(book.getAuthor());
         tvPublisher.setText(book.getPublisher());
-        tvEditorialReview.setText(book.getShortDescription());
+       // tvEditorialReview.setText(book.getShortDescription());
     }
 
     private void setupToolbar(){
