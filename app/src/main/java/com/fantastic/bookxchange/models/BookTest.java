@@ -4,6 +4,8 @@ import android.os.Parcel;
 import android.os.Parcelable;
 import android.text.TextUtils;
 
+import com.fantastic.bookxchange.api.JsonKeys;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -20,6 +22,9 @@ public class BookTest implements Parcelable {
     private String author;
     private String title;
     private String publisher;
+    private String isbn;
+
+
 
     public String getPublisher() {
         return publisher;
@@ -41,6 +46,13 @@ public class BookTest implements Parcelable {
         return author;
     }
 
+    public String getIsbn() {
+        return isbn;
+    }
+
+    public void setIsbn(String isbn) {
+        this.isbn = isbn;
+    }
 
     public String getCoverUrl() {
         return "http://covers.openlibrary.org/b/olid/" + openLibraryId + "-L.jpg?default=false";
@@ -51,13 +63,13 @@ public class BookTest implements Parcelable {
         BookTest bookTest = new BookTest();
         try {
 
-            if (jsonObject.has("cover_edition_key")) {
-                bookTest.openLibraryId = jsonObject.getString("cover_edition_key");
-            } else if(jsonObject.has("edition_key")) {
-                final JSONArray ids = jsonObject.getJSONArray("edition_key");
+            if (jsonObject.has(JsonKeys.COVER_EDITION_KEY)) {
+                bookTest.openLibraryId = jsonObject.getString(JsonKeys.COVER_EDITION_KEY);
+            } else if(jsonObject.has(JsonKeys.EDITION_KEY)) {
+                final JSONArray ids = jsonObject.getJSONArray(JsonKeys.EDITION_KEY);
                 bookTest.openLibraryId = ids.getString(0);
             }
-            bookTest.title = jsonObject.has("title_suggest") ? jsonObject.getString("title_suggest") : "";
+            bookTest.title = jsonObject.has(JsonKeys.BOOK_TITLE) ? jsonObject.getString(JsonKeys.BOOK_TITLE) : "";
             bookTest.author = getAuthor(jsonObject);
             bookTest.publisher = getPublisher(jsonObject);
         } catch (JSONException e) {
@@ -72,7 +84,7 @@ public class BookTest implements Parcelable {
 
     private static String getAuthor(final JSONObject jsonObject) {
         try {
-            final JSONArray authors = jsonObject.getJSONArray("author_name");
+            final JSONArray authors = jsonObject.getJSONArray(JsonKeys.BOOK_AUTHOR);
             int numAuthors = authors.length();
             final String[] authorStrings = new String[numAuthors];
             for (int i = 0; i < numAuthors; ++i) {
@@ -84,7 +96,7 @@ public class BookTest implements Parcelable {
         }
     }    private static String getPublisher(final JSONObject jsonObject) {
         try {
-            final JSONArray pubs = jsonObject.getJSONArray("publisher");
+            final JSONArray pubs = jsonObject.getJSONArray(JsonKeys.BOOK_PUBLISHER);
             int numPubs = pubs.length();
             final String[] pubStrings = new String[numPubs];
             for (int i = 0; i < numPubs; ++i) {

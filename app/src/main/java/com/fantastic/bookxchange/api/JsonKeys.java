@@ -12,6 +12,7 @@ public final class JsonKeys {
     public static final String BOOK_AUTHOR = "author_name";
     public static final String BOOK_PUBLISHER = "publisher";
     public static final String EDITION_KEY = "edition_key";
+    public static final String COVER_EDITION_KEY = "cover_edition_key";
 
     public static final String BIB_KEY = "bib_key";
     public static final String THUMBNAIL = "thumbnail_url";
