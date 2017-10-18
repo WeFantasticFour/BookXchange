@@ -1,5 +1,7 @@
 package com.fantastic.bookxchange.models;
 
+import android.text.TextUtils;
+
 import com.fantastic.bookxchange.api.JsonKeys;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
@@ -8,6 +10,9 @@ import com.google.gson.annotations.SerializedName;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.parceler.Parcel;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by m3libea on 10/11/17.
@@ -20,11 +25,11 @@ public class Book {
     @SerializedName("title")
     public String title;
     @SerializedName("authors")
-    public String authors;
+    public List<String> authors;
     public String author;
     public String publisher;
     @SerializedName("publishers")
-    public String publishers;
+    public List<String> publishers;
     @SerializedName("description")
     public String description;
     @SerializedName("bib_key")
@@ -68,18 +73,25 @@ public class Book {
     }
 
     public String getAuthors() {
-        return authors;
-    }
-
-    public void setAuthors(String authors) {
-        this.authors = authors;
+        if (authors != null) {
+            return TextUtils.join(", ", authors);
+        }
+        return "No author";
     }
 
     public String getPublishers() {
-        return publishers;
+        if(publishers != null){
+            return TextUtils.join(" ", publishers);
+        }
+        return "No publisher";
     }
 
-    public void setPublishers(String publishers) {
+
+    public void setAuthors(List<String> authors) {
+        this.authors = authors;
+    }
+
+    public void setPublishers(List<String> publishers) {
         this.publishers = publishers;
     }
 
@@ -106,6 +118,8 @@ public class Book {
     public void setUrlPicture(String urlPicture) {
         this.urlPicture = urlPicture;
     }
+
+
 
     public static void fromJSON(JSONObject jsonObject){
         //TODO Complete the method to get info from JSON
