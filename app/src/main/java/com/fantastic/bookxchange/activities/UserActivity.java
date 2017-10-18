@@ -43,7 +43,7 @@ import java.util.Locale;
 public class UserActivity extends BaseActivity implements BaseBookListFragment.BookListClickListener,
         BaseBookListFragment.BookListReadyListener,
         ReviewFragment.ReviewDialogListener,
-        MessageFragment.MessageListener{
+        MessageFragment.MessageListener {
 
     ImageView ivProfile;
     TextView tvLocation;
@@ -75,7 +75,7 @@ public class UserActivity extends BaseActivity implements BaseBookListFragment.B
         setupView();
     }
 
-    private void setupView(){
+    private void setupView() {
 
         Geocoder geocoder;
         List<Address> addresses;
@@ -95,7 +95,7 @@ public class UserActivity extends BaseActivity implements BaseBookListFragment.B
 
         if (!user.getReviews().isEmpty()) {
             setReviewNumber();
-        }else{
+        } else {
             tvRN.setVisibility(View.GONE);
         }
 
@@ -116,10 +116,8 @@ public class UserActivity extends BaseActivity implements BaseBookListFragment.B
 
         //TODO setup real Profile image
 
-        Glide.with(this)
+        Glide.with(this).asBitmap()
                 .load(R.drawable.photo_test)
-                .asBitmap()
-                .centerCrop()
                 .into(new BitmapImageViewTarget(ivProfile) {
                     @Override
                     protected void setResource(Bitmap resource) {
@@ -134,9 +132,9 @@ public class UserActivity extends BaseActivity implements BaseBookListFragment.B
     private void setReviewNumber() {
         StringBuilder rev = new StringBuilder();
         rev.append(user.getReviews().size());
-        if(user.getReviews().size() == 1) {
+        if (user.getReviews().size() == 1) {
             rev.append(" Review");
-        }else {
+        } else {
             rev.append(" Reviews");
         }
         tvRN.setText(rev);
@@ -158,7 +156,6 @@ public class UserActivity extends BaseActivity implements BaseBookListFragment.B
     }
 
 
-
     @Override
     public void onClickListener(Book book) {
 
@@ -174,7 +171,7 @@ public class UserActivity extends BaseActivity implements BaseBookListFragment.B
     @Override
     public void onReadyListener(BaseBookListFragment.FragmentType type) {
 
-        switch (type){
+        switch (type) {
             case SHARE:
                 ShareListFragment fmSh = (ShareListFragment) aPager.getRegisteredFragment(0);
 

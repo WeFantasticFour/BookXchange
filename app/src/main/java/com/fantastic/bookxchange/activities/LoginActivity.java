@@ -56,7 +56,7 @@ public class LoginActivity extends BaseActivity {
                     if (task.isSuccessful()) {
                         Log.d(TAG, "signInWithEmail:success");
                         FirebaseUser user = auth.getCurrentUser();
-                        startActivity(MainActivity.class);
+                        startActivity(NearMeActivity.class);
                     } else {
                         Log.w(TAG, "signInWithEmail:failure", task.getException());
                         toast(R.string.auth_failed);

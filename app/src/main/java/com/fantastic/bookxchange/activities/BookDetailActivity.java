@@ -16,7 +16,7 @@ public class BookDetailActivity extends BaseActivity {
     private ImageView ivLargeImage;
     private TextView tvTitle;
     private TextView tvAuthor;
-    private TextView tvDetailPage;
+    //private TextView tvDetailPage;
     private TextView tvPublisher;
     private TextView tvEditorialReview;
 
@@ -35,6 +35,7 @@ public class BookDetailActivity extends BaseActivity {
         tvTitle = findViewById(R.id.tvTitle);
         tvAuthor = findViewById(R.id.tvAuthor);
 //        tvDetailPage = findViewById(tvEdition);
+        //tvDetailPage = findViewById(R.id.tvDetailPage);
         tvEditorialReview = findViewById(R.id.tvEditorialReview);
         tvPublisher = findViewById(R.id.tvPublisher);
 
@@ -44,20 +45,19 @@ public class BookDetailActivity extends BaseActivity {
 
     }
 
-    private void setupView(){
-        Glide.with(this)
+    private void setupView() {
+        Glide.with(this).asBitmap()
                 .load(R.drawable.harry_potter_cover)
-                .asBitmap()
-                .centerCrop()
                 .into(ivLargeImage);
 
         tvTitle.setText(book.getTitle());
         tvAuthor.setText(book.getAuthor());
+        // tvDetailPage.setText(book.getShortDescription());
         tvPublisher.setText(book.getPublisher());
         tvEditorialReview.setText(book.getShortDescription());
     }
 
-    private void setupToolbar(){
+    private void setupToolbar() {
         enableToolbarBackButton();
         setTitle(book.getTitle());
     }

@@ -49,7 +49,6 @@ public class BaseBookListFragment extends Fragment implements BooksAdapter.BookC
 
 
     public BaseBookListFragment() {
-        // Required empty public constructor
     }
 
     public static BaseBookListFragment newInstance() {

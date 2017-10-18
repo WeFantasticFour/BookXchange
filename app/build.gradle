@@ -48,6 +48,8 @@ dependencies {
     compile "com.google.android.gms:play-services-maps:${rootProject.ext.firebaseVersion}"
     compile "com.google.android.gms:play-services-location:${rootProject.ext.firebaseVersion}"
     compile "com.google.firebase:firebase-auth:${rootProject.ext.firebaseVersion}"
+    compile "com.google.firebase:firebase-database:${rootProject.ext.firebaseVersion}"
+    compile "com.google.firebase:firebase-storage:${rootProject.ext.firebaseVersion}"
     compile "com.android.support:recyclerview-v7:${rootProject.ext.supportLibVersion}"
 
     compile 'com.loopj.android:android-async-http:1.4.9'

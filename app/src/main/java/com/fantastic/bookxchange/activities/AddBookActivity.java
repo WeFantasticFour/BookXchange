@@ -2,7 +2,10 @@ package com.fantastic.bookxchange.activities;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.net.Uri;
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
@@ -16,6 +19,11 @@ import com.fantastic.bookxchange.R;
 import com.fantastic.bookxchange.models.Book;
 import com.fantastic.bookxchange.rest.BookClient;
 import com.fantastic.bookxchange.rest.JsonKeys;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.UploadTask;
 import com.google.zxing.integration.android.IntentIntegrator;
 import com.google.zxing.integration.android.IntentResult;
 import com.loopj.android.http.JsonHttpResponseHandler;
@@ -24,47 +32,60 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.ByteArrayOutputStream;
+import java.util.Date;
+
 import cz.msebera.android.httpclient.Header;
 
-public class AddBookActivity extends BaseActivity  {
+public class AddBookActivity extends BaseActivity {
 
-    private EditText isbn, title, author, publisher;
+    private static final String TAG = AddBookActivity.class.getSimpleName();
+    private EditText etBookAuthor;
+    private EditText etBookTitle;
+    private EditText etISBNNumber;
+    private EditText etDescription;
+    private Button btnAddBook;
+    private Button btnAddPhoto;
+    private ImageView ivPicture;
+    private EditText etPublisher;
+
     private ImageView cover;
     private Button scanner, addBook;
 
-     BookClient client;
+    BookClient client;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_book);
 
-        isbn = findViewById(R.id.etISBNNumber);
-        title = findViewById(R.id.etBookTitle);
-        author = findViewById(R.id.etBookAuthor);
-        publisher = findViewById(R.id.etPublisher);
-        cover =  findViewById(R.id.ivCover);
+        etPublisher = findViewById(R.id.etPublisher);
+        cover = findViewById(R.id.ivCover);
         addBook = findViewById(R.id.btnAddBook);
+        showToolbarBackButton();
+        enableToolbarBackButton();
+        etBookTitle = findViewById(R.id.etBookTitle);
+        etBookAuthor = findViewById(R.id.etBookAuthor);
+        etISBNNumber = findViewById(R.id.etISBNNumber);
+        etDescription = findViewById(R.id.etDescription);
+        btnAddBook = findViewById(R.id.btnAddBook);
+        btnAddPhoto = findViewById(R.id.btnAddPhoto);
+        ivPicture = findViewById(R.id.ivPicture);
+        ivPicture.setDrawingCacheEnabled(true);
+        ivPicture.buildDrawingCache();
         scanner = findViewById(R.id.btnScanner);
-
-        addBook.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                fetchBooks(isbn.getText().toString());
-            }
+        btnAddPhoto.setOnClickListener(view -> {
+            Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+            startActivityForResult(intent, 0);
         });
 
-        scanner.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                openScanner();
-            }
-        });
 
+        addBook.setOnClickListener(view -> fetchBooks(getText(etISBNNumber)));
+        scanner.setOnClickListener(view -> openScanner());
 
     }
 
-    public void openScanner(){
+    public void openScanner() {
         final Activity activity = this;
 
         IntentIntegrator integrator = new IntentIntegrator(activity);
@@ -78,6 +99,11 @@ public class AddBookActivity extends BaseActivity  {
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if(requestCode==0){
+            Bitmap bitmap = (Bitmap) data.getExtras().get("data");
+            ivPicture.setImageBitmap(bitmap);
+            return;
+        }
         IntentResult result = IntentIntegrator.parseActivityResult(requestCode, resultCode, data);
         if (result != null) {
             if (result.getContents() == null) {
@@ -86,7 +112,7 @@ public class AddBookActivity extends BaseActivity  {
             } else {
                 Log.d("BookSearchActivity", "Scanned");
                 Toast.makeText(this, "Scanned: " + result.getContents(), Toast.LENGTH_LONG).show();
-                isbn.setText(result.getContents());
+                etISBNNumber.setText(result.getContents());
             }
         } else {
             super.onActivityResult(requestCode, resultCode, data);
@@ -95,36 +121,33 @@ public class AddBookActivity extends BaseActivity  {
 
     }
 
-    public void fetchBooks(String isbn){
-       
+    public void fetchBooks(String isbn) {
+
         client = new BookClient();
-        client.getBooks(isbn, new JsonHttpResponseHandler(){
+        client.getBooks(isbn, new JsonHttpResponseHandler() {
             @Override
-            public void onSuccess(int statusCode, Header[] headers, JSONObject response){
-                try{
+            public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
+                try {
                     JSONArray docs;
-                    if(response != null){
+                    if (response != null) {
                         docs = response.getJSONArray(JsonKeys.DOCS);
                         // final ArrayList<Book> books = Book.fromJson(docs);
 //                        pushData(books);
-                        for (int i = 0; i < docs.length() ; i++) {
+                        for (int i = 0; i < docs.length(); i++) {
                             JSONObject object = docs.getJSONObject(i);
-                            title.setText(object.getString(JsonKeys.TITLE));
-                            author.setText(getAuthor(object));
-                            publisher.setText(getPublisher(object));
-                            Glide.with(getApplicationContext()).load(getCoverUrl()).asBitmap().centerCrop().into(cover);
-
+                            etBookTitle.setText(object.getString(JsonKeys.TITLE));
+                            etBookAuthor.setText(getAuthor(object));
+                            etPublisher.setText(getPublisher(object));
+                            Glide.with(getApplicationContext()).load(getCoverUrl()).into(cover);
                         }
-
-
-
                     }
-                }catch (JSONException e){
+                } catch (JSONException e) {
                     e.printStackTrace();
                 }
             }
+
             @Override
-            public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable){
+            public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
                 super.onFailure(statusCode, headers, responseString, throwable);
             }
 
@@ -143,7 +166,9 @@ public class AddBookActivity extends BaseActivity  {
         } catch (JSONException e) {
             return "";
         }
-    }    private static String getPublisher(final JSONObject jsonObject) {
+    }
+
+    private static String getPublisher(final JSONObject jsonObject) {
         try {
             final JSONArray pubs = jsonObject.getJSONArray(JsonKeys.BOOK_PUBLISHER);
             int numPubs = pubs.length();
@@ -158,9 +183,62 @@ public class AddBookActivity extends BaseActivity  {
     }
 
     public String getCoverUrl() {
+        return "http://covers.openlibrary.org/b/olid/" + getText(etISBNNumber) + "-L.jpg?default=false";
+    }
 
-        return "http://covers.openlibrary.org/b/olid/" + isbn + "-L.jpg?default=false";
+    public void addBook(View view) {
+        if (!validate(etBookTitle, etBookAuthor, etISBNNumber, etDescription)) {
+            return;
+        }
+        String isbn = getText(etISBNNumber);
+        uploadCoverPage(ivPicture.getDrawingCache(), isbn);
 
+    }
+
+    private void saveBook(String url) {
+        String title = getText(etBookTitle);
+        String author = getText(etBookAuthor);
+        String isbn = getText(etISBNNumber);
+        String description = getText(etDescription);
+        Book book = Book.Builder.get()
+                .title(title)
+                .author(author)
+                .urlPicture(url)
+                .description(description)
+                .isbn(isbn)
+                .active(true)
+                .category(Book.CATEGORY.EXCHANGE)
+                .user(FirebaseAuth.getInstance().getCurrentUser().getUid())
+                .build();
+        startProgress();
+        FirebaseDatabase.getInstance()
+                .getReference("books")
+                .push()
+                .setValue(book)
+                .addOnCompleteListener(task -> {
+                    doneProgress();
+                    if (task.getException() != null) {
+                        snakebar(etBookTitle, task.getException().getMessage());
+                    } else {
+                        snakebar(etBookTitle, "Your Content has been saved!");
+                    }
+                });
+    }
+
+    private void uploadCoverPage(Bitmap bitmap, String isbn) {
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        bitmap.compress(Bitmap.CompressFormat.JPEG, 100, baos);
+        byte[] data = baos.toByteArray();
+
+        StorageReference storageRef = FirebaseStorage.getInstance().getReference();
+        storageRef = storageRef.child("book_cover_pages").child(String.format("%s_%s", isbn, new Date().getTime()));
+        UploadTask uploadTask = storageRef.putBytes(data);
+        uploadTask.addOnFailureListener(exception -> {
+            Log.e(TAG, exception.getMessage(), exception);
+        }).addOnSuccessListener(taskSnapshot -> {
+            Uri downloadUrl = taskSnapshot.getDownloadUrl();
+            saveBook(downloadUrl.toString());
+        });
     }
 
 }

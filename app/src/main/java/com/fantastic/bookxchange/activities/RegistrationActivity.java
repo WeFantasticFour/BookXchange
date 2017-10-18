@@ -8,6 +8,7 @@ import android.widget.EditText;
 import com.fantastic.bookxchange.R;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.auth.UserProfileChangeRequest;
 
 public class RegistrationActivity extends BaseActivity {
 
@@ -49,7 +50,13 @@ public class RegistrationActivity extends BaseActivity {
             if (task.isSuccessful()) {
                 Log.d(TAG, "signInWithEmail:success");
                 FirebaseUser user = auth.getCurrentUser();
-                startActivity(MainActivity.class);
+                if (user != null) {
+                    UserProfileChangeRequest profileUpdates = new UserProfileChangeRequest.Builder()
+                            .setDisplayName(getText(etFirstName) + " " + getText(etLastName))
+                            .build();
+                    user.updateProfile(profileUpdates);
+                }
+                startActivity(NearMeActivity.class);
             } else {
                 Log.w(TAG, "signInWithEmail:failure", task.getException());
                 toast(R.string.auth_failed);

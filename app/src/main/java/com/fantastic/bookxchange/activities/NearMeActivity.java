@@ -36,6 +36,7 @@ import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
+import com.google.firebase.auth.FirebaseAuth;
 import com.vistrav.flow.Flow;
 
 import org.parceler.Parcels;
@@ -292,6 +293,13 @@ public class NearMeActivity extends BaseActivity implements BaseBookListFragment
             case R.id.nav_messages:
                 Intent iMessage = new Intent(this, MessagesActivity.class);
                 startActivity(iMessage);
+                break;
+            case R.id.nav_logout:
+                FirebaseAuth.getInstance().signOut();
+                startActivity(LoginActivity.class);
+                break;
+            case R.id.nav_add_book:
+                startActivity(AddBookActivity.class);
                 break;
             default:
                 toast(item.getTitle().toString());
