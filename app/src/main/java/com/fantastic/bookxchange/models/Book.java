@@ -1,17 +1,13 @@
 package com.fantastic.bookxchange.models;
 
-import android.text.TextUtils;
-
-import com.fantastic.bookxchange.api.Constant;
 import com.fantastic.bookxchange.api.JsonKeys;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
 import com.google.gson.annotations.SerializedName;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.parceler.Parcel;
-
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * Created by m3libea on 10/11/17.
@@ -20,42 +16,39 @@ import java.util.List;
 @Parcel
 public class Book {
 
-    @SerializedName("edition_key")
-    private List<String> editionKeys;
-    @SerializedName("title_suggest")
+
+    @SerializedName("title")
     public String title;
-    @SerializedName("author_name")
+    @SerializedName("authors")
+    public String authors;
     public String author;
     public String publisher;
-    public List<String> authors;
     @SerializedName("publishers")
-    public List<String> publishers;
-    @SerializedName("isbn")
-    public List<String> isbn;
-    @SerializedName("cover_edition_key")
+    public String publishers;
+    @SerializedName("description")
+    public String description;
+    @SerializedName("bib_key")
+    public String isbn;
+    @SerializedName("thumbnail_url")
     public String urlPicture;
 
-    //public String shortDescription;
-
+    public Book() {
+        this.title = title;
+        this.author = author;
+        this.publisher = publisher;
+        this.authors = authors;
+        this.publishers = publishers;
+        this.description = description;
+        this.isbn = isbn;
+        this.urlPicture = urlPicture;
+    }
 
     public String getTitle() {
         return title;
     }
 
-    public String getAuthors() {
-        if(authors != null)
-        {
-            return TextUtils.join(", ", authors);
-        }
-
-        return "No author";
-    }
-
-    public String getPublishers() {
-        if(publishers != null && publishers.size()>0){
-            return publishers.get(0);
-        }
-        return "No Publisher";
+    public void setTitle(String title) {
+        this.title = title;
     }
 
     public String getAuthor() {
@@ -74,70 +67,49 @@ public class Book {
         this.publisher = publisher;
     }
 
-    public String getIsbn() {
-        if(isbn != null && isbn.size()>0){
-            return isbn.get(0);
-        }
-        return "No ISBN";
+    public String getAuthors() {
+        return authors;
     }
 
-
-    public List<String> getEditionKeys() {
-        return editionKeys;
-    }
-
-    public void setEditionKeys(List<String> editionKeys) {
-        this.editionKeys = editionKeys;
-    }
-
-    public void setAuthors(List<String> authors) {
+    public void setAuthors(String authors) {
         this.authors = authors;
     }
 
-    public void setPublishers(List<String> publishers) {
+    public String getPublishers() {
+        return publishers;
+    }
+
+    public void setPublishers(String publishers) {
         this.publishers = publishers;
     }
 
-    public void setIsbn(List<String> isbn) {
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public String getIsbn() {
+        return isbn;
+    }
+
+    public void setIsbn(String isbn) {
         this.isbn = isbn;
     }
 
-    public String getOLibraryId(){
-        if(editionKeys != null && editionKeys.size() > 0){
-            return editionKeys.get(0);
-        }
+    public String getUrlPicture() {
         return urlPicture;
     }
-
-    public String getUrlPicture() {
-        return Constant.STATIC_BASE_URL + getOLibraryId() + "-L.jpg?default=false";
-    }
-
-//    public String getShortDescription() {
-//        return shortDescription;
-//    }
-
-    public void setTitle(String title) {
-        this.title = title;
-    }
-
-
 
     public void setUrlPicture(String urlPicture) {
         this.urlPicture = urlPicture;
     }
 
-//    public void setShortDescription(String shortDescription) {
-//        this.shortDescription = shortDescription;
-//    }
-
-    public static Book fromJSON(JSONObject jsonObject){
+    public static void fromJSON(JSONObject jsonObject){
         //TODO Complete the method to get info from JSON
 
-        Book book = new Book();
-
-
-        return new Book();
     }
 
     public static void toJSON(Book book){
