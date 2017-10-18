@@ -3,11 +3,14 @@ package com.fantastic.bookxchange.models;
 import android.text.TextUtils;
 
 import com.fantastic.bookxchange.api.Constant;
+import com.fantastic.bookxchange.api.JsonKeys;
 import com.google.gson.annotations.SerializedName;
 
+import org.json.JSONException;
 import org.json.JSONObject;
 import org.parceler.Parcel;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -78,9 +81,6 @@ public class Book {
         return "No ISBN";
     }
 
-    public void setIsbn(List<String> isbn) {
-        this.isbn = isbn;
-    }
 
     public List<String> getEditionKeys() {
         return editionKeys;
@@ -96,6 +96,10 @@ public class Book {
 
     public void setPublishers(List<String> publishers) {
         this.publishers = publishers;
+    }
+
+    public void setIsbn(List<String> isbn) {
+        this.isbn = isbn;
     }
 
     public String getOLibraryId(){
@@ -129,6 +133,8 @@ public class Book {
 
     public static Book fromJSON(JSONObject jsonObject){
         //TODO Complete the method to get info from JSON
+
+        Book book = new Book();
 
 
         return new Book();

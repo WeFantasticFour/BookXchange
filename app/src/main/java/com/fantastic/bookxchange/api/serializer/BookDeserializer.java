@@ -13,42 +13,68 @@ import com.google.gson.JsonParseException;
 
 import java.lang.reflect.Type;
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by gretel on 10/17/17.
  */
 
-public class BookDeserializer implements JsonDeserializer<SearchResult> {
+public class BookDeserializer implements JsonDeserializer<Book> {
     @Override
-    public SearchResult deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context) throws JsonParseException {
+    public Book deserialize(JsonElement json,
+                                    Type typeOfT, JsonDeserializationContext context) throws JsonParseException {
 
-        Gson gson = new Gson();
-        SearchResult searchResult = gson.fromJson(json, SearchResult.class);
 
-        JsonArray searchResultData = json.getAsJsonObject().getAsJsonArray(JsonKeys.BOOK_RESPONSE_ARRAY);
-
+        JsonArray bookResponse = json.getAsJsonObject().getAsJsonArray(JsonKeys.BOOK_RESPONSE_ARRAY);
 
 
 
+        final JsonObject jsonObject = json.getAsJsonObject();
+        final JsonElement jsonTitle = jsonObject.get(JsonKeys.BOOK_TITLE);
+        final String title = jsonTitle.getAsString();
 
-        return null;
-    }
-
-    private ArrayList<Book> deserializerBookFromJson(JsonArray searchResultData){
-        ArrayList<Book> books = new ArrayList<>();
-        for (int i = 0; i < searchResultData.size(); i++) {
-            JsonObject searchResultDataObjetct = searchResultData.get(i).getAsJsonObject();
-            String title = searchResultDataObjetct.getAsJsonObject(JsonKeys.BOOK_TITLE).getAsString();
-            String author = searchResultDataObjetct.getAsJsonObject(JsonKeys.BOOK_AUTHOR).getAsString();
-            String publisher = searchResultDataObjetct.getAsJsonObject(JsonKeys.BOOK_PUBLISHER).getAsString();
-            String isbn = searchResultDataObjetct.getAsJsonObject(JsonKeys.BOOK_ISBN).getAsString();
-            String edition_key = searchResultDataObjetct.getAsJsonObject(JsonKeys.EDITION_KEY).getAsString();
-
-            Book currentBook = new Book();
-
-
-
+        final JsonArray jsonAuthors = jsonObject.get(JsonKeys.BOOK_AUTHOR).getAsJsonArray();
+        final String[] authors = new String[jsonAuthors.size()];
+        for (int i = 0; i < authors.length ; i++) {
+            final JsonElement jsonAuthor = jsonAuthors.get(i);
+            authors[i] = jsonAuthor.getAsString();
         }
 
+        final JsonArray jsonIsbns = jsonObject.get(JsonKeys.BOOK_ISBN).getAsJsonArray();
+        final String[] isbns = new String[jsonIsbns.size()];
+        for (int i = 0; i < isbns.length ; i++) {
+            final JsonElement jsonIsbn = jsonIsbns.get(i);
+            isbns[i] = jsonIsbn.getAsString();
+        }
+
+        final JsonArray jsonEditionKeys = jsonObject.get(JsonKeys.EDITION_KEY).getAsJsonArray();
+        final String[] editionKeys = new String[jsonEditionKeys.size()];
+        for (int i = 0; i < editionKeys.length ; i++) {
+            final JsonElement jsonEditionKey = jsonEditionKeys.get(i);
+            editionKeys[i] = jsonEditionKey.getAsString();
+        }
+
+        final JsonArray jsonPublishers = jsonObject.get(JsonKeys.BOOK_PUBLISHER).getAsJsonArray();
+        final String[] publishers = new String[jsonPublishers.size()];
+        for (int i = 0; i < publishers.length ; i++) {
+            final JsonElement jsonPublisher = jsonPublishers.get(i);
+            publishers[i] = jsonPublisher.getAsString();
+        }
+
+
+
+        final Book book = new Book();
+        book.setIsbn(isbns);
+        book.setAuthors(authors);
+        book.setTitle(title);
+        book.setEditionKeys(editionKeys);
+        book.setPublishers(publishers);
+       // book.setUrlPicture(urlPicture);
+
+        return book;
+
+
     }
+
 }
+
