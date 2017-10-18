@@ -121,8 +121,27 @@ public class Book {
 
 
 
-    public static void fromJSON(JSONObject jsonObject){
+    public static Book fromJSON(JSONObject jsonObject){
         //TODO Complete the method to get info from JSON
+
+        Book book = new Book();
+
+        try{
+
+            book.isbn = jsonObject.getString(JsonKeys.BIB_KEY);
+            book.title = jsonObject.getString(JsonKeys.TITLE);
+            book.description = jsonObject.getString(JsonKeys.DESCRIPTION);
+            book.urlPicture = jsonObject.getString(JsonKeys.THUMBNAIL);
+            List<String> authorArray = (List<String>) jsonObject.getJSONArray(JsonKeys.AUTHORS);
+            book.authors = authorArray;
+            List<String> publisherArray = (List<String>) jsonObject.getJSONArray(JsonKeys.PUBLISHERS);
+            book.publishers = publisherArray;
+
+        }catch (JSONException e){
+            e.printStackTrace();
+        }
+
+        return book;
 
     }
 
