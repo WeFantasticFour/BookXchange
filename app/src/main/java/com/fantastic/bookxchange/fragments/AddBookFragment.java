@@ -73,8 +73,6 @@ public class AddBookFragment extends Fragment {
             }
         });
 
-
-
         return view;
 
     }

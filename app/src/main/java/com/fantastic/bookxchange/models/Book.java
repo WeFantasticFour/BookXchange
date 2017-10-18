@@ -7,6 +7,7 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.annotations.SerializedName;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.parceler.Parcel;
@@ -132,6 +133,8 @@ public class Book {
             book.title = jsonObject.getString(JsonKeys.TITLE);
             book.description = jsonObject.getString(JsonKeys.DESCRIPTION);
             book.urlPicture = jsonObject.getString(JsonKeys.THUMBNAIL);
+
+
             List<String> authorArray = (List<String>) jsonObject.getJSONArray(JsonKeys.AUTHORS);
             book.authors = authorArray;
             List<String> publisherArray = (List<String>) jsonObject.getJSONArray(JsonKeys.PUBLISHERS);
@@ -144,6 +147,7 @@ public class Book {
         return book;
 
     }
+
 
     public static void toJSON(Book book){
         //TODO Complete the method to send the info tho Firebase

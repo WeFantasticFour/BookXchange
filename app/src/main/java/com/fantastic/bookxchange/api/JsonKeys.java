@@ -6,7 +6,7 @@ package com.fantastic.bookxchange.api;
 
 public final class JsonKeys {
 
-    public static final String BOOK_RESPONSE_ARRAY = "docs";
+    public static final String DOCS = "docs";
     public static final String BOOK_TITLE = "title_suggest";
     public static final String BOOK_ISBN = "isbn";
     public static final String BOOK_AUTHOR = "author_name";
