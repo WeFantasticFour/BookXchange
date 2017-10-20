@@ -3,7 +3,6 @@ package com.fantastic.bookxchange.activities;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.view.View;
 
 import com.fantastic.bookxchange.R;
 import com.fantastic.bookxchange.adapters.ReviewsAdapter;
@@ -14,8 +13,6 @@ import com.fantastic.bookxchange.utils.ListDivider;
 import org.parceler.Parcels;
 
 import java.util.List;
-
-import static com.fantastic.bookxchange.R.id.rvBooks;
 
 public class ReviewActivity extends BaseActivity {
 
@@ -54,9 +51,5 @@ public class ReviewActivity extends BaseActivity {
         //Line between rows
         ListDivider line = new ListDivider(this);
         rvReviews.addItemDecoration(line);
-    }
-
-    public void addReview(View view) {
-        //TODO Create Review Dialog Fragment
     }
 }

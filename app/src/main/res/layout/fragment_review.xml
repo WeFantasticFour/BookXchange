@@ -5,14 +5,27 @@
     android:orientation="vertical"
     tools:context="com.fantastic.bookxchange.fragments.ReviewFragment">
 
-    <android.support.v7.widget.RecyclerView
+    <RatingBar
         android:layout_width="wrap_content"
-        android:layout_height="match_parent">
-
-    </android.support.v7.widget.RecyclerView>
-    <Button
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:id="@+id/rbStars"
+        android:numStars="5"
+        android:layout_centerHorizontal="true" />
+    <EditText
+        android:id="@+id/etReview"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:gravity="top"
+        android:inputType="textMultiLine"
+        android:background="@android:color/transparent"
+        android:padding="10dp"
+        android:lines="6"/>
+    <Button
+        android:id="@+id/btnAddReview"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/colorPrimary"
+        android:textColor="@color/white"
         android:text="@string/add_review"/>
-
 </LinearLayout>

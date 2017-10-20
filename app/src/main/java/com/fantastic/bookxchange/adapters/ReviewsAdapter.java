@@ -51,7 +51,8 @@ public class ReviewsAdapter extends RecyclerView.Adapter<ReviewsAdapter.ViewHold
         }
 
         public void bind(Review review){
-            tvUsername.setText(review.getAuthor().getName());
+            String userName = review.getAuthor() != null ? review.getAuthor().getName() : "Anonymous";
+            tvUsername.setText(userName);
             tvDate.setText(review.getFormattedDate());
             tvReview.setText(review.getReview());
             rbStars.setRating(review.getStars());
@@ -59,7 +60,7 @@ public class ReviewsAdapter extends RecyclerView.Adapter<ReviewsAdapter.ViewHold
             stars.getDrawable(2).setColorFilter(ResourcesCompat.getColor(context.getResources(), R.color.colorPrimary, null), PorterDuff.Mode.SRC_ATOP);
 
 
-            if(review.getAuthor().getUrlProfileImage()!= null){
+            if(review.getAuthor()!= null && review.getAuthor().getUrlProfileImage()!= null){
                 ivProfile.setVisibility(View.VISIBLE);
                 Glide.with(context)
                         .load(review.getAuthor().getUrlProfileImage())

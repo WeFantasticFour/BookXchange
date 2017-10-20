@@ -8,6 +8,7 @@ import android.location.Address;
 import android.location.Geocoder;
 import android.os.Bundle;
 import android.support.design.widget.TabLayout;
+import android.support.v4.app.FragmentManager;
 import android.support.v4.content.res.ResourcesCompat;
 import android.support.v4.graphics.drawable.RoundedBitmapDrawable;
 import android.support.v4.graphics.drawable.RoundedBitmapDrawableFactory;
@@ -23,10 +24,13 @@ import com.fantastic.bookxchange.R;
 import com.fantastic.bookxchange.adapters.BookFragmentPagerAdapter;
 import com.fantastic.bookxchange.fragments.BaseBookListFragment;
 import com.fantastic.bookxchange.fragments.ExchangeListFragment;
+import com.fantastic.bookxchange.fragments.ReviewFragment;
 import com.fantastic.bookxchange.fragments.ShareListFragment;
 import com.fantastic.bookxchange.fragments.WishListFragment;
 import com.fantastic.bookxchange.models.Book;
+import com.fantastic.bookxchange.models.Review;
 import com.fantastic.bookxchange.models.User;
+import com.github.clans.fab.FloatingActionMenu;
 
 import org.parceler.Parcels;
 
@@ -34,12 +38,15 @@ import java.io.IOException;
 import java.util.List;
 import java.util.Locale;
 
-public class UserActivity extends BaseActivity implements BaseBookListFragment.BookListClickListener, BaseBookListFragment.BookListReadyListener {
+public class UserActivity extends BaseActivity implements BaseBookListFragment.BookListClickListener, BaseBookListFragment.BookListReadyListener, ReviewFragment.ReviewDialogListener {
 
     ImageView ivProfile;
     TextView tvLocation;
     RatingBar ratingBar;
     TextView tvRN;
+
+    FloatingActionMenu faMenu;
+    com.github.clans.fab.FloatingActionButton faMessage, faReview;
 
     User user;
     private BookFragmentPagerAdapter aPager;
@@ -72,6 +79,7 @@ public class UserActivity extends BaseActivity implements BaseBookListFragment.B
             addresses = geocoder.getFromLocation(user.getLocation().latitude, user.getLocation().longitude, 1);
             tvLocation.setText(addresses.get(0).getLocality() + ", " + addresses.get(0).getAdminArea());
         } catch (IOException e) {
+            tvLocation.setVisibility(View.GONE);
             e.printStackTrace();
         }
 
@@ -80,10 +88,24 @@ public class UserActivity extends BaseActivity implements BaseBookListFragment.B
         LayerDrawable stars = (LayerDrawable) ratingBar.getProgressDrawable();
         stars.getDrawable(2).setColorFilter(ResourcesCompat.getColor(getResources(), R.color.colorPrimary, null), PorterDuff.Mode.SRC_ATOP);
 
-        if (!user.getReviews().isEmpty()){
-            tvRN.setVisibility(View.VISIBLE);
-            tvRN.setText(Integer.toString(user.getReviews().size()));
+        if (!user.getReviews().isEmpty()) {
+            setReviewNumber();
+        }else{
+            tvRN.setVisibility(View.GONE);
         }
+
+        faMessage = findViewById(R.id.menu_message);
+        faReview = findViewById(R.id.menu_review);
+
+        faMessage.setOnClickListener(view -> {
+            //TODO Message
+        });
+
+        faReview.setOnClickListener(view -> {
+            FragmentManager fm = getSupportFragmentManager();
+            ReviewFragment reviewCompose = ReviewFragment.newInstance();
+            reviewCompose.show(fm, "fragment_review");
+        });
 
         //TODO setup real Profile image
         Glide.with(this)
@@ -99,6 +121,17 @@ public class UserActivity extends BaseActivity implements BaseBookListFragment.B
                         ivProfile.setImageDrawable(circularBitmapDrawable);
                     }
                 });
+    }
+
+    private void setReviewNumber() {
+        StringBuilder rev = new StringBuilder();
+        rev.append(user.getReviews().size());
+        if(user.getReviews().size() == 1) {
+            rev.append(" Review");
+        }else {
+            rev.append(" Reviews");
+        }
+        tvRN.setText(rev);
     }
 
     private void setupToolbar() {
@@ -149,5 +182,19 @@ public class UserActivity extends BaseActivity implements BaseBookListFragment.B
         Intent i = new Intent(this, ReviewActivity.class);
         i.putExtra("user", Parcels.wrap(user));
         startActivity(i);
+    }
+
+
+    @Override
+    public void onAddReview(Review review) {
+        //TODO save review on Firebase
+        //TODO add author
+        //review.setAuthor(FirebaseAuth.getInstance().getCurrentUser());
+
+        user.addReview(review);
+        setReviewNumber();
+        ratingBar.setRating(user.getRating());
+
+
     }
 }

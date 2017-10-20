@@ -17,7 +17,7 @@ public class Review {
 
     public String id;
     public User author;
-    public int stars;
+    public float stars;
     public String review;
     public Date date;
 
@@ -49,7 +49,7 @@ public class Review {
         this.author = author;
     }
 
-    public int getStars() {
+    public float getStars() {
         return stars;
     }
 
@@ -57,7 +57,7 @@ public class Review {
         return date;
     }
 
-    public void setStars(int stars) {
+    public void setStars(float stars) {
         this.stars = stars;
     }
 
