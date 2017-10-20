@@ -45,11 +45,12 @@
             </intent-filter>
         </activity>
         <activity android:name=".activities.RegistrationActivity" />
-        <activity android:name=".activities.UserActivity"/>
+        <activity android:name=".activities.UserActivity" />
         <activity android:name=".activities.AddBookActivity" />
         <activity android:name=".activities.BookDetailActivity" />
         <activity android:name=".activities.NearMeActivity" />
-        <activity android:name=".activities.MessageActivity"/>
+        <activity android:name=".activities.MessageActivity" />
+        <activity android:name=".activities.ReviewActivity"></activity>
     </application>
 
 </manifest>

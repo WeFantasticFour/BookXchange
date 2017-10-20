@@ -40,4 +40,7 @@
     <string name="profile">Profile</string>
     <string name="action_settings">Settings</string>
     <string name="welcome">Welcome</string>
+    <string name="add_review">Add Review</string>
+    <string name="example_review">Excelent! Just on time to share our books!</string>
+    <string name="hint_review">Write your review</string>
 </resources>
