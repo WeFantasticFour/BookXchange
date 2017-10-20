@@ -24,6 +24,7 @@ import com.fantastic.bookxchange.R;
 import com.fantastic.bookxchange.adapters.BookFragmentPagerAdapter;
 import com.fantastic.bookxchange.fragments.BaseBookListFragment;
 import com.fantastic.bookxchange.fragments.ExchangeListFragment;
+import com.fantastic.bookxchange.fragments.MessageFragment;
 import com.fantastic.bookxchange.fragments.ReviewFragment;
 import com.fantastic.bookxchange.fragments.ShareListFragment;
 import com.fantastic.bookxchange.fragments.WishListFragment;
@@ -38,7 +39,10 @@ import java.io.IOException;
 import java.util.List;
 import java.util.Locale;
 
-public class UserActivity extends BaseActivity implements BaseBookListFragment.BookListClickListener, BaseBookListFragment.BookListReadyListener, ReviewFragment.ReviewDialogListener {
+public class UserActivity extends BaseActivity implements BaseBookListFragment.BookListClickListener,
+        BaseBookListFragment.BookListReadyListener,
+        ReviewFragment.ReviewDialogListener,
+        MessageFragment.MessageListener{
 
     ImageView ivProfile;
     TextView tvLocation;
@@ -98,7 +102,9 @@ public class UserActivity extends BaseActivity implements BaseBookListFragment.B
         faReview = findViewById(R.id.menu_review);
 
         faMessage.setOnClickListener(view -> {
-            //TODO Message
+            FragmentManager fm = getSupportFragmentManager();
+            MessageFragment messageCompose = MessageFragment.newInstance();
+            messageCompose.show(fm, "fragment_message");
         });
 
         faReview.setOnClickListener(view -> {
@@ -108,6 +114,7 @@ public class UserActivity extends BaseActivity implements BaseBookListFragment.B
         });
 
         //TODO setup real Profile image
+
         Glide.with(this)
                 .load(R.drawable.photo_test)
                 .asBitmap()
@@ -153,7 +160,7 @@ public class UserActivity extends BaseActivity implements BaseBookListFragment.B
 
     @Override
     public void onClickListener(Book book) {
-        //TODO Itent to Book Detail page
+        //TODO Itent to Book Detail Fragment
     }
 
     @Override
@@ -194,7 +201,11 @@ public class UserActivity extends BaseActivity implements BaseBookListFragment.B
         user.addReview(review);
         setReviewNumber();
         ratingBar.setRating(user.getRating());
+    }
 
-
+    @Override
+    public void onAddMessage(String s) {
+        //TODO send message
+        toast(s);
     }
 }

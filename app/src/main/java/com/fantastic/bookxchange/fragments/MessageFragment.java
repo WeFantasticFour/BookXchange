@@ -31,7 +31,11 @@ public class MessageFragment extends BottomSheetDialogFragment {
     private TextView tvCharsRemaining;
 
     User user;
+    private MessageListener mListener;
 
+    public interface MessageListener{
+        void onAddMessage(String s);
+    }
 
     public MessageFragment() {
         //Empty constructor is required for DialogFragment
@@ -40,8 +44,6 @@ public class MessageFragment extends BottomSheetDialogFragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState){
         return inflater.inflate(R.layout.fragment_message, container);
-
-
     }
 
     public static MessageFragment newInstance() {
@@ -49,8 +51,6 @@ public class MessageFragment extends BottomSheetDialogFragment {
 
         return messageFragment;
     }
-
-
 
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState){
@@ -93,21 +93,16 @@ public class MessageFragment extends BottomSheetDialogFragment {
             }
         });
 
-        btnGoToSendMessage.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                //TODO SEND MESSAGE
-            }
-        });
-
-
-
-        btnCancel.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
+        btnGoToSendMessage.setOnClickListener(v -> {
+            if(etMessage.getText().toString().replaceAll("\\s+","").length() == 0) {
+                Toast.makeText(getContext(), "Empty message", Toast.LENGTH_SHORT);
+            }else {
+                addMessage(etMessage.getText().toString());
                 dismiss();
             }
         });
+
+        btnCancel.setOnClickListener(v -> dismiss());
 
         setCharsRemaining(TOTAL_CHARS);
 
@@ -116,8 +111,21 @@ public class MessageFragment extends BottomSheetDialogFragment {
     private void setCharsRemaining(int totalChars) {
         Resources res = getContext().getResources();
         tvCharsRemaining.setText(String.format(res.getString(R.string.number), totalChars));
-
     }
 
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        if (context instanceof MessageListener) {
+            mListener = (MessageListener) context;
+        } else {
+            throw new RuntimeException(context.toString()
+                    + " must implement OnFragmentInteractionListener");
+        }
+    }
 
+    public void addMessage(String s) {
+        if (mListener != null) {
+            mListener.onAddMessage(s);
+        }
+    }
 }

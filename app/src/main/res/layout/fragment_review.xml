@@ -25,7 +25,7 @@
         android:id="@+id/btnAddReview"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/colorPrimary"
+        android:background="@color/colorAccent"
         android:textColor="@color/white"
         android:text="@string/add_review"/>
 </LinearLayout>
