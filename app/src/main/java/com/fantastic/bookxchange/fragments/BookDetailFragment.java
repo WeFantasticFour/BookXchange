@@ -46,9 +46,9 @@ public class BookDetailFragment extends DialogFragment {
 
     public static BookDetailFragment newInstance(Book book) {
         BookDetailFragment fragment = new BookDetailFragment();
-       // Bundle args = new Bundle();
-       // args.putParcelable(EXTRA_BOOK, Parcels.wrap(book));
-       // fragment.setArguments(args);
+        Bundle args = new Bundle();
+        args.putParcelable(EXTRA_BOOK, Parcels.wrap(book));
+        fragment.setArguments(args);
         return fragment;
     }
 
@@ -57,7 +57,6 @@ public class BookDetailFragment extends DialogFragment {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
             mBook = getArguments().getParcelable(EXTRA_BOOK);
-            Log.i("Book", String.valueOf(mBook.getTitle()));
 
         }
     }
@@ -81,7 +80,7 @@ public class BookDetailFragment extends DialogFragment {
         tvTitle = view.findViewById(R.id.tvTitle);
         tvAuthor = view.findViewById(R.id.tvAuthor);
         tvPublisher = view.findViewById(R.id.tvPublisher);
-       // tvEditorialReview = view.findViewById(R.id.tvEditorialReview);
+
 
         getDialog().setTitle(tvTitle.getText().toString());
 
@@ -93,15 +92,12 @@ public class BookDetailFragment extends DialogFragment {
 
     }
 
-    private void setUpApi(){
-
-    }
 
     private void setupView(){
         Glide.with(this)
                 .load(R.drawable.harry_potter_cover)
-                 //.asBitmap()
-                 //.centerCrop()
+                .asBitmap()
+                .centerCrop()
                 .into(ivLargeImage);
 
         tvTitle.setText(mBook.getTitle());

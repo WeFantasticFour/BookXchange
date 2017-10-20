@@ -31,6 +31,7 @@ public class BaseBookListFragment extends Fragment implements BooksAdapter.BookC
     protected BookListReadyListener readyListener;
 
 
+
     public interface BookListClickListener {
         void onClickListener(Book book);
     }
@@ -39,7 +40,8 @@ public class BaseBookListFragment extends Fragment implements BooksAdapter.BookC
         SHARE,
         EXCHANGE,
         WISHLIST,
-        NEAR
+        NEAR,
+        SEARCH
     }
 
     public interface BookListReadyListener{
@@ -97,6 +99,7 @@ public class BaseBookListFragment extends Fragment implements BooksAdapter.BookC
         clickListener.onClickListener(book);
     }
 
+
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
@@ -113,6 +116,7 @@ public class BaseBookListFragment extends Fragment implements BooksAdapter.BookC
             throw new ClassCastException(context.toString()
                     + " must implement onReadyListener");
         }
+
     }
 
     public void pushData(List<Book> books) {

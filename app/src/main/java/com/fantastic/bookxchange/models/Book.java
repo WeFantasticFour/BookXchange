@@ -23,47 +23,10 @@ import java.util.List;
 public class Book {
 
 
-    @SerializedName("title")
-    public String title;
-    @SerializedName("authors")
-    public List<String> authors;
-    public String author;
-    public String publisher;
-    @SerializedName("publishers")
-    public List<String> publishers;
-    @SerializedName("description")
-    public String description;
-    @SerializedName("bib_key")
     public String isbn;
-    @SerializedName("thumbnail_url")
-    public String urlPicture;
-
-    public Book() {
-        this.title = title;
-        this.author = author;
-        this.publisher = publisher;
-        this.authors = authors;
-        this.publishers = publishers;
-        this.description = description;
-        this.isbn = isbn;
-        this.urlPicture = urlPicture;
-    }
-
-    public String getTitle() {
-        return title;
-    }
-
-    public void setTitle(String title) {
-        this.title = title;
-    }
-
-    public String getAuthor() {
-        return author;
-    }
-
-    public void setAuthor(String author) {
-        this.author = author;
-    }
+    public String author;
+    public String title;
+    public String publisher;
 
     public String getPublisher() {
         return publisher;
@@ -73,84 +36,97 @@ public class Book {
         this.publisher = publisher;
     }
 
-    public String getAuthors() {
-        if (authors != null) {
-            return TextUtils.join(", ", authors);
-        }
-        return "No author";
-    }
-
-    public String getPublishers() {
-        if(publishers != null){
-            return TextUtils.join(" ", publishers);
-        }
-        return "No publisher";
-    }
-
-
-    public void setAuthors(List<String> authors) {
-        this.authors = authors;
-    }
-
-    public void setPublishers(List<String> publishers) {
-        this.publishers = publishers;
-    }
-
-    public String getDescription() {
-        return description;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
-    }
-
     public String getIsbn() {
         return isbn;
     }
 
-    public void setIsbn(String isbn) {
-        this.isbn = isbn;
+    public String getTitle() {
+        return title;
     }
 
-    public String getUrlPicture() {
-        return urlPicture;
+    public String getAuthor() {
+        return author;
     }
 
-    public void setUrlPicture(String urlPicture) {
-        this.urlPicture = urlPicture;
+    // Get book cover from covers API
+    public String getCoverUrl() {
+
+        return "http://covers.openlibrary.org/b/olid/" + isbn + "-L.jpg?default=false";
+
     }
 
-
-
-    public static Book fromJSON(JSONObject jsonObject){
-        //TODO Complete the method to get info from JSON
-
+    // Returns a Book given the expected JSON
+    public static Book fromJson(JSONObject jsonObject) {
         Book book = new Book();
-
-        try{
-
-            book.isbn = jsonObject.getString(JsonKeys.BIB_KEY);
-            book.title = jsonObject.getString(JsonKeys.TITLE);
-            book.description = jsonObject.getString(JsonKeys.DESCRIPTION);
-            book.urlPicture = jsonObject.getString(JsonKeys.THUMBNAIL);
-
-
-            List<String> authorArray = (List<String>) jsonObject.getJSONArray(JsonKeys.AUTHORS);
-            book.authors = authorArray;
-            List<String> publisherArray = (List<String>) jsonObject.getJSONArray(JsonKeys.PUBLISHERS);
-            book.publishers = publisherArray;
-
-        }catch (JSONException e){
+        try {
+            // Deserialize json into object fields
+            // Check if a cover edition is available
+            if (jsonObject.has(JsonKeys.COVER_EDITION_KEY)) {
+                book.isbn = jsonObject.getString(JsonKeys.COVER_EDITION_KEY);
+            } else if(jsonObject.has(JsonKeys.EDITION_KEY)) {
+                final JSONArray ids = jsonObject.getJSONArray(JsonKeys.EDITION_KEY);
+                book.isbn = ids.getString(0);
+            }
+            book.title = jsonObject.has(JsonKeys.BOOK_TITLE) ? jsonObject.getString(JsonKeys.BOOK_TITLE) : "";
+            book.author = getAuthor(jsonObject);
+            book.publisher = getPublisher(jsonObject);
+        } catch (JSONException e) {
             e.printStackTrace();
+            return null;
         }
-
+        // Return new object
         return book;
+    }
 
+    // Return comma separated author list when there is more than one author
+    private static String getAuthor(final JSONObject jsonObject) {
+        try {
+            final JSONArray authors = jsonObject.getJSONArray(JsonKeys.BOOK_AUTHOR);
+            int numAuthors = authors.length();
+            final String[] authorStrings = new String[numAuthors];
+            for (int i = 0; i < numAuthors; ++i) {
+                authorStrings[i] = authors.getString(i);
+            }
+            return TextUtils.join(", ", authorStrings);
+        } catch (JSONException e) {
+            return "";
+        }
+    }    private static String getPublisher(final JSONObject jsonObject) {
+        try {
+            final JSONArray pubs = jsonObject.getJSONArray(JsonKeys.BOOK_PUBLISHER);
+            int numPubs = pubs.length();
+            final String[] pubStrings = new String[numPubs];
+            for (int i = 0; i < numPubs; ++i) {
+                pubStrings[i] = pubs.getString(i);
+            }
+            return TextUtils.join(", ", pubStrings);
+        } catch (JSONException e) {
+            return "";
+        }
     }
 
 
-    public static void toJSON(Book book){
-        //TODO Complete the method to send the info tho Firebase
+    public static ArrayList<Book> fromJson(JSONArray jsonArray) {
+        ArrayList<Book> books = new ArrayList<Book>(jsonArray.length());
+
+        for (int i = 0; i < jsonArray.length(); i++) {
+            JSONObject bookJson = null;
+            try {
+                bookJson = jsonArray.getJSONObject(i);
+            } catch (Exception e) {
+                e.printStackTrace();
+                continue;
+            }
+            Book book = Book.fromJson(bookJson);
+            if (book != null) {
+                books.add(book);
+            }
+        }
+        return books;
     }
+
+    public Book() {
+    }
+
 
 }
