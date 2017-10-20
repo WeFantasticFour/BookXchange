@@ -19,6 +19,7 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.target.BitmapImageViewTarget;
 import com.fantastic.bookxchange.R;
 import com.fantastic.bookxchange.models.Review;
+import com.fantastic.bookxchange.models.User;
 
 import java.util.List;
 
@@ -31,6 +32,15 @@ public class ReviewsAdapter extends RecyclerView.Adapter<ReviewsAdapter.ViewHold
     private List<Review> reviews;
     private Context context;
 
+    ReviewListener mListener;
+
+    public void setListener(ReviewListener mListener) {
+        this.mListener = mListener;
+    }
+
+    public interface ReviewListener {
+        void onUsernameClickListener(User user);
+    }
 
     public class ViewHolder extends RecyclerView.ViewHolder {
 
@@ -59,8 +69,13 @@ public class ReviewsAdapter extends RecyclerView.Adapter<ReviewsAdapter.ViewHold
             LayerDrawable stars = (LayerDrawable) rbStars.getProgressDrawable();
             stars.getDrawable(2).setColorFilter(ResourcesCompat.getColor(context.getResources(), R.color.colorPrimary, null), PorterDuff.Mode.SRC_ATOP);
 
+            if(review.getAuthor() != null) {
+                tvUsername.setOnClickListener(view -> mListener.onUsernameClickListener(review.getAuthor()));
+            }else{
+                tvUsername.setOnClickListener(null);
+            }
 
-            if(review.getAuthor()!= null && review.getAuthor().getUrlProfileImage()!= null){
+            if(review.getAuthor()!= null && review.getAuthor().getUrlProfileImage()!= null) {
                 ivProfile.setVisibility(View.VISIBLE);
                 Glide.with(context)
                         .load(review.getAuthor().getUrlProfileImage())

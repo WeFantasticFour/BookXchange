@@ -1,5 +1,6 @@
 package com.fantastic.bookxchange.activities;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -14,7 +15,7 @@ import org.parceler.Parcels;
 
 import java.util.List;
 
-public class ReviewActivity extends BaseActivity {
+public class ReviewActivity extends BaseActivity implements ReviewsAdapter.ReviewListener{
 
     private RecyclerView rvReviews;
     private ReviewsAdapter aReviews;
@@ -44,6 +45,7 @@ public class ReviewActivity extends BaseActivity {
     private void setupRecyclerView() {
         rvReviews = findViewById(R.id.rvReviews);
         aReviews = new ReviewsAdapter(this, reviews);
+        aReviews.setListener(this);
         rvReviews.setAdapter(aReviews);
 
         LinearLayoutManager lyManager = new LinearLayoutManager(this);
@@ -51,5 +53,12 @@ public class ReviewActivity extends BaseActivity {
         //Line between rows
         ListDivider line = new ListDivider(this);
         rvReviews.addItemDecoration(line);
+    }
+
+    @Override
+    public void onUsernameClickListener(User user) {
+        Intent i = new Intent(this, UserActivity.class);
+        i.putExtra("user", Parcels.wrap(user));
+        startActivity(i);
     }
 }
