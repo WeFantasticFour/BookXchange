@@ -2,6 +2,9 @@ package com.fantastic.bookxchange.models;
 
 import org.parceler.Parcel;
 
+import java.util.Calendar;
+import java.util.Date;
+
 /**
  * Created by m3libea on 10/19/17.
  */
@@ -9,12 +12,14 @@ import org.parceler.Parcel;
 @Parcel
 public class Review {
 
-    private String id;
-    private User author;
-    private int stars;
-    private String review;
+    public String id;
+    public User author;
+    public int stars;
+    public String review;
+    public Date date;
 
     public Review() {
+        this.date = Calendar.getInstance().getTime();
     }
 
     public Review(String id, User author, int stars, String review) {
@@ -22,6 +27,7 @@ public class Review {
         this.author = author;
         this.stars = stars;
         this.review = review;
+        this.date = Calendar.getInstance().getTime();
     }
 
     public String getId() {

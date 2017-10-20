@@ -1,14 +1,19 @@
 package com.fantastic.bookxchange.activities;
 
 import android.graphics.Bitmap;
+import android.graphics.PorterDuff;
+import android.graphics.drawable.LayerDrawable;
 import android.location.Address;
 import android.location.Geocoder;
 import android.os.Bundle;
 import android.support.design.widget.TabLayout;
+import android.support.v4.content.res.ResourcesCompat;
 import android.support.v4.graphics.drawable.RoundedBitmapDrawable;
 import android.support.v4.graphics.drawable.RoundedBitmapDrawableFactory;
 import android.support.v4.view.ViewPager;
+import android.view.View;
 import android.widget.ImageView;
+import android.widget.RatingBar;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
@@ -28,10 +33,14 @@ import java.io.IOException;
 import java.util.List;
 import java.util.Locale;
 
+import static com.fantastic.bookxchange.R.id.rbStars;
+
 public class UserActivity extends BaseActivity implements BaseBookListFragment.BookListClickListener, BaseBookListFragment.BookListReadyListener {
 
     ImageView ivProfile;
     TextView tvLocation;
+    RatingBar ratingBar;
+    TextView tvRN;
 
     User user;
     private BookFragmentPagerAdapter aPager;
@@ -46,6 +55,8 @@ public class UserActivity extends BaseActivity implements BaseBookListFragment.B
 
         ivProfile = findViewById(R.id.ivProfile);
         tvLocation = findViewById(R.id.tvLocation);
+        ratingBar = findViewById(R.id.rbStars);
+        tvRN = findViewById(R.id.tvReviewNumber);
 
         setupToolbar();
         setupTab();
@@ -62,6 +73,16 @@ public class UserActivity extends BaseActivity implements BaseBookListFragment.B
             tvLocation.setText(addresses.get(0).getLocality() + ", " + addresses.get(0).getAdminArea());
         } catch (IOException e) {
             e.printStackTrace();
+        }
+
+        ratingBar.setRating(user.getRating());
+
+        LayerDrawable stars = (LayerDrawable) ratingBar.getProgressDrawable();
+        stars.getDrawable(2).setColorFilter(ResourcesCompat.getColor(getResources(), R.color.colorPrimary, null), PorterDuff.Mode.SRC_ATOP);
+
+        if (!user.getReviews().isEmpty()){
+            tvRN.setVisibility(View.VISIBLE);
+            tvRN.setText(Integer.toString(user.getReviews().size()));
         }
 
         Glide.with(this)
@@ -121,5 +142,9 @@ public class UserActivity extends BaseActivity implements BaseBookListFragment.B
                 fmWs.pushData(user.getWishListBooks());
                 break;
         }
+    }
+
+    public void openReviewDialog(View view) {
+        //TODO OpenReviewDialog
     }
 }

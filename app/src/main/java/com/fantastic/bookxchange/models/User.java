@@ -24,7 +24,7 @@ public class User {
     public List<Book> exchangeBooks;
     public List<Book> wishListBooks;
     public List<Review> reviews;
-    public double rating;
+    public float rating;
     public int starsCount;
 
     public User() {
@@ -67,6 +67,14 @@ public class User {
 
     public List<Book> getWishListBooks() {
         return wishListBooks;
+    }
+
+    public float getRating() {
+        return rating;
+    }
+
+    public List<Review> getReviews() {
+        return reviews;
     }
 
     public void setName(String name) {
