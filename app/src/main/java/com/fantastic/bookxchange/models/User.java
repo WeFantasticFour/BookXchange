@@ -14,6 +14,7 @@ import java.util.List;
 
 @Parcel
 public class User {
+    public String id;
     public String name;
     public String username;
     public String emailAddress;
@@ -22,11 +23,18 @@ public class User {
     public List<Book> shareBooks;
     public List<Book> exchangeBooks;
     public List<Book> wishListBooks;
+    public List<Review> reviews;
+    public double rating;
+    public int starsCount;
 
     public User() {
         this.shareBooks = new ArrayList<>();
         this.exchangeBooks = new ArrayList<>();
         this.wishListBooks = new ArrayList<>();
+        this.reviews = new ArrayList<>();
+
+        this.starsCount = 0;
+        this.rating = 0;
     }
 
     public String getName() {
@@ -100,5 +108,11 @@ public class User {
 
     public static void toJSON(User user){
         //TODO Complete the method to send the info tho Firebase
+    }
+
+    public void addReview(Review r){
+        reviews.add(r);
+        //Update rating
+        rating = (starsCount + r.getStars())/reviews.size();
     }
 }

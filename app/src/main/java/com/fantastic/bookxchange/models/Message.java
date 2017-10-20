@@ -3,6 +3,7 @@ package com.fantastic.bookxchange.models;
 import com.fantastic.bookxchange.utils.Utils;
 
 import org.json.JSONObject;
+import org.parceler.Parcel;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -12,6 +13,7 @@ import java.util.Locale;
  * Created by gretel on 10/14/17.
  */
 
+@Parcel
 public class Message {
 
     private String id;
