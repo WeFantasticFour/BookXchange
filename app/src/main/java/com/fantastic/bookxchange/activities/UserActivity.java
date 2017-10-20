@@ -1,5 +1,6 @@
 package com.fantastic.bookxchange.activities;
 
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.PorterDuff;
 import android.graphics.drawable.LayerDrawable;
@@ -33,8 +34,6 @@ import java.io.IOException;
 import java.util.List;
 import java.util.Locale;
 
-import static com.fantastic.bookxchange.R.id.rbStars;
-
 public class UserActivity extends BaseActivity implements BaseBookListFragment.BookListClickListener, BaseBookListFragment.BookListReadyListener {
 
     ImageView ivProfile;
@@ -44,6 +43,7 @@ public class UserActivity extends BaseActivity implements BaseBookListFragment.B
 
     User user;
     private BookFragmentPagerAdapter aPager;
+    private final String TAG = "User Activity";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -85,6 +85,7 @@ public class UserActivity extends BaseActivity implements BaseBookListFragment.B
             tvRN.setText(Integer.toString(user.getReviews().size()));
         }
 
+        //TODO setup real Profile image
         Glide.with(this)
                 .load(R.drawable.photo_test)
                 .asBitmap()
@@ -144,7 +145,9 @@ public class UserActivity extends BaseActivity implements BaseBookListFragment.B
         }
     }
 
-    public void openReviewDialog(View view) {
-        //TODO OpenReviewDialog
+    public void openReviewActivity(View view) {
+        Intent i = new Intent(this, ReviewActivity.class);
+        i.putExtra("user", Parcels.wrap(user));
+        startActivity(i);
     }
 }

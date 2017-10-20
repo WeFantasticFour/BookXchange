@@ -45,19 +45,20 @@ dependencies {
     }
 
 
-    compile 'com.google.maps.android:android-maps-utils:0.5'
     compile "com.google.android.gms:play-services-maps:${rootProject.ext.firebaseVersion}"
     compile "com.google.android.gms:play-services-location:${rootProject.ext.firebaseVersion}"
     compile "com.google.firebase:firebase-auth:${rootProject.ext.firebaseVersion}"
     compile "com.android.support:recyclerview-v7:${rootProject.ext.supportLibVersion}"
+
+    compile 'com.google.maps.android:android-maps-utils:0.5'
     compile 'com.android.support.constraint:constraint-layout:1.0.2'
     compile 'org.parceler:parceler-api:1.1.6'
     compile 'com.github.hotchemi:permissionsdispatcher:2.4.0'
+    compile 'com.github.bumptech.glide:glide:3.8.0'
+    compile 'com.github.00ec454:Flow:0.5'
+    compile 'com.android.support:support-v4:26.+'
     testCompile 'junit:junit:4.12'
     annotationProcessor 'org.parceler:parceler:1.1.6'
     annotationProcessor 'com.github.hotchemi:permissionsdispatcher-processor:2.4.0'
-    compile 'com.github.bumptech.glide:glide:3.8.0'
-    compile 'com.github.00ec454:Flow:0.5'
-
 }
 apply plugin: 'com.google.gms.google-services'

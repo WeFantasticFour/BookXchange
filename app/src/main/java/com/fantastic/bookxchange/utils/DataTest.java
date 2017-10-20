@@ -1,7 +1,7 @@
 package com.fantastic.bookxchange.utils;
 
-import com.fantastic.bookxchange.R;
 import com.fantastic.bookxchange.models.Book;
+import com.fantastic.bookxchange.models.Review;
 import com.fantastic.bookxchange.models.User;
 import com.google.android.gms.maps.model.LatLng;
 
@@ -96,6 +96,19 @@ public class DataTest {
         users.add(user);
         users.add(user1);
         users.add(user2);
+
+        Review r1 = new Review();
+        r1.setAuthor(user1);
+        r1.setReview("Excelet trade!");
+        r1.setStars(5);
+
+        Review r2 = new Review();
+        r2.setAuthor(user2);
+        r2.setReview("Quick answer");
+        r2.setStars(3);
+
+        user.addReview(r1);
+        user.addReview(r2);
 
         return users;
     }

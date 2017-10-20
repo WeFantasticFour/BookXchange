@@ -2,8 +2,11 @@ package com.fantastic.bookxchange.models;
 
 import org.parceler.Parcel;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.Locale;
 
 /**
  * Created by m3libea on 10/19/17.
@@ -50,6 +53,10 @@ public class Review {
         return stars;
     }
 
+    public Date getDate() {
+        return date;
+    }
+
     public void setStars(int stars) {
         this.stars = stars;
     }
@@ -60,5 +67,17 @@ public class Review {
 
     public void setReview(String review) {
         this.review = review;
+    }
+
+    public String getFormattedDate() {
+        String twitterFormat = "EEE MMM dd HH:mm:ss ZZZZZ yyyy";
+        SimpleDateFormat sf = new SimpleDateFormat(twitterFormat, Locale.ENGLISH);
+        sf.setLenient(true);
+
+        String formattedDate = "";
+        formattedDate = DateFormat.getDateTimeInstance().format(date);
+
+
+        return formattedDate;
     }
 }

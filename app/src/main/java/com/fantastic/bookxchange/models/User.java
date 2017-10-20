@@ -121,6 +121,7 @@ public class User {
     public void addReview(Review r){
         reviews.add(r);
         //Update rating
-        rating = (starsCount + r.getStars())/reviews.size();
+        starsCount+= r.getStars();
+        rating = starsCount/reviews.size();
     }
 }
