@@ -24,6 +24,7 @@ public class User {
     public List<Book> exchangeBooks;
     public List<Book> wishListBooks;
     public List<Review> reviews;
+    public List<Message> messages;
     public float rating;
     public int starsCount;
 
@@ -32,6 +33,7 @@ public class User {
         this.exchangeBooks = new ArrayList<>();
         this.wishListBooks = new ArrayList<>();
         this.reviews = new ArrayList<>();
+        this.messages = new ArrayList<>();
 
         this.starsCount = 0;
         this.rating = 0;
@@ -107,6 +109,14 @@ public class User {
 
     public void setWishListBooks(List<Book> wishListBooks) {
         this.wishListBooks = wishListBooks;
+    }
+
+    public List<Message> getMessages() {
+        return messages;
+    }
+
+    public void addMessage(Message m) {
+        messages.add(m);
     }
 
     public static User fromJSON(JSONObject jsonObject){

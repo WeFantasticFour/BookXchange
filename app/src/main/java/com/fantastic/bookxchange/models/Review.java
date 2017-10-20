@@ -1,5 +1,6 @@
 package com.fantastic.bookxchange.models;
 
+import org.json.JSONObject;
 import org.parceler.Parcel;
 
 import java.text.DateFormat;
@@ -79,5 +80,14 @@ public class Review {
 
 
         return formattedDate;
+    }
+
+    public static Review fromJSON(JSONObject jsonObject){
+        //TODO Complete the method to get info from JSON
+        return new Review();
+    }
+
+    public static void toJSON(Review review){
+        //TODO Complete the method to send the info tho Firebase
     }
 }
