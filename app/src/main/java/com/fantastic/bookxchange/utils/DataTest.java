@@ -1,11 +1,13 @@
 package com.fantastic.bookxchange.utils;
 
 import com.fantastic.bookxchange.models.Book;
+import com.fantastic.bookxchange.models.Message;
 import com.fantastic.bookxchange.models.Review;
 import com.fantastic.bookxchange.models.User;
 import com.google.android.gms.maps.model.LatLng;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 
 /**
@@ -14,14 +16,43 @@ import java.util.List;
 
 public class DataTest {
 
+    public static User getCurrent(){
 
+        User user = new User();
+
+        user.setName("Rocio");
+        user.setUsername("rommor");
+        user.setLocation(new LatLng(37.7749,-122.419));
+
+        List<Book> lshare1 = new ArrayList<>();
+
+        Book b1 = new Book();
+        b1.setTitle("Harry Potter");
+        b1.setAuthor("JKRowling");
+
+        Book b2 = new Book();
+        b2.setTitle("Harry Potter 2");
+        b2.setAuthor("JKRowling");
+
+        lshare1.add(b1);
+        lshare1.add(b2);
+
+        Review r1 = new Review();
+        r1.setReview("Excelent trade!");
+        r1.setStars(5);
+
+        user.setShareBooks(lshare1);
+        user.addReview(r1);
+
+        return user;
+    }
 
     public static List<User> fakeData(){
         User user = new User();
         User user1 = new User();
         User user2 = new User();
 
-        user.setName("Rocio");
+        user.setName("Maria");
         user.setUsername("rommor");
         user.setLocation(new LatLng(37.7749,-122.419));
 
@@ -99,7 +130,7 @@ public class DataTest {
 
         Review r1 = new Review();
         r1.setAuthor(user1);
-        r1.setReview("Excelet trade!");
+        r1.setReview("Excelent trade!");
         r1.setStars(5);
 
         Review r2 = new Review();
@@ -143,4 +174,39 @@ public class DataTest {
 
     }
 
+    public static List<Message> getMessages(){
+
+        List<Message> messages = new ArrayList<>();
+
+        List<User> users = fakeData();
+
+        User u = getCurrent();
+
+        Message m1 = new Message();
+
+        m1.setRecipientUser(u);
+        m1.setSenderUser(users.get(0));
+        m1.setRelativeDate(Calendar.getInstance().getTime().toString());
+        m1.setText("Hello!");
+
+        Message m2 = new Message();
+
+        m2.setRecipientUser(u);
+        m2.setSenderUser(users.get(1));
+        m2.setRelativeDate(Calendar.getInstance().getTime().toString());
+        m2.setText("Hi!");
+
+        Message m3 = new Message();
+
+        m3.setRecipientUser(u);
+        m3.setSenderUser(users.get(1));
+        m3.setRelativeDate(Calendar.getInstance().getTime().toString());
+        m3.setText("How are you?");
+
+        messages.add(m1);
+        messages.add(m2);
+        messages.add(m3);
+
+        return messages;
+    }
 }

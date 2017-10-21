@@ -26,7 +26,7 @@ public class ReviewActivity extends BaseActivity implements ReviewsAdapter.Revie
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_review);
+        setContentView(R.layout.activity_list);
 
         user = Parcels.unwrap(getIntent().getExtras().getParcelable("user"));
 
@@ -43,7 +43,7 @@ public class ReviewActivity extends BaseActivity implements ReviewsAdapter.Revie
     }
 
     private void setupRecyclerView() {
-        rvReviews = findViewById(R.id.rvReviews);
+        rvReviews = findViewById(R.id.rvList);
         aReviews = new ReviewsAdapter(this, reviews);
         aReviews.setListener(this);
         rvReviews.setAdapter(aReviews);

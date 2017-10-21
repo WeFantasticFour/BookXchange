@@ -2,9 +2,6 @@ package com.fantastic.bookxchange.adapters;
 
 import android.content.Context;
 import android.graphics.Bitmap;
-import android.graphics.PorterDuff;
-import android.graphics.drawable.LayerDrawable;
-import android.support.v4.content.res.ResourcesCompat;
 import android.support.v4.graphics.drawable.RoundedBitmapDrawable;
 import android.support.v4.graphics.drawable.RoundedBitmapDrawableFactory;
 import android.support.v7.widget.RecyclerView;
@@ -12,13 +9,13 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
-import android.widget.RatingBar;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.target.BitmapImageViewTarget;
 import com.fantastic.bookxchange.R;
-import com.fantastic.bookxchange.models.Review;
+import com.fantastic.bookxchange.models.Message;
 import com.fantastic.bookxchange.models.User;
 
 import java.util.List;
@@ -27,58 +24,56 @@ import java.util.List;
  * Created by m3libea on 10/13/17.
  */
 
-public class ReviewsAdapter extends RecyclerView.Adapter<ReviewsAdapter.ViewHolder>{
+public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.ViewHolder>{
 
-    private List<Review> reviews;
+    private List<Message> messages;
     private Context context;
 
-    public void setListener(ReviewListener mListener) {
+    MessageListListener mListener;
+
+
+    public void setListener(MessageListListener mListener) {
         this.mListener = mListener;
     }
 
-    ReviewListener mListener;
-
-    public interface ReviewListener {
-        void onUsernameClickListener(User user);
+    public interface MessageListListener {
+        void onClickListener(User user);
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder {
 
         TextView tvUsername;
         TextView tvDate;
-        RatingBar rbStars;
-        TextView tvReview;
+        TextView tvMessage;
         ImageView ivProfile;
+        LinearLayout llMessage;
 
         public ViewHolder(View itemView) {
             super(itemView);
 
             tvUsername = itemView.findViewById(R.id.tvUsername);
             tvDate = itemView.findViewById(R.id.tvDate);
-            tvReview = itemView.findViewById(R.id.tvReview);
-            rbStars = itemView.findViewById(R.id.rbStars);
+            tvMessage = itemView.findViewById(R.id.tvMessage);
             ivProfile = itemView.findViewById(R.id.ivProfile);
+            llMessage = itemView.findViewById(R.id.llMessage);
         }
 
-        public void bind(Review review){
-            String userName = review.getAuthor() != null ? review.getAuthor().getName() : "Anonymous";
-            tvUsername.setText(userName);
-            tvDate.setText(review.getFormattedDate());
-            tvReview.setText(review.getReview());
-            rbStars.setRating(review.getStars());
-            LayerDrawable stars = (LayerDrawable) rbStars.getProgressDrawable();
-            stars.getDrawable(2).setColorFilter(ResourcesCompat.getColor(context.getResources(), R.color.colorPrimary, null), PorterDuff.Mode.SRC_ATOP);
+        public void bind(Message message){
+            tvUsername.setText(message.getSenderUser().getName());
+            tvDate.setText(message.getRelativeDate());
+            tvMessage.setText(message.getText());
 
-            if(review.getAuthor() != null) {
-                tvUsername.setOnClickListener(view -> mListener.onUsernameClickListener(review.getAuthor()));
-            }else{
-                tvUsername.setOnClickListener(null);
-            }
+            llMessage.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    mListener.onClickListener(message.getSenderUser());
+                }
+            });
 
-            if(review.getAuthor()!= null && review.getAuthor().getUrlProfileImage()!= null) {
+            if(message.getSenderUser().getUrlProfileImage()!= null) {
                 ivProfile.setVisibility(View.VISIBLE);
                 Glide.with(context)
-                        .load(review.getAuthor().getUrlProfileImage())
+                        .load(message.getSenderUser().getUrlProfileImage())
                         .asBitmap()
                         .centerCrop()
                         .into(new BitmapImageViewTarget(ivProfile) {
@@ -95,9 +90,9 @@ public class ReviewsAdapter extends RecyclerView.Adapter<ReviewsAdapter.ViewHold
             }
         }
     }
-    public ReviewsAdapter(Context context, List<Review> r) {
+    public MessageAdapter(Context context, List<Message> m) {
         this.context = context;
-        this.reviews = r;
+        this.messages = m;
     }
 
     @Override
@@ -105,19 +100,19 @@ public class ReviewsAdapter extends RecyclerView.Adapter<ReviewsAdapter.ViewHold
         Context context = parent.getContext();
         LayoutInflater inflater = LayoutInflater.from(context);
 
-        View tweetView = inflater.inflate(R.layout.item_review, parent, false);
+        View tweetView = inflater.inflate(R.layout.item_message, parent, false);
 
         return new ViewHolder(tweetView);
     }
 
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
-        final Review review = reviews.get(position);
-        holder.bind(review);
+        final Message message = messages.get(position);
+        holder.bind(message);
     }
 
     @Override
     public int getItemCount() {
-        return reviews.size();
+        return messages.size();
     }
 }

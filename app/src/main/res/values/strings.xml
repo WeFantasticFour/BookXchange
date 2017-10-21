@@ -30,7 +30,6 @@
     <string name="message">Message</string>
     <string name="number">%1$d</string>
 
-    <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="send">Send</string>
     <string name="cancel">Cancel</string>
@@ -44,4 +43,7 @@
     <string name="example_review">Excelent! Just on time to share our books!</string>
     <string name="hint_review">Write your review</string>
     <string name="search_text">Search</string>
+    <string name="example_message">Hi! how are you?</string>
+    <string name="messages">Direct Messages</string>
+
 </resources>
