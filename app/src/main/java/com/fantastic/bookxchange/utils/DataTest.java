@@ -118,22 +118,19 @@ public class DataTest {
         Book book1 = new Book();
         book1.setTitle("Harry Potter");
         book1.setAuthor("JKRowling");
-        book1.setShortDescription("Harry Potter JKRowling Harry Potter JKRowling Harry Potter JKRowling Harry Potter JKRowling Harry Potter JKRowling" +
-                "Harry Potter JKRowling");
+      //  book1.setShortDescription("Harry Potter JKRowling Harry Potter JKRowling Harry Potter JKRowling Harry Potter JKRowling Harry Potter JKRowling" +"Harry Potter JKRowling");
         book1.setPublisher("Publisher");
 
         Book book2 = new Book();
         book2.setTitle("Harry Potter 2");
         book2.setAuthor("JKRowling");
-        book2.setShortDescription("Harry Potter 2 JKRowling Harry Potter 2 JKRowling Harry Potter 2 JKRowling Harry Potter 2 JKRowling Harry Potter 2 JKRowling" +
-                "Harry Potter 2 JKRowling");
+      //  book2.setShortDescription("Harry Potter 2 JKRowling Harry Potter 2 JKRowling Harry Potter 2 JKRowling Harry Potter 2 JKRowling Harry Potter 2 JKRowling" +"Harry Potter 2 JKRowling");
         book2.setPublisher("Publisher");
 
         Book book3 = new Book();
         book3.setTitle("Harry Potter 3");
         book3.setAuthor("JKRowling");
-        book3.setShortDescription("Harry Potter 3 JKRowling Harry Potter 3 JKRowling Harry Potter 3 JKRowling Harry Potter 3 JKRowling Harry Potter 3 JKRowling" +
-                "Harry Potter 3 JKRowling");
+     //   book3.setShortDescription("Harry Potter 3 JKRowling Harry Potter 3 JKRowling Harry Potter 3 JKRowling Harry Potter 3 JKRowling Harry Potter 3 JKRowling" +"Harry Potter 3 JKRowling");
         book3.setPublisher("Publisher");
 
         List<Book> books = new ArrayList<>();
