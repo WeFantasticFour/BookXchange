@@ -50,7 +50,9 @@
         <activity android:name=".activities.BookDetailActivity" />
         <activity android:name=".activities.NearMeActivity" />
         <activity android:name=".activities.MessageActivity" />
-        <activity android:name=".activities.ReviewActivity"></activity>
+        <activity android:name=".activities.ReviewActivity" />
+        <activity android:name=".activities.ConversationActivity" />
+        <activity android:name=".activities.MessagesActivity"></activity>
     </application>
 
 </manifest>
