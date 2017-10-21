@@ -39,7 +39,7 @@ Describe any challenges encountered while building the app.
 - [Google Maps Android API utility library](https://github.com/googlemaps/android-maps-utils)
 - [Glide](http://inthecheesefactory.com/blog/get-to-know-glide-recommended-by-google/en) - Image loading and caching library for Android
 - [Floating Action Button](https://github.com/Clans/FloatingActionButton)
-- ADD SCAN LIBRARY 
+- [Zxing](https://github.com/zxing/zxing) - Bar Code Reader 
 
 
 ## License
