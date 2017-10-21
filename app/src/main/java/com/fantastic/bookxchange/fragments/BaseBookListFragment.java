@@ -39,7 +39,8 @@ public class BaseBookListFragment extends Fragment implements BooksAdapter.BookC
         SHARE,
         EXCHANGE,
         WISHLIST,
-        NEAR
+        NEAR,
+        SEARCH
     }
 
     public interface BookListReadyListener{
