@@ -1,7 +1,9 @@
 package com.fantastic.bookxchange.activities;
 
+import android.app.Activity;
 import android.app.SearchManager;
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
@@ -9,6 +11,7 @@ import android.support.v7.widget.SearchView;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.Toast;
 
 import com.fantastic.bookxchange.R;
 import com.fantastic.bookxchange.fragments.BaseBookListFragment;
@@ -16,6 +19,8 @@ import com.fantastic.bookxchange.fragments.BookDetailFragment;
 import com.fantastic.bookxchange.fragments.SearchListFragment;
 import com.fantastic.bookxchange.models.Book;
 import com.fantastic.bookxchange.rest.BookClient;
+import com.google.zxing.integration.android.IntentIntegrator;
+import com.google.zxing.integration.android.IntentResult;
 
 import org.parceler.Parcels;
 
@@ -126,7 +131,39 @@ public class BookSearchActivity extends BaseActivity implements SearchListFragme
             return true;
         }
 
+        if(id==R.id.action_scan){
+
+            final Activity activity = this;
+
+            IntentIntegrator integrator = new IntentIntegrator(activity);
+            integrator.setDesiredBarcodeFormats(IntentIntegrator.ALL_CODE_TYPES);
+            integrator.setPrompt("Scan");
+            integrator.setCameraId(0);
+            integrator.setBeepEnabled(false);
+            integrator.setBarcodeImageEnabled(false);
+            integrator.initiateScan();
+        }
+
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        IntentResult result = IntentIntegrator.parseActivityResult(requestCode, resultCode, data);
+        if (result != null) {
+            if (result.getContents() == null) {
+                Log.d("BookSearchActivity", "Cancelled scan");
+                Toast.makeText(this, "Canceled", Toast.LENGTH_LONG).show();
+            } else {
+                Log.d("BookSearchActivity", "Scanned");
+                Toast.makeText(this, "Scanned: " + result.getContents(), Toast.LENGTH_LONG).show();
+
+            }
+        } else {
+            super.onActivityResult(requestCode, resultCode, data);
+
+        }
+
     }
 
 
