@@ -10,10 +10,10 @@ The following **required** functionality is completed:
 * [x]	User can **Create Profile**
 * [x]	User can **List of books for sharing or exchange or the book user wants to read**
 * [x]	User can **Locate the books available on map(near by)**
-* [ ]	User can **scan ISBN number to get the detail of books**
+* [X]	User can **scan ISBN number to get the detail of books**
 * [x]	User can **send a message to another user**
 * [X]	User can **provide review to another user**
-* [ ]	User can **search for a particular book by title/author**
+* [X]	User can **search for a particular book by title/author**
 
 The following **optional** functionality
 
@@ -39,6 +39,7 @@ Describe any challenges encountered while building the app.
 - [Google Maps Android API utility library](https://github.com/googlemaps/android-maps-utils)
 - [Glide](http://inthecheesefactory.com/blog/get-to-know-glide-recommended-by-google/en) - Image loading and caching library for Android
 - [Floating Action Button](https://github.com/Clans/FloatingActionButton)
+- ADD SCAN LIBRARY 
 
 
 ## License
