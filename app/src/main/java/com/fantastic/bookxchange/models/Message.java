@@ -7,6 +7,9 @@ import org.parceler.Parcel;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
 import java.util.Locale;
 
 /**
@@ -81,5 +84,30 @@ public class Message {
         return relativeDate;
     }
 
+    public static HashMap<User, List<Message>> getMap(List<Message> messages){
+        HashMap<User, List<Message>> mess = new HashMap<>();
 
+        for(Message m:messages) {
+            User user = m.getSenderUser();
+            if (mess.containsKey(user)){
+                mess.get(user).add(m);
+            }else{
+                List<Message> mList = new ArrayList<>();
+                mList.add(m);
+                mess.put(user, mList);
+            }
+        }
+        return mess;
+    }
+
+    public static List<Message> getLastUnique(HashMap<User, List<Message>> messages){
+
+        ArrayList<Message> mList = new ArrayList<>();
+
+        for(User u:messages.keySet()){
+            mList.add(messages.get(u).get(0));
+        }
+
+        return mList;
+    }
 }

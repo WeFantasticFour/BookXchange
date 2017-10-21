@@ -117,6 +117,7 @@ public class NearMeActivity extends BaseActivity implements BaseBookListFragment
     }
 
     private void populateData() {
+        //TODO Query to firebase, get the closest users to your position
         users = DataTest.fakeData();
 
         books = new HashMap<>();
@@ -282,8 +283,15 @@ public class NearMeActivity extends BaseActivity implements BaseBookListFragment
     @Override
     public boolean onNavigationItemSelected(MenuItem item) {
         switch (item.getItemId()) {
-            case R.id.nav_share:
-                toast("Share");
+            case R.id.nav_profile:
+                Intent iUser = new Intent(this, UserActivity.class);
+                //TODO get CUrrent user
+                iUser.putExtra("user", Parcels.wrap(DataTest.getCurrent()));
+                startActivity(iUser);
+                break;
+            case R.id.nav_messages:
+                Intent iMessage = new Intent(this, MessagesActivity.class);
+                startActivity(iMessage);
                 break;
             default:
                 toast(item.getTitle().toString());
