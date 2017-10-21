@@ -23,6 +23,7 @@ import com.bumptech.glide.request.target.BitmapImageViewTarget;
 import com.fantastic.bookxchange.R;
 import com.fantastic.bookxchange.adapters.BookFragmentPagerAdapter;
 import com.fantastic.bookxchange.fragments.BaseBookListFragment;
+import com.fantastic.bookxchange.fragments.BookDetailFragment;
 import com.fantastic.bookxchange.fragments.ExchangeListFragment;
 import com.fantastic.bookxchange.fragments.MessageFragment;
 import com.fantastic.bookxchange.fragments.ReviewFragment;
@@ -160,7 +161,14 @@ public class UserActivity extends BaseActivity implements BaseBookListFragment.B
 
     @Override
     public void onClickListener(Book book) {
-        //TODO Itent to Book Detail Fragment
+
+        Bundle bundle = new Bundle();
+        bundle.putParcelable("book", Parcels.wrap(book));
+
+        FragmentManager manager = getSupportFragmentManager();
+        BookDetailFragment dialog = BookDetailFragment.newInstance(book);
+        dialog.setArguments(bundle);
+        dialog.show(manager, "Dialog");
     }
 
     @Override

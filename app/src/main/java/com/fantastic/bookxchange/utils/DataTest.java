@@ -68,14 +68,17 @@ public class DataTest {
         //Create books
         Book b1 = new Book();
         b1.setTitle("Harry Potter");
+        b1.setShortDescription("Harry Potter JKRowling Harry Potter JKRowling Harry Potter JKRowling Harry Potter JKRowling Harry Potter JKRowling" +"Harry Potter JKRowling");
         b1.setAuthor("JKRowling");
 
         Book b2 = new Book();
         b2.setTitle("Harry Potter 2");
+        b2.setShortDescription("Harry Potter 2 JKRowling Harry Potter 2 JKRowling Harry Potter 2 JKRowling Harry Potter 2 JKRowling Harry Potter 2 JKRowling" +"Harry Potter 2 JKRowling");
         b2.setAuthor("JKRowling");
 
         Book b = new Book();
         b.setTitle("Harry Potter 3");
+        b.setShortDescription("Harry Potter 3 JKRowling Harry Potter 3 JKRowling Harry Potter 3 JKRowling Harry Potter 3 JKRowling Harry Potter 3 JKRowling" +"Harry Potter 3 JKRowling");
         b.setAuthor("JKRowling");
 
         Book b3 = new Book();
@@ -149,19 +152,19 @@ public class DataTest {
         Book book1 = new Book();
         book1.setTitle("Harry Potter");
         book1.setAuthor("JKRowling");
-      //  book1.setShortDescription("Harry Potter JKRowling Harry Potter JKRowling Harry Potter JKRowling Harry Potter JKRowling Harry Potter JKRowling" +"Harry Potter JKRowling");
+        book1.setShortDescription("Harry Potter JKRowling Harry Potter JKRowling Harry Potter JKRowling Harry Potter JKRowling Harry Potter JKRowling" +"Harry Potter JKRowling");
         book1.setPublisher("Publisher");
 
         Book book2 = new Book();
         book2.setTitle("Harry Potter 2");
         book2.setAuthor("JKRowling");
-      //  book2.setShortDescription("Harry Potter 2 JKRowling Harry Potter 2 JKRowling Harry Potter 2 JKRowling Harry Potter 2 JKRowling Harry Potter 2 JKRowling" +"Harry Potter 2 JKRowling");
+        book2.setShortDescription("Harry Potter 2 JKRowling Harry Potter 2 JKRowling Harry Potter 2 JKRowling Harry Potter 2 JKRowling Harry Potter 2 JKRowling" +"Harry Potter 2 JKRowling");
         book2.setPublisher("Publisher");
 
         Book book3 = new Book();
         book3.setTitle("Harry Potter 3");
         book3.setAuthor("JKRowling");
-     //   book3.setShortDescription("Harry Potter 3 JKRowling Harry Potter 3 JKRowling Harry Potter 3 JKRowling Harry Potter 3 JKRowling Harry Potter 3 JKRowling" +"Harry Potter 3 JKRowling");
+        book3.setShortDescription("Harry Potter 3 JKRowling Harry Potter 3 JKRowling Harry Potter 3 JKRowling Harry Potter 3 JKRowling Harry Potter 3 JKRowling" +"Harry Potter 3 JKRowling");
         book3.setPublisher("Publisher");
 
         List<Book> books = new ArrayList<>();
@@ -170,8 +173,6 @@ public class DataTest {
         books.add(book3);
 
         return books;
-
-
     }
 
     public static List<Message> getMessages(){

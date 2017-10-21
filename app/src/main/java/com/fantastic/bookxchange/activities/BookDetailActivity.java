@@ -7,7 +7,8 @@ import android.widget.TextView;
 import com.bumptech.glide.Glide;
 import com.fantastic.bookxchange.R;
 import com.fantastic.bookxchange.models.Book;
-import com.fantastic.bookxchange.utils.DataTest;
+
+import org.parceler.Parcels;
 
 
 public class BookDetailActivity extends BaseActivity {
@@ -28,9 +29,7 @@ public class BookDetailActivity extends BaseActivity {
         setContentView(R.layout.activity_book_detail);
 
         // Get book
-        // book = Parcels.unwrap(getIntent().getParcelableExtra(book);
-
-        book = DataTest.getFakeBook().get(0);
+        book = Parcels.unwrap(getIntent().getParcelableExtra("book"));
 
         ivLargeImage = findViewById(R.id.ivLargeImage);
         tvTitle = findViewById(R.id.tvTitle);
@@ -54,7 +53,6 @@ public class BookDetailActivity extends BaseActivity {
 
         tvTitle.setText(book.getTitle());
         tvAuthor.setText(book.getAuthor());
-        tvDetailPage.setText(book.getShortDescription());
         tvPublisher.setText(book.getPublisher());
         tvEditorialReview.setText(book.getShortDescription());
     }

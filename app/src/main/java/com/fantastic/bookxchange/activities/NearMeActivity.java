@@ -277,7 +277,7 @@ public class NearMeActivity extends BaseActivity implements BaseBookListFragment
 
     @Override
     public void onReadyListener(BaseBookListFragment.FragmentType type) {
-        fragment.pushData(new ArrayList(books.keySet()));
+        fragment.pushData(new ArrayList<Book>(books.keySet()));
     }
 
     @Override

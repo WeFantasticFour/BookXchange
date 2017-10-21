@@ -21,6 +21,7 @@ public class Book {
     public String author;
     public String title;
     public String publisher;
+    public String shortDescription;
 
     public String getPublisher() {
         return publisher;
@@ -135,4 +136,11 @@ public class Book {
     }
 
 
+    public String getShortDescription() {
+        return this.shortDescription;
+    }
+
+    public void setShortDescription(String shortDescription) {
+        this.shortDescription = shortDescription;
+    }
 }
