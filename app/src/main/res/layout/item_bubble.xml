@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:orientation="horizontal"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:minHeight="50dp"
+    android:padding="5dp"
+    android:background="@drawable/bubble"
+    android:layout_margin="10dp"
+    android:id="@+id/llBook">
+    <ImageView
+        android:id="@+id/ivProfile"
+        android:layout_width="50dp"
+        android:src="@drawable/photo_test"
+        android:paddingRight="5dp"
+        android:layout_height="50dp" />
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <TextView
+            android:id="@+id/tvMessage"
+            android:paddingTop="5dp"
+            android:layout_gravity="top"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textColor="@color/white"
+            tools:text="@string/example_message"/>
+
+        <TextView
+            android:id="@+id/tvDate"
+            android:layout_gravity="bottom"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            tools:text="20 December"
+            android:textSize="10sp"
+            android:textColor="@color/subtext"
+            android:paddingRight="5dp"/>
+    </FrameLayout>
+</LinearLayout>
