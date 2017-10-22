@@ -11,6 +11,7 @@ import android.support.v7.widget.SearchView;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.EditText;
 import android.widget.Toast;
 
 import com.fantastic.bookxchange.R;
@@ -99,6 +100,9 @@ public class BookSearchActivity extends BaseActivity implements SearchListFragme
         if(null!=searchManager){
             searchView.setSearchableInfo(searchManager.getSearchableInfo(getComponentName()));
         }
+        int searchEditId = android.support.v7.appcompat.R.id.search_src_text;
+        final EditText et = (EditText) searchView.findViewById(searchEditId);
+
 
         searchView.setIconifiedByDefault(false);
 
@@ -156,6 +160,7 @@ public class BookSearchActivity extends BaseActivity implements SearchListFragme
                 Toast.makeText(this, "Canceled", Toast.LENGTH_LONG).show();
             } else {
                 Log.d("BookSearchActivity", "Scanned");
+                
                 Toast.makeText(this, "Scanned: " + result.getContents(), Toast.LENGTH_LONG).show();
 
             }

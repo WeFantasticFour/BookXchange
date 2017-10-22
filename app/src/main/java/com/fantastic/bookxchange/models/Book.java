@@ -21,6 +21,7 @@ public class Book {
     public String author;
     public String title;
     public String publisher;
+    public String cover;
     public String shortDescription;
 
     public String getPublisher() {
@@ -60,6 +61,10 @@ public class Book {
 
         return "http://covers.openlibrary.org/b/olid/" + isbn + "-L.jpg?default=false";
 
+    }
+
+    public void setCoverUrl(String cover){
+        this.cover = cover;
     }
 
     // Returns a Book given the expected JSON

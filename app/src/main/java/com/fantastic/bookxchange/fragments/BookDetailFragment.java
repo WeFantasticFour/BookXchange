@@ -89,8 +89,8 @@ public class BookDetailFragment extends DialogFragment {
     private void setupView(){
         Glide.with(getContext())
                 .load(mBook.getCoverUrl())
-                //.asBitmap()
-                //.centerCrop()
+                .asBitmap()
+                .centerCrop()
                 .into(ivBookCover);
 
         tvTitle.setText(mBook.getTitle());

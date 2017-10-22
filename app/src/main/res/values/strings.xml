@@ -45,5 +45,6 @@
     <string name="search_text">Search</string>
     <string name="example_message">Hi! how are you?</string>
     <string name="messages">Direct Messages</string>
+    <string name="book_publisher">Publisher</string>
 
 </resources>
