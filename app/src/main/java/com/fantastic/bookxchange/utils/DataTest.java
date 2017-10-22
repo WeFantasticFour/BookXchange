@@ -10,6 +10,8 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 
+import static com.fantastic.bookxchange.R.drawable.ic_nocover;
+
 /**
  * Created by m3libea on 10/12/17.
  */
@@ -29,10 +31,13 @@ public class DataTest {
         Book b1 = new Book();
         b1.setTitle("Harry Potter");
         b1.setAuthor("JKRowling");
+        b1.setCoverUrl("@drawable/ic_nocover");
+
 
         Book b2 = new Book();
         b2.setTitle("Harry Potter 2");
         b2.setAuthor("JKRowling");
+        b2.setCoverUrl("@drawable/ic_nocover");
 
         lshare1.add(b1);
         lshare1.add(b2);
@@ -70,28 +75,34 @@ public class DataTest {
         b1.setTitle("Harry Potter");
         b1.setShortDescription("Harry Potter JKRowling Harry Potter JKRowling Harry Potter JKRowling Harry Potter JKRowling Harry Potter JKRowling" +"Harry Potter JKRowling");
         b1.setAuthor("JKRowling");
+        b1.setCoverUrl("@drawable/ic_nocover");
 
         Book b2 = new Book();
         b2.setTitle("Harry Potter 2");
         b2.setShortDescription("Harry Potter 2 JKRowling Harry Potter 2 JKRowling Harry Potter 2 JKRowling Harry Potter 2 JKRowling Harry Potter 2 JKRowling" +"Harry Potter 2 JKRowling");
         b2.setAuthor("JKRowling");
+        b2.setCoverUrl("@drawable/ic_nocover");
 
         Book b = new Book();
         b.setTitle("Harry Potter 3");
         b.setShortDescription("Harry Potter 3 JKRowling Harry Potter 3 JKRowling Harry Potter 3 JKRowling Harry Potter 3 JKRowling Harry Potter 3 JKRowling" +"Harry Potter 3 JKRowling");
         b.setAuthor("JKRowling");
+        b.setCoverUrl("@drawable/ic_nocover");
 
         Book b3 = new Book();
-        b.setTitle("Harry Potter 5");
-        b.setAuthor("JKRowling");
+        b3.setTitle("Harry Potter 5");
+        b3.setAuthor("JKRowling");
+        b3.setCoverUrl("@drawable/ic_nocover");
 
         Book b4 = new Book();
         b4.setTitle("Pride and Prejuice");
         b4.setAuthor("Jane Austen");
+        b4.setCoverUrl("@drawable/ic_nocover");
 
         Book b5 = new Book();
         b5.setTitle("Alice In Wonderland");
         b5.setAuthor("Carrol");
+        b5.setCoverUrl("@drawable/ic_nocover");
 
         List<Book> lshare1 = new ArrayList<>();
         List<Book> lex1 = new ArrayList<>();
@@ -154,18 +165,21 @@ public class DataTest {
         book1.setAuthor("JKRowling");
         book1.setShortDescription("Harry Potter JKRowling Harry Potter JKRowling Harry Potter JKRowling Harry Potter JKRowling Harry Potter JKRowling" +"Harry Potter JKRowling");
         book1.setPublisher("Publisher");
+        book1.setCoverUrl("@drawable/ic_nocover");
 
         Book book2 = new Book();
         book2.setTitle("Harry Potter 2");
         book2.setAuthor("JKRowling");
         book2.setShortDescription("Harry Potter 2 JKRowling Harry Potter 2 JKRowling Harry Potter 2 JKRowling Harry Potter 2 JKRowling Harry Potter 2 JKRowling" +"Harry Potter 2 JKRowling");
         book2.setPublisher("Publisher");
+        book2.setCoverUrl("@drawable/ic_nocover");
 
         Book book3 = new Book();
         book3.setTitle("Harry Potter 3");
         book3.setAuthor("JKRowling");
         book3.setShortDescription("Harry Potter 3 JKRowling Harry Potter 3 JKRowling Harry Potter 3 JKRowling Harry Potter 3 JKRowling Harry Potter 3 JKRowling" +"Harry Potter 3 JKRowling");
         book3.setPublisher("Publisher");
+        book3.setCoverUrl("@drawable/ic_nocover");
 
         List<Book> books = new ArrayList<>();
         books.add(book1);
