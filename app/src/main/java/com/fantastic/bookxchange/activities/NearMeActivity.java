@@ -1,5 +1,6 @@
 package com.fantastic.bookxchange.activities;
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.location.Location;
 import android.os.Bundle;
@@ -86,8 +87,6 @@ public class NearMeActivity extends BaseActivity implements BaseBookListFragment
 
 
         if (savedInstanceState != null && savedInstanceState.keySet().contains(KEY_LOCATION)) {
-            // Since KEY_LOCATION was found in the Bundle, we can be sure that mCurrentLocation
-            // is not null.
             mCurrentLocation = savedInstanceState.getParcelable(KEY_LOCATION);
         }
         setupMap();
@@ -190,6 +189,7 @@ public class NearMeActivity extends BaseActivity implements BaseBookListFragment
     }
 
     @NeedsPermission({Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION})
+    @SuppressLint("MissingPermission")
     void getMyLocation() {
         //noinspection MissingPermission
         map.setMyLocationEnabled(true);
@@ -223,6 +223,7 @@ public class NearMeActivity extends BaseActivity implements BaseBookListFragment
         NearMeActivityPermissionsDispatcher.startLocationUpdatesWithCheck(this);
     }
 
+    @SuppressLint("MissingPermission")
     @NeedsPermission({Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION})
     protected void startLocationUpdates() {
         mLocationRequest = new LocationRequest();
@@ -248,7 +249,6 @@ public class NearMeActivity extends BaseActivity implements BaseBookListFragment
     }
 
     public void onLocationChanged(Location location) {
-        // GPS may be turned off
         if (location == null) {
             return;
         }
@@ -278,7 +278,7 @@ public class NearMeActivity extends BaseActivity implements BaseBookListFragment
 
     @Override
     public void onReadyListener(BaseBookListFragment.FragmentType type) {
-        fragment.pushData(new ArrayList<Book>(books.keySet()));
+        fragment.pushData(new ArrayList<>(books.keySet()));
     }
 
     @Override
