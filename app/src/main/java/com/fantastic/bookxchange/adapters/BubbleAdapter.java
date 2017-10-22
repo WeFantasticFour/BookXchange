@@ -12,6 +12,11 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.Priority;
+import com.bumptech.glide.load.resource.bitmap.CenterCrop;
+import com.bumptech.glide.load.resource.bitmap.CircleCrop;
+import com.bumptech.glide.load.resource.bitmap.RoundedCorners;
+import com.bumptech.glide.request.RequestOptions;
 import com.bumptech.glide.request.target.BitmapImageViewTarget;
 import com.fantastic.bookxchange.R;
 import com.fantastic.bookxchange.models.Message;
@@ -51,17 +56,8 @@ public class BubbleAdapter extends RecyclerView.Adapter<BubbleAdapter.ViewHolder
                 ivProfile.setVisibility(View.VISIBLE);
                 Glide.with(context)
                         .load(message.getSenderUser().getUrlProfileImage())
-                        .asBitmap()
-                        .centerCrop()
-                        .into(new BitmapImageViewTarget(ivProfile) {
-                            @Override
-                            protected void setResource(Bitmap resource) {
-                                RoundedBitmapDrawable circularBitmapDrawable =
-                                        RoundedBitmapDrawableFactory.create(context.getResources(), resource);
-                                circularBitmapDrawable.setCircular(true);
-                                ivProfile.setImageDrawable(circularBitmapDrawable);
-                            }
-                        });
+                        .apply(new RequestOptions().transforms(new CenterCrop(), new CircleCrop()))
+                        .into(ivProfile);
             }else{
                 ivProfile.setVisibility(View.GONE);
             }

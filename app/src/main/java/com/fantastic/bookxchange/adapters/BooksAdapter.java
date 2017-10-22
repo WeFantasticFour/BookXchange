@@ -13,6 +13,8 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.Priority;
+import com.bumptech.glide.request.RequestOptions;
 import com.fantastic.bookxchange.R;
 import com.fantastic.bookxchange.models.Book;
 
@@ -22,7 +24,7 @@ import java.util.ArrayList;
  * Created by m3libea on 10/13/17.
  */
 
-public class BooksAdapter extends RecyclerView.Adapter<BooksAdapter.ViewHolder>{
+public class BooksAdapter extends RecyclerView.Adapter<BooksAdapter.ViewHolder> {
 
     private ArrayList<Book> books;
     public Context context;
@@ -33,7 +35,7 @@ public class BooksAdapter extends RecyclerView.Adapter<BooksAdapter.ViewHolder>{
 
     int rowSelectedIndex = -1;
 
-    public interface BookClickListener{
+    public interface BookClickListener {
         void onBookClickListener(Book book);
     }
 
@@ -57,12 +59,20 @@ public class BooksAdapter extends RecyclerView.Adapter<BooksAdapter.ViewHolder>{
             ivCover = itemView.findViewById(R.id.ivBookCover);
         }
 
-        public void bind(Book book){
+        public void bind(Book book) {
             tvTitle.setText(book.getTitle());
             tvAuthor.setText(book.getAuthor());
-            Glide.with(context).load(Uri.parse(book.getCoverUrl())).placeholder(R.drawable.ic_nocover).into(ivCover);
+            RequestOptions options = new RequestOptions()
+                    .centerCrop()
+                    .placeholder(R.drawable.ic_nocover)
+                    .priority(Priority.HIGH);
+            Glide.with(context)
+                    .load(Uri.parse(book.getCoverUrl()))
+                    .apply(options)
+                    .into(ivCover);
         }
     }
+
     public BooksAdapter(Context context, ArrayList<Book> books) {
         this.context = context;
         this.books = books;
@@ -84,16 +94,14 @@ public class BooksAdapter extends RecyclerView.Adapter<BooksAdapter.ViewHolder>{
         holder.bind(book);
 
         holder.llBook.setOnClickListener(view -> {
-            rowSelectedIndex=position;
+            rowSelectedIndex = position;
             listener.onBookClickListener(book);
 
             notifyDataSetChanged();
         });
-        if(rowSelectedIndex==position){
-            holder.llBook.setBackgroundColor(ContextCompat.getColor(context,R.color.colorPrimary));
-        }
-        else
-        {
+        if (rowSelectedIndex == position) {
+            holder.llBook.setBackgroundColor(ContextCompat.getColor(context, R.color.colorPrimary));
+        } else {
             holder.llBook.setBackgroundColor(Color.TRANSPARENT);
         }
     }

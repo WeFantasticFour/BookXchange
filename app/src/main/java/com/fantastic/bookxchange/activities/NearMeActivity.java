@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.location.Location;
 import android.os.Bundle;
 import android.os.Looper;
+import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
@@ -67,17 +68,15 @@ public class NearMeActivity extends BaseActivity implements BaseBookListFragment
     private final static String KEY_LOCATION = "location";
     private final static int CONNECTION_FAILURE_RESOLUTION_REQUEST = 9000;
 
-
-    //Data
-
-    List<User> users;
-    HashMap<Book, List<Marker>> books;
+    private List<User> users;
+    private HashMap<Book, List<Marker>> books;
     private String TAG = "NearMeActivity";
 
     private List<Marker> previousMarkers = new ArrayList<>();
     private NearListFragment fragment;
 
     private NavigationView navigationView;
+    private FirebaseAuth auth = FirebaseAuth.getInstance();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -109,34 +108,28 @@ public class NearMeActivity extends BaseActivity implements BaseBookListFragment
     }
 
     private void prepareHeader(View navigationView) {
-        TextView tvEmail = navigationView.findViewById(R.id.tv_email);
-        tvEmail.setText("todo@bookxchange.com");
-        TextView tvName = navigationView.findViewById(R.id.tv_name);
-        ImageView imoji = navigationView.findViewById(R.id.imageView);
-        //TODO set user and email in header
+        if(auth.getCurrentUser()!=null) {
+            TextView tvEmail = navigationView.findViewById(R.id.tv_email);
+            tvEmail.setText(auth.getCurrentUser().getEmail());
+            TextView tvName = navigationView.findViewById(R.id.tv_name);
+            tvName.setText(auth.getCurrentUser().getDisplayName());
+            ImageView imoji = navigationView.findViewById(R.id.imageView);
+        }
     }
 
     private void populateData() {
         //TODO Query to firebase, get the closest users to your position
         users = DataTest.fakeData();
-
         books = new HashMap<>();
 
         for (User u : users) {
             if (!u.getShareBooks().isEmpty()) {
                 Marker marker = MapUtils.addMarker(map, u);
-                for (Book b : u.getShareBooks()) {
-                    saveMarker(marker, b);
-                }
-
-                for (Book b : u.getExchangeBooks()) {
-                    saveMarker(marker, b);
-                }
+                Flow.of(u.getShareBooks()).forEach(b -> saveMarker(marker, b));
+                Flow.of(u.getExchangeBooks()).forEach(b -> saveMarker(marker, b));
             }
         }
-
         fragment = NearListFragment.newInstance();
-
         getSupportFragmentManager()
                 .beginTransaction()
                 .add(R.id.flBooks, fragment)
@@ -161,7 +154,6 @@ public class NearMeActivity extends BaseActivity implements BaseBookListFragment
         } else {
             toast(R.string.map_null_error);
         }
-
     }
 
     protected void loadMap(GoogleMap googleMap) {
@@ -191,27 +183,17 @@ public class NearMeActivity extends BaseActivity implements BaseBookListFragment
     @NeedsPermission({Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION})
     @SuppressLint("MissingPermission")
     void getMyLocation() {
-        //noinspection MissingPermission
         map.setMyLocationEnabled(true);
-
         FusedLocationProviderClient locationClient = getFusedLocationProviderClient(this);
-        //noinspection MissingPermission
         locationClient.getLastLocation()
-                .addOnSuccessListener(location -> {
-                    if (location != null) {
-                        onLocationChanged(location);
-                    }
-                })
-                .addOnFailureListener(e -> {
-                    Log.e(TAG, e.getMessage(), e);
-                });
+                .addOnSuccessListener(this::onLocationChanged)
+                .addOnFailureListener(e -> Log.e(TAG, e.getMessage(), e));
     }
 
 
     @Override
     protected void onResume() {
         super.onResume();
-
         if (mCurrentLocation != null) {
             LatLng latLng = new LatLng(mCurrentLocation.getLatitude(), mCurrentLocation.getLongitude());
             CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngZoom(latLng, 17);
@@ -237,22 +219,19 @@ public class NearMeActivity extends BaseActivity implements BaseBookListFragment
 
         SettingsClient settingsClient = LocationServices.getSettingsClient(this);
         settingsClient.checkLocationSettings(locationSettingsRequest);
-        //noinspection MissingPermission
         getFusedLocationProviderClient(this)
                 .requestLocationUpdates(mLocationRequest, new LocationCallback() {
-                            @Override
-                            public void onLocationResult(LocationResult locationResult) {
-                                onLocationChanged(locationResult.getLastLocation());
-                            }
-                        },
-                        Looper.myLooper());
+                    @Override
+                    public void onLocationResult(LocationResult locationResult) {
+                        onLocationChanged(locationResult.getLastLocation());
+                    }
+                }, Looper.myLooper());
     }
 
     public void onLocationChanged(Location location) {
         if (location == null) {
             return;
         }
-
         mCurrentLocation = location;
         LatLng latLng = new LatLng(mCurrentLocation.getLatitude(), mCurrentLocation.getLongitude());
         CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngZoom(latLng, 15);
@@ -278,15 +257,16 @@ public class NearMeActivity extends BaseActivity implements BaseBookListFragment
 
     @Override
     public void onReadyListener(BaseBookListFragment.FragmentType type) {
-        fragment.pushData(new ArrayList<>(books.keySet()));
+        if (books != null) {
+            fragment.pushData(new ArrayList<>(books.keySet()));
+        }
     }
 
     @Override
-    public boolean onNavigationItemSelected(MenuItem item) {
+    public boolean onNavigationItemSelected(@NonNull MenuItem item) {
         switch (item.getItemId()) {
             case R.id.nav_profile:
                 Intent iUser = new Intent(this, UserActivity.class);
-                //TODO get CUrrent user
                 iUser.putExtra("user", Parcels.wrap(DataTest.getCurrent()));
                 startActivity(iUser);
                 break;

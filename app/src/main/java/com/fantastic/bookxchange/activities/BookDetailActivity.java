@@ -46,7 +46,8 @@ public class BookDetailActivity extends BaseActivity {
     }
 
     private void setupView() {
-        Glide.with(this).asBitmap()
+        Glide.with(this)
+                //.asBitmap()
                 .load(R.drawable.harry_potter_cover)
                 .into(ivLargeImage);
 

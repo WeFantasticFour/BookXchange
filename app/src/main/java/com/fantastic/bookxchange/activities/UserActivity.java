@@ -116,7 +116,8 @@ public class UserActivity extends BaseActivity implements BaseBookListFragment.B
 
         //TODO setup real Profile image
 
-        Glide.with(this).asBitmap()
+        Glide.with(this)
+                .asBitmap()
                 .load(R.drawable.photo_test)
                 .into(new BitmapImageViewTarget(ivProfile) {
                     @Override

@@ -1,12 +1,14 @@
 package com.fantastic.bookxchange.activities;
 
 import android.app.Activity;
+import android.Manifest;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.text.TextUtils;
+import android.support.annotation.NonNull;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -20,7 +22,10 @@ import com.fantastic.bookxchange.models.Book;
 import com.fantastic.bookxchange.rest.BookClient;
 import com.fantastic.bookxchange.rest.JsonKeys;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
@@ -34,9 +39,16 @@ import org.json.JSONObject;
 
 import java.io.ByteArrayOutputStream;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 
 import cz.msebera.android.httpclient.Header;
 
+import permissions.dispatcher.NeedsPermission;
+import permissions.dispatcher.RuntimePermissions;
+
+
+@RuntimePermissions
 public class AddBookActivity extends BaseActivity {
 
     private static final String TAG = AddBookActivity.class.getSimpleName();
@@ -44,8 +56,6 @@ public class AddBookActivity extends BaseActivity {
     private EditText etBookTitle;
     private EditText etISBNNumber;
     private EditText etDescription;
-    private Button btnAddBook;
-    private Button btnAddPhoto;
     private ImageView ivPicture;
     private EditText etPublisher;
 
@@ -53,6 +63,7 @@ public class AddBookActivity extends BaseActivity {
     private Button scanner, addBook;
 
     BookClient client;
+    private Button btnAddPhoto;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -68,7 +79,6 @@ public class AddBookActivity extends BaseActivity {
         etBookAuthor = findViewById(R.id.etBookAuthor);
         etISBNNumber = findViewById(R.id.etISBNNumber);
         etDescription = findViewById(R.id.etDescription);
-        btnAddBook = findViewById(R.id.btnAddBook);
         btnAddPhoto = findViewById(R.id.btnAddPhoto);
         ivPicture = findViewById(R.id.ivPicture);
         ivPicture.setDrawingCacheEnabled(true);
@@ -95,11 +105,24 @@ public class AddBookActivity extends BaseActivity {
         integrator.setBeepEnabled(false);
         integrator.setBarcodeImageEnabled(false);
         integrator.initiateScan();
+        btnAddPhoto.setOnClickListener(view -> AddBookActivityPermissionsDispatcher.addPhotoWithCheck(this));
+    }
+
+    @NeedsPermission(Manifest.permission.CAMERA)
+    public void addPhoto() {
+        Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+        startActivityForResult(intent, 111);
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        AddBookActivityPermissionsDispatcher.onRequestPermissionsResult(this, requestCode, grantResults);
     }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if(requestCode==0){
+        if(requestCode==111){
             Bitmap bitmap = (Bitmap) data.getExtras().get("data");
             ivPicture.setImageBitmap(bitmap);
             return;
@@ -187,12 +210,34 @@ public class AddBookActivity extends BaseActivity {
     }
 
     public void addBook(View view) {
+
+
         if (!validate(etBookTitle, etBookAuthor, etISBNNumber, etDescription)) {
             return;
         }
         String isbn = getText(etISBNNumber);
-        uploadCoverPage(ivPicture.getDrawingCache(), isbn);
+        startProgress();
+        searchAndSave(isbn);
+    }
 
+    private void searchAndSave(final String isbn) {
+        FirebaseDatabase.getInstance()
+                .getReference("books")
+                .child(isbn)
+                .addValueEventListener(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(DataSnapshot dataSnapshot) {
+                        if (dataSnapshot == null) {
+                            uploadCoverPage(ivPicture.getDrawingCache(), isbn);
+                        } else {
+                            saveUserBookRelation(isbn, Book.CATEGORY.EXCHANGE);
+                        }
+                    }
+                    @Override
+                    public void onCancelled(DatabaseError databaseError) {
+                        Log.e(TAG, "databaseError: " + databaseError);
+                    }
+                });
     }
 
     private void saveBook(String url) {
@@ -200,6 +245,8 @@ public class AddBookActivity extends BaseActivity {
         String author = getText(etBookAuthor);
         String isbn = getText(etISBNNumber);
         String description = getText(etDescription);
+
+
         Book book = Book.Builder.get()
                 .title(title)
                 .author(author)
@@ -213,8 +260,29 @@ public class AddBookActivity extends BaseActivity {
         startProgress();
         FirebaseDatabase.getInstance()
                 .getReference("books")
-                .push()
+                .child(isbn)
                 .setValue(book)
+                .addOnCompleteListener(task -> {
+                    if (task.getException() != null) {
+                        doneProgress();
+                        snakebar(etBookTitle, task.getException().getMessage());
+                    } else {
+                        saveUserBookRelation(isbn, Book.CATEGORY.EXCHANGE);
+                        //snakebar(etBookTitle, "Your Content has been saved!");
+                    }
+                });
+    }
+
+    private void saveUserBookRelation(String isbn, Book.CATEGORY category) {
+        Map<String, Object> valueMap = new HashMap<>();
+        valueMap.put("isbn", isbn);
+        valueMap.put("category", category);
+
+        FirebaseDatabase.getInstance()
+                .getReference("user_book")
+                .child(FirebaseAuth.getInstance().getCurrentUser().getUid())
+                .child(isbn)
+                .setValue(valueMap)
                 .addOnCompleteListener(task -> {
                     doneProgress();
                     if (task.getException() != null) {
@@ -223,6 +291,7 @@ public class AddBookActivity extends BaseActivity {
                         snakebar(etBookTitle, "Your Content has been saved!");
                     }
                 });
+
     }
 
     private void uploadCoverPage(Bitmap bitmap, String isbn) {
@@ -235,6 +304,7 @@ public class AddBookActivity extends BaseActivity {
         UploadTask uploadTask = storageRef.putBytes(data);
         uploadTask.addOnFailureListener(exception -> {
             Log.e(TAG, exception.getMessage(), exception);
+            doneProgress();
         }).addOnSuccessListener(taskSnapshot -> {
             Uri downloadUrl = taskSnapshot.getDownloadUrl();
             saveBook(downloadUrl.toString());
