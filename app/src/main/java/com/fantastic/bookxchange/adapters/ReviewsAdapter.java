@@ -1,12 +1,9 @@
 package com.fantastic.bookxchange.adapters;
 
 import android.content.Context;
-import android.graphics.Bitmap;
 import android.graphics.PorterDuff;
 import android.graphics.drawable.LayerDrawable;
 import android.support.v4.content.res.ResourcesCompat;
-import android.support.v4.graphics.drawable.RoundedBitmapDrawable;
-import android.support.v4.graphics.drawable.RoundedBitmapDrawableFactory;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -16,7 +13,9 @@ import android.widget.RatingBar;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
-import com.bumptech.glide.request.target.BitmapImageViewTarget;
+import com.bumptech.glide.load.resource.bitmap.CenterCrop;
+import com.bumptech.glide.load.resource.bitmap.CircleCrop;
+import com.bumptech.glide.request.RequestOptions;
 import com.fantastic.bookxchange.R;
 import com.fantastic.bookxchange.models.Review;
 import com.fantastic.bookxchange.models.User;
@@ -27,7 +26,7 @@ import java.util.List;
  * Created by m3libea on 10/13/17.
  */
 
-public class ReviewsAdapter extends RecyclerView.Adapter<ReviewsAdapter.ViewHolder>{
+public class ReviewsAdapter extends RecyclerView.Adapter<ReviewsAdapter.ViewHolder> {
 
     private List<Review> reviews;
     private Context context;
@@ -60,7 +59,7 @@ public class ReviewsAdapter extends RecyclerView.Adapter<ReviewsAdapter.ViewHold
             ivProfile = itemView.findViewById(R.id.ivProfile);
         }
 
-        public void bind(Review review){
+        public void bind(Review review) {
             String userName = review.getAuthor() != null ? review.getAuthor().getName() : "Anonymous";
             tvUsername.setText(userName);
             tvDate.setText(review.getFormattedDate());
@@ -69,32 +68,24 @@ public class ReviewsAdapter extends RecyclerView.Adapter<ReviewsAdapter.ViewHold
             LayerDrawable stars = (LayerDrawable) rbStars.getProgressDrawable();
             stars.getDrawable(2).setColorFilter(ResourcesCompat.getColor(context.getResources(), R.color.colorPrimary, null), PorterDuff.Mode.SRC_ATOP);
 
-            if(review.getAuthor() != null) {
+            if (review.getAuthor() != null) {
                 tvUsername.setOnClickListener(view -> mListener.onUsernameClickListener(review.getAuthor()));
-            }else{
+            } else {
                 tvUsername.setOnClickListener(null);
             }
 
-            if(review.getAuthor()!= null && review.getAuthor().getUrlProfileImage()!= null) {
+            if (review.getAuthor() != null && review.getAuthor().getUrlProfileImage() != null) {
                 ivProfile.setVisibility(View.VISIBLE);
                 Glide.with(context)
                         .load(review.getAuthor().getUrlProfileImage())
-                        .asBitmap()
-                        .centerCrop()
-                        .into(new BitmapImageViewTarget(ivProfile) {
-                            @Override
-                            protected void setResource(Bitmap resource) {
-                                RoundedBitmapDrawable circularBitmapDrawable =
-                                        RoundedBitmapDrawableFactory.create(context.getResources(), resource);
-                                circularBitmapDrawable.setCircular(true);
-                                ivProfile.setImageDrawable(circularBitmapDrawable);
-                            }
-                        });
-            }else{
+                        .apply(new RequestOptions().transforms(new CenterCrop(), new CircleCrop()))
+                        .into(ivProfile);
+            } else {
                 ivProfile.setVisibility(View.GONE);
             }
         }
     }
+
     public ReviewsAdapter(Context context, List<Review> r) {
         this.context = context;
         this.reviews = r;

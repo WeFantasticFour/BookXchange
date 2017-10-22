@@ -1,9 +1,6 @@
 package com.fantastic.bookxchange.adapters;
 
 import android.content.Context;
-import android.graphics.Bitmap;
-import android.support.v4.graphics.drawable.RoundedBitmapDrawable;
-import android.support.v4.graphics.drawable.RoundedBitmapDrawableFactory;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -13,7 +10,9 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
-import com.bumptech.glide.request.target.BitmapImageViewTarget;
+import com.bumptech.glide.load.resource.bitmap.CenterCrop;
+import com.bumptech.glide.load.resource.bitmap.CircleCrop;
+import com.bumptech.glide.request.RequestOptions;
 import com.fantastic.bookxchange.R;
 import com.fantastic.bookxchange.models.Message;
 import com.fantastic.bookxchange.models.User;
@@ -24,7 +23,7 @@ import java.util.List;
  * Created by m3libea on 10/13/17.
  */
 
-public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.ViewHolder>{
+public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.ViewHolder> {
 
     private List<Message> messages;
     private Context context;
@@ -58,7 +57,7 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.ViewHold
             llMessage = itemView.findViewById(R.id.llMessage);
         }
 
-        public void bind(Message message){
+        public void bind(Message message) {
             tvUsername.setText(message.getSenderUser().getName());
             tvDate.setText(message.getRelativeDate());
             tvMessage.setText(message.getText());
@@ -70,26 +69,18 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.ViewHold
                 }
             });
 
-            if(message.getSenderUser().getUrlProfileImage()!= null) {
+            if (message.getSenderUser().getUrlProfileImage() != null) {
                 ivProfile.setVisibility(View.VISIBLE);
                 Glide.with(context)
                         .load(message.getSenderUser().getUrlProfileImage())
-                        .asBitmap()
-                        .centerCrop()
-                        .into(new BitmapImageViewTarget(ivProfile) {
-                            @Override
-                            protected void setResource(Bitmap resource) {
-                                RoundedBitmapDrawable circularBitmapDrawable =
-                                        RoundedBitmapDrawableFactory.create(context.getResources(), resource);
-                                circularBitmapDrawable.setCircular(true);
-                                ivProfile.setImageDrawable(circularBitmapDrawable);
-                            }
-                        });
-            }else{
+                        .apply(new RequestOptions().transforms(new CenterCrop(), new CircleCrop()))
+                        .into(ivProfile);
+            } else {
                 ivProfile.setVisibility(View.GONE);
             }
         }
     }
+
     public MessageAdapter(Context context, List<Message> m) {
         this.context = context;
         this.messages = m;

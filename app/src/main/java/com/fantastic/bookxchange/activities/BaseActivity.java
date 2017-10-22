@@ -14,6 +14,7 @@ import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.EditText;
+import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import com.fantastic.bookxchange.R;
@@ -26,11 +27,13 @@ public class BaseActivity extends AppCompatActivity {
 
     protected Toolbar toolbar;
     protected ActionBar actionBar;
+    protected ProgressBar progressBar;
 
     @Override
     public void setContentView(int layoutResId) {
         super.setContentView(layoutResId);
         toolbar = findViewById(R.id.app_toolbar);
+        progressBar = findViewById(R.id.progressBar);
         if (toolbar != null) {
             setSupportActionBar(toolbar);
             actionBar = getSupportActionBar();
@@ -55,6 +58,18 @@ public class BaseActivity extends AppCompatActivity {
     public void setTitle(@StringRes int title) {
         if (actionBar != null) {
             actionBar.setTitle(title);
+        }
+    }
+
+    protected void startProgress() {
+        if (progressBar != null) {
+            progressBar.setVisibility(View.VISIBLE);
+        }
+    }
+
+    protected void doneProgress() {
+        if (progressBar != null) {
+            progressBar.setVisibility(View.GONE);
         }
     }
 

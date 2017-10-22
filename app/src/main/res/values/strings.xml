@@ -4,6 +4,7 @@
     <string name="navigation_drawer_close" translatable="false">Close navigation drawer</string>
     <string name="app_name">BookXchange</string>
     <string name="google_maps_api_key">AIzaSyAD7EJ9PRdNMwEo0Cpa9VbOeQq_LDqEfRo</string>
+    <string name="google_geo_code_api_key">AIzaSyAXe8NalmwBC-hs8lsr_FfJfMZSb_E6vFc</string>
     <string name="insert_isbn">Please, enter ISBN number</string>
     <string name="add_book">Add book</string>
     <string name="title">Book Title</string>
@@ -24,7 +25,7 @@
     <string name="email">Email</string>
     <string name="password">Password</string>
     <string name="bookxchange">BookXChange</string>
-    <string name="auth_failed">Authentication failed.</string>
+    <string name="auth_failed">Authentication failed: %1$s.</string>
     <string name="map_null_error">Error - Map was null!!</string>
     <string name="current_location_null">Current location was null, enable GPS</string>
     <string name="message">Message</string>
@@ -46,5 +47,6 @@
     <string name="example_message">Hi! how are you?</string>
     <string name="messages">Direct Messages</string>
     <string name="book_publisher">Publisher</string>
+    <string name="zip">Zip</string>
 
 </resources>
