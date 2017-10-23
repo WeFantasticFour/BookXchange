@@ -48,5 +48,6 @@
     <string name="messages">Direct Messages</string>
     <string name="book_publisher">Publisher</string>
     <string name="zip">Zip</string>
+    <string name="book_not_found">Book not found for ISBN</string>
 
 </resources>

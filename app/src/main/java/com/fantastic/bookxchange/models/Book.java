@@ -79,9 +79,7 @@ public class Book {
 
     // Get book cover from covers API
     public String getCoverUrl() {
-
-        return "http://covers.openlibrary.org/b/olid/" + isbn + "-L.jpg?default=false";
-
+        return "http://covers.openlibrary.org/b/isbn/" + isbn + ".jpg";
     }
 
     public void setCoverUrl(String cover){

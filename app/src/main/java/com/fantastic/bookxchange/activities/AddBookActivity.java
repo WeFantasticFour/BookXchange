@@ -1,14 +1,14 @@
 package com.fantastic.bookxchange.activities;
 
-import android.app.Activity;
 import android.Manifest;
+import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
-import android.text.TextUtils;
 import android.support.annotation.NonNull;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -43,7 +43,6 @@ import java.util.HashMap;
 import java.util.Map;
 
 import cz.msebera.android.httpclient.Header;
-
 import permissions.dispatcher.NeedsPermission;
 import permissions.dispatcher.RuntimePermissions;
 
@@ -52,46 +51,74 @@ import permissions.dispatcher.RuntimePermissions;
 public class AddBookActivity extends BaseActivity {
 
     private static final String TAG = AddBookActivity.class.getSimpleName();
+    private BookClient client;
     private EditText etBookAuthor;
     private EditText etBookTitle;
     private EditText etISBNNumber;
     private EditText etDescription;
-    private ImageView ivPicture;
+    private ImageView ivCover;
     private EditText etPublisher;
-
-    private ImageView cover;
-    private Button scanner, addBook;
-
-    BookClient client;
+    private Button btnScan;
     private Button btnAddPhoto;
+
+    private static String getAuthor(final JSONObject jsonObject) {
+        try {
+            final JSONArray authors = jsonObject.getJSONArray(JsonKeys.BOOK_AUTHOR);
+            int numAuthors = authors.length();
+            final String[] authorStrings = new String[numAuthors];
+            for (int i = 0; i < numAuthors; ++i) {
+                authorStrings[i] = authors.getString(i);
+            }
+            return TextUtils.join(", ", authorStrings);
+        } catch (JSONException e) {
+            return "";
+        }
+    }
+
+    private static String getPublisher(final JSONObject jsonObject) {
+        try {
+            final JSONArray pubs = jsonObject.getJSONArray(JsonKeys.BOOK_PUBLISHER);
+            int numPubs = pubs.length();
+            final String[] pubStrings = new String[numPubs];
+            for (int i = 0; i < numPubs; ++i) {
+                pubStrings[i] = pubs.getString(i);
+            }
+            return TextUtils.join(", ", pubStrings);
+        } catch (JSONException e) {
+            return "";
+        }
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_book);
-
-        etPublisher = findViewById(R.id.etPublisher);
-        cover = findViewById(R.id.ivCover);
-        addBook = findViewById(R.id.btnAddBook);
         showToolbarBackButton();
         enableToolbarBackButton();
+
+        etPublisher = findViewById(R.id.etPublisher);
+        ivCover = findViewById(R.id.ivCover);
         etBookTitle = findViewById(R.id.etBookTitle);
         etBookAuthor = findViewById(R.id.etBookAuthor);
         etISBNNumber = findViewById(R.id.etISBNNumber);
+        etISBNNumber.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View view, boolean b) {
+                Log.i(TAG, "onFocusChange: b " + b);
+                fetchBooks(getText((EditText) view));
+            }
+        });
         etDescription = findViewById(R.id.etDescription);
         btnAddPhoto = findViewById(R.id.btnAddPhoto);
-        ivPicture = findViewById(R.id.ivPicture);
-        ivPicture.setDrawingCacheEnabled(true);
-        ivPicture.buildDrawingCache();
-        scanner = findViewById(R.id.btnScanner);
+        ivCover.setDrawingCacheEnabled(true);
+        ivCover.buildDrawingCache();
+        btnScan = findViewById(R.id.btnScanner);
         btnAddPhoto.setOnClickListener(view -> {
-            Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-            startActivityForResult(intent, 0);
+            AddBookActivityPermissionsDispatcher.addPhotoWithCheck(this);
         });
 
-
-        addBook.setOnClickListener(view -> fetchBooks(getText(etISBNNumber)));
-        scanner.setOnClickListener(view -> openScanner());
+        //addBook.setOnClickListener(view -> fetchBooks(getText(etISBNNumber)));
+        btnScan.setOnClickListener(view -> openScanner());
 
     }
 
@@ -122,9 +149,9 @@ public class AddBookActivity extends BaseActivity {
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if(requestCode==111){
+        if (requestCode == 111) {
             Bitmap bitmap = (Bitmap) data.getExtras().get("data");
-            ivPicture.setImageBitmap(bitmap);
+            ivCover.setImageBitmap(bitmap);
             return;
         }
         IntentResult result = IntentIntegrator.parseActivityResult(requestCode, resultCode, data);
@@ -150,22 +177,23 @@ public class AddBookActivity extends BaseActivity {
         client.getBooks(isbn, new JsonHttpResponseHandler() {
             @Override
             public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
+                Log.i(TAG, "onSuccess: response " + response);
                 try {
                     JSONArray docs;
                     if (response != null) {
                         docs = response.getJSONArray(JsonKeys.DOCS);
-                        // final ArrayList<Book> books = Book.fromJson(docs);
-//                        pushData(books);
-                        for (int i = 0; i < docs.length(); i++) {
-                            JSONObject object = docs.getJSONObject(i);
+                        if (docs.length() > 0) {
+                            JSONObject object = docs.getJSONObject(0);
                             etBookTitle.setText(object.getString(JsonKeys.TITLE));
                             etBookAuthor.setText(getAuthor(object));
                             etPublisher.setText(getPublisher(object));
-                            Glide.with(getApplicationContext()).load(getCoverUrl()).into(cover);
+                            Glide.with(getApplicationContext()).load(getCoverUrl()).into(ivCover);
+                        } else {
+                            snakebar(etBookTitle, R.string.book_not_found);
                         }
                     }
                 } catch (JSONException e) {
-                    e.printStackTrace();
+                    Log.e(TAG, e.getMessage(), e);
                 }
             }
 
@@ -177,41 +205,12 @@ public class AddBookActivity extends BaseActivity {
         });
     }
 
-    private static String getAuthor(final JSONObject jsonObject) {
-        try {
-            final JSONArray authors = jsonObject.getJSONArray(JsonKeys.BOOK_AUTHOR);
-            int numAuthors = authors.length();
-            final String[] authorStrings = new String[numAuthors];
-            for (int i = 0; i < numAuthors; ++i) {
-                authorStrings[i] = authors.getString(i);
-            }
-            return TextUtils.join(", ", authorStrings);
-        } catch (JSONException e) {
-            return "";
-        }
-    }
-
-    private static String getPublisher(final JSONObject jsonObject) {
-        try {
-            final JSONArray pubs = jsonObject.getJSONArray(JsonKeys.BOOK_PUBLISHER);
-            int numPubs = pubs.length();
-            final String[] pubStrings = new String[numPubs];
-            for (int i = 0; i < numPubs; ++i) {
-                pubStrings[i] = pubs.getString(i);
-            }
-            return TextUtils.join(", ", pubStrings);
-        } catch (JSONException e) {
-            return "";
-        }
-    }
-
     public String getCoverUrl() {
-        return "http://covers.openlibrary.org/b/olid/" + getText(etISBNNumber) + "-L.jpg?default=false";
+        String cover = "http://covers.openlibrary.org/b/isbn/" + getText(etISBNNumber) + ".jpg";
+        return cover;
     }
 
     public void addBook(View view) {
-
-
         if (!validate(etBookTitle, etBookAuthor, etISBNNumber, etDescription)) {
             return;
         }
@@ -227,12 +226,13 @@ public class AddBookActivity extends BaseActivity {
                 .addValueEventListener(new ValueEventListener() {
                     @Override
                     public void onDataChange(DataSnapshot dataSnapshot) {
-                        if (dataSnapshot == null) {
-                            uploadCoverPage(ivPicture.getDrawingCache(), isbn);
+                        if (dataSnapshot.getValue() == null) {
+                            uploadCoverPage(ivCover.getDrawingCache(), isbn);
                         } else {
                             saveUserBookRelation(isbn, Book.CATEGORY.EXCHANGE);
                         }
                     }
+
                     @Override
                     public void onCancelled(DatabaseError databaseError) {
                         Log.e(TAG, "databaseError: " + databaseError);
@@ -310,5 +310,4 @@ public class AddBookActivity extends BaseActivity {
             saveBook(downloadUrl.toString());
         });
     }
-
 }

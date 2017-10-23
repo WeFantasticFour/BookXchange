@@ -76,6 +76,7 @@ public class DataTest {
         b1.setShortDescription("Harry Potter JKRowling Harry Potter JKRowling Harry Potter JKRowling Harry Potter JKRowling Harry Potter JKRowling" +"Harry Potter JKRowling");
         b1.setAuthor("JKRowling");
         b1.setCoverUrl("@drawable/ic_nocover");
+        b1.setIsbn("9780563533184");
 
         Book b2 = new Book();
         b2.setTitle("Harry Potter 2");
@@ -98,6 +99,7 @@ public class DataTest {
         b4.setTitle("Pride and Prejuice");
         b4.setAuthor("Jane Austen");
         b4.setCoverUrl("@drawable/ic_nocover");
+        b4.setIsbn("9780061863134");
 
         Book b5 = new Book();
         b5.setTitle("Alice In Wonderland");

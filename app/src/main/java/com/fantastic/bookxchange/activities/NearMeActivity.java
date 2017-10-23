@@ -11,6 +11,7 @@ import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.util.Log;
+import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
@@ -22,6 +23,7 @@ import com.fantastic.bookxchange.fragments.BaseBookListFragment;
 import com.fantastic.bookxchange.fragments.NearListFragment;
 import com.fantastic.bookxchange.models.Book;
 import com.fantastic.bookxchange.models.User;
+import com.fantastic.bookxchange.rest.BookClient;
 import com.fantastic.bookxchange.utils.DataTest;
 import com.fantastic.bookxchange.utils.MapUtils;
 import com.google.android.gms.location.FusedLocationProviderClient;
@@ -39,14 +41,22 @@ import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
+import com.loopj.android.http.JsonHttpResponseHandler;
 import com.vistrav.flow.Flow;
 
+import org.json.JSONException;
+import org.json.JSONObject;
 import org.parceler.Parcels;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
+import cz.msebera.android.httpclient.Header;
 import permissions.dispatcher.NeedsPermission;
 import permissions.dispatcher.RuntimePermissions;
 
@@ -104,11 +114,12 @@ public class NearMeActivity extends BaseActivity implements BaseBookListFragment
         toggle.syncState();
         navigationView.getMenu().getItem(0).setChecked(true);
         navigationView.setNavigationItemSelectedListener(this);
+        //getUsers();
 
     }
 
     private void prepareHeader(View navigationView) {
-        if(auth.getCurrentUser()!=null) {
+        if (auth.getCurrentUser() != null) {
             TextView tvEmail = navigationView.findViewById(R.id.tv_email);
             tvEmail.setText(auth.getCurrentUser().getEmail());
             TextView tvName = navigationView.findViewById(R.id.tv_name);
@@ -119,16 +130,17 @@ public class NearMeActivity extends BaseActivity implements BaseBookListFragment
 
     private void populateData() {
         //TODO Query to firebase, get the closest users to your position
-        users = DataTest.fakeData();
+        //users = DataTest.fakeData();
         books = new HashMap<>();
-
+        /*
         for (User u : users) {
             if (!u.getShareBooks().isEmpty()) {
                 Marker marker = MapUtils.addMarker(map, u);
                 Flow.of(u.getShareBooks()).forEach(b -> saveMarker(marker, b));
                 Flow.of(u.getExchangeBooks()).forEach(b -> saveMarker(marker, b));
             }
-        }
+        }*/
+        getUsers();
         fragment = NearListFragment.newInstance();
         getSupportFragmentManager()
                 .beginTransaction()
@@ -169,6 +181,7 @@ public class NearMeActivity extends BaseActivity implements BaseBookListFragment
                 return true;
             });
             populateData();
+            //getUsers();
         } else {
             toast(R.string.map_null_error);
         }
@@ -284,13 +297,107 @@ public class NearMeActivity extends BaseActivity implements BaseBookListFragment
             default:
                 toast(item.getTitle().toString());
         }
-
+        Menu menu = navigationView.getMenu();
+        for (int i = 0; i < menu.size(); i++) {
+            menu.getItem(i).setCheckable(false);
+        }
         DrawerLayout drawer = findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
-        item.setChecked(true);
-        setTitle(item.getTitle());
+        //item.setChecked(true);
+        //setTitle(item.getTitle());
 
         return true;
+    }
+
+    private void getUsers() {
+        FirebaseDatabase.getInstance()
+                .getReference("users")
+                .addValueEventListener(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(DataSnapshot dataSnapshot) {
+                        List<User> users = new ArrayList<>();
+                        Flow.of(dataSnapshot
+                                .getChildren())
+                                .forEach(data -> {
+                                    User user = data.getValue(User.class);
+                                    users.add(user);
+                                    loadUserLocation(user);
+                                });
+                    }
+
+                    @Override
+                    public void onCancelled(DatabaseError databaseError) {
+
+                    }
+                });
+
+    }
+
+    private void getUserBooks(User user, Marker marker) {
+        FirebaseDatabase.getInstance()
+                .getReference("user_book")
+                .child(user.getId())
+                .addValueEventListener(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(DataSnapshot dataSnapshot) {
+                        Flow.of(dataSnapshot
+                                .getChildren())
+                                .forEach(data -> {
+                                    getBook(user,
+                                            data.child("isbn").getValue(String.class),
+                                            Book.CATEGORY.valueOf(data.child("category").getValue(String.class)), marker);
+                                });
+                    }
+
+                    @Override
+                    public void onCancelled(DatabaseError databaseError) {
+
+                    }
+                });
+
+    }
+
+    private void getBook(User user, String isbn, Book.CATEGORY category, Marker marker) {
+        FirebaseDatabase.getInstance()
+                .getReference("books")
+                .child(isbn)
+                .addValueEventListener(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(DataSnapshot dataSnapshot) {
+                        Book book = dataSnapshot.getValue(Book.class);
+                        Log.i(TAG, "onDataChange: isbn " + isbn + " : " + book);
+                        if (book != null) {
+                            book.setCategory(category);
+                            user.addBook(book);
+                            saveMarker(marker, book);
+                        }
+                    }
+
+                    @Override
+                    public void onCancelled(DatabaseError databaseError) {
+
+                    }
+                });
+
+    }
+
+    private void loadUserLocation(User user) {
+        BookClient client = new BookClient();
+        client.getLocation(user.getZip(), new JsonHttpResponseHandler() {
+
+            @Override
+            public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
+                try {
+                    JSONObject object = (JSONObject) response.getJSONArray("results").get(0);
+                    JSONObject locObject = object.getJSONObject("geometry").getJSONObject("location");
+                    user.setLocation(new LatLng(locObject.getDouble("lat"), locObject.getDouble("lng")));
+                    Marker marker = MapUtils.addMarker(map, user);
+                    getUserBooks(user, marker);
+                } catch (JSONException e) {
+                    Log.e(TAG, e.getMessage(), e);
+                }
+            }
+        });
     }
 }
 

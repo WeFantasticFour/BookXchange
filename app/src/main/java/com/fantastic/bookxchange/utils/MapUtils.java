@@ -28,17 +28,12 @@ public class MapUtils {
     }
 
     public static Marker addMarker(GoogleMap map, User u) {
-        // Creates and adds marker to the map
-
         BitmapDescriptor marker = BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_ORANGE);
-
         MarkerOptions options = new MarkerOptions()
                 .position(u.getLocation())
                 .icon(marker);
-
         Marker result = map.addMarker(options);
         result.setTag(u);
-
         return result;
     }
 

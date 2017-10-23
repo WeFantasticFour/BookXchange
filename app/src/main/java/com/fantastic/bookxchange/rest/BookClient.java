@@ -2,6 +2,7 @@ package com.fantastic.bookxchange.rest;
 
 import com.loopj.android.http.AsyncHttpClient;
 import com.loopj.android.http.JsonHttpResponseHandler;
+import com.loopj.android.http.RequestParams;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
@@ -13,6 +14,7 @@ import java.net.URLEncoder;
 public class BookClient {
 
     private AsyncHttpClient client;
+    private static final String GOOGLE_URL = "https://maps.googleapis.com/maps/api/geocode/json?&key=AIzaSyAXe8NalmwBC-hs8lsr_FfJfMZSb_E6vFc";
 
     public BookClient() {
         this.client = new AsyncHttpClient();
@@ -30,6 +32,12 @@ public class BookClient {
         } catch (UnsupportedEncodingException e) {
             e.printStackTrace();
         }
+    }
+
+    public void getLocation(final String zip, JsonHttpResponseHandler handler) {
+        RequestParams params = new RequestParams();
+        params.put("address", zip);
+        client.get(GOOGLE_URL, params, handler);
     }
 
 }

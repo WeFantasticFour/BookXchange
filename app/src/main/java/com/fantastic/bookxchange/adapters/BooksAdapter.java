@@ -5,6 +5,7 @@ import android.graphics.Color;
 import android.net.Uri;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -26,6 +27,7 @@ import java.util.ArrayList;
 
 public class BooksAdapter extends RecyclerView.Adapter<BooksAdapter.ViewHolder> {
 
+    private static final String TAG = BooksAdapter.class.getSimpleName();
     private ArrayList<Book> books;
     public Context context;
 
@@ -60,6 +62,7 @@ public class BooksAdapter extends RecyclerView.Adapter<BooksAdapter.ViewHolder> 
         }
 
         public void bind(Book book) {
+            Log.i(TAG, "bind: book.getCoverUrl()" + book.getCoverUrl());
             tvTitle.setText(book.getTitle());
             tvAuthor.setText(book.getAuthor());
             RequestOptions options = new RequestOptions()
@@ -67,7 +70,7 @@ public class BooksAdapter extends RecyclerView.Adapter<BooksAdapter.ViewHolder> 
                     .placeholder(R.drawable.ic_nocover)
                     .priority(Priority.HIGH);
             Glide.with(context)
-                    .load(Uri.parse(book.getCoverUrl()))
+                    .load(book.getIsbn() != null ? Uri.parse(book.getCoverUrl()) : R.drawable.ic_nocover)
                     .apply(options)
                     .into(ivCover);
         }
@@ -96,7 +99,6 @@ public class BooksAdapter extends RecyclerView.Adapter<BooksAdapter.ViewHolder> 
         holder.llBook.setOnClickListener(view -> {
             rowSelectedIndex = position;
             listener.onBookClickListener(book);
-
             notifyDataSetChanged();
         });
         if (rowSelectedIndex == position) {

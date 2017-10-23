@@ -1,6 +1,7 @@
 package com.fantastic.bookxchange.models;
 
 import com.google.android.gms.maps.model.LatLng;
+import com.vistrav.flow.Flow;
 
 import org.json.JSONObject;
 import org.parceler.Parcel;
@@ -25,13 +26,16 @@ public class User {
     public List<Book> exchangeBooks;
     public List<Book> wishListBooks;
     public List<Review> reviews;
+    public List<Book> books;
     public float rating;
     public int starsCount;
+
     public User() {
         this.shareBooks = new ArrayList<>();
         this.exchangeBooks = new ArrayList<>();
         this.wishListBooks = new ArrayList<>();
         this.reviews = new ArrayList<>();
+        this.books = new ArrayList<>();
 
         this.starsCount = 0;
         this.rating = 0;
@@ -44,6 +48,10 @@ public class User {
 
     public static void toJSON(User user) {
         //TODO Complete the method to send the info tho Firebase
+    }
+
+    public void addBook(Book book) {
+        books.add(book);
     }
 
     public String getId() {
@@ -103,7 +111,8 @@ public class User {
     }
 
     public List<Book> getShareBooks() {
-        return shareBooks;
+        return shareBooks != null ? shareBooks : Flow.of(books)
+                .filter(book -> book.getCategory().equals(Book.CATEGORY.SHARE)).toList();
     }
 
     public void setShareBooks(List<Book> shareBooks) {
@@ -111,7 +120,9 @@ public class User {
     }
 
     public List<Book> getExchangeBooks() {
-        return exchangeBooks;
+
+        return exchangeBooks != null ? exchangeBooks : Flow.of(books)
+                .filter(book -> book.getCategory().equals(Book.CATEGORY.EXCHANGE)).toList();
     }
 
     public void setExchangeBooks(List<Book> exchangeBooks) {
@@ -119,7 +130,8 @@ public class User {
     }
 
     public List<Book> getWishListBooks() {
-        return wishListBooks;
+        return wishListBooks != null ? wishListBooks : Flow.of(books)
+                .filter(book -> book.getCategory().equals(Book.CATEGORY.WISH)).toList();
     }
 
     public void setWishListBooks(List<Book> wishListBooks) {
