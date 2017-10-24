@@ -13,15 +13,13 @@ import org.parceler.Parcels;
 
 public class BookDetailActivity extends BaseActivity {
 
+    Book book;
     private ImageView ivLargeImage;
     private TextView tvTitle;
     private TextView tvAuthor;
     //private TextView tvDetailPage;
     private TextView tvPublisher;
     private TextView tvEditorialReview;
-
-    Book book;
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,8 +45,8 @@ public class BookDetailActivity extends BaseActivity {
 
     private void setupView() {
         Glide.with(this)
-                //.asBitmap()
                 .load(R.drawable.harry_potter_cover)
+                .asBitmap()
                 .into(ivLargeImage);
 
         tvTitle.setText(book.getTitle());

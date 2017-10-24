@@ -13,8 +13,8 @@ import java.net.URLEncoder;
 
 public class BookClient {
 
-    private AsyncHttpClient client;
     private static final String GOOGLE_URL = "https://maps.googleapis.com/maps/api/geocode/json?&key=AIzaSyAXe8NalmwBC-hs8lsr_FfJfMZSb_E6vFc";
+    private AsyncHttpClient client;
 
     public BookClient() {
         this.client = new AsyncHttpClient();

@@ -19,11 +19,10 @@ import java.util.ArrayList;
 
 public class ConversationActivity extends BaseActivity {
 
-    private RecyclerView rvMessages;
-    private BubbleAdapter aBubble;
-
     User user;
     ArrayList<Message> messages;
+    private RecyclerView rvMessages;
+    private BubbleAdapter aBubble;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

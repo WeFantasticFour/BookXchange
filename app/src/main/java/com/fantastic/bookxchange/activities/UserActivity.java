@@ -32,7 +32,9 @@ import com.fantastic.bookxchange.fragments.WishListFragment;
 import com.fantastic.bookxchange.models.Book;
 import com.fantastic.bookxchange.models.Review;
 import com.fantastic.bookxchange.models.User;
+import com.fantastic.bookxchange.utils.FirebaseUtils;
 import com.github.clans.fab.FloatingActionMenu;
+import com.google.firebase.auth.FirebaseAuth;
 
 import org.parceler.Parcels;
 
@@ -45,26 +47,22 @@ public class UserActivity extends BaseActivity implements BaseBookListFragment.B
         ReviewFragment.ReviewDialogListener,
         MessageFragment.MessageListener {
 
-    ImageView ivProfile;
-    TextView tvLocation;
-    RatingBar ratingBar;
-    TextView tvRN;
-
-    FloatingActionMenu faMenu;
-    com.github.clans.fab.FloatingActionButton faMessage, faReview;
-
-    User user;
-    private BookFragmentPagerAdapter aPager;
     private final String TAG = "User Activity";
+    private ImageView ivProfile;
+    private TextView tvLocation;
+    private RatingBar ratingBar;
+    private TextView tvRN;
+    private FloatingActionMenu faMenu;
+    private com.github.clans.fab.FloatingActionButton faMessage, faReview;
+    private User user;
+    private BookFragmentPagerAdapter aPager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_user);
 
-        //Get user
         user = Parcels.unwrap(getIntent().getParcelableExtra("user"));
-
         ivProfile = findViewById(R.id.ivProfile);
         tvLocation = findViewById(R.id.tvLocation);
         ratingBar = findViewById(R.id.rbStars);
@@ -117,8 +115,10 @@ public class UserActivity extends BaseActivity implements BaseBookListFragment.B
         //TODO setup real Profile image
 
         Glide.with(this)
-                .asBitmap()
                 .load(R.drawable.photo_test)
+                .asBitmap()
+                .centerCrop()
+                .placeholder(R.drawable.ic_person_24dp)
                 .into(new BitmapImageViewTarget(ivProfile) {
                     @Override
                     protected void setResource(Bitmap resource) {
@@ -175,17 +175,14 @@ public class UserActivity extends BaseActivity implements BaseBookListFragment.B
         switch (type) {
             case SHARE:
                 ShareListFragment fmSh = (ShareListFragment) aPager.getRegisteredFragment(0);
-
                 fmSh.pushData(user.getShareBooks());
                 break;
             case EXCHANGE:
                 ExchangeListFragment fmEx = (ExchangeListFragment) aPager.getRegisteredFragment(1);
-
                 fmEx.pushData(user.getExchangeBooks());
                 break;
             case WISHLIST:
                 WishListFragment fmWs = (WishListFragment) aPager.getRegisteredFragment(2);
-
                 fmWs.pushData(user.getWishListBooks());
                 break;
         }
@@ -200,13 +197,24 @@ public class UserActivity extends BaseActivity implements BaseBookListFragment.B
 
     @Override
     public void onAddReview(Review review) {
-        //TODO save review on Firebase
-        //TODO add author
-        //review.setAuthor(FirebaseAuth.getInstance().getCurrentUser());
-
         user.addReview(review);
         setReviewNumber();
         ratingBar.setRating(user.getRating());
+        FirebaseUtils.loadOneUser(FirebaseAuth.getInstance().getCurrentUser().getUid(), me -> {
+            if (me == null) {
+                me = new User();
+                me.setId(FirebaseAuth.getInstance().getCurrentUser().getUid());
+                me.setName(FirebaseAuth.getInstance().getCurrentUser().getDisplayName());
+            }
+            review.setAuthor(me);
+            FirebaseUtils.saveReview(user, review, task -> {
+                if (task.getException() != null) {
+                    snakebar(ratingBar, task.getException().getMessage());
+                } else {
+                    snakebar(ratingBar, "Your Content has been saved!");
+                }
+            });
+        });
     }
 
     @Override
@@ -214,4 +222,6 @@ public class UserActivity extends BaseActivity implements BaseBookListFragment.B
         //TODO send message
         toast(s);
     }
+
+
 }

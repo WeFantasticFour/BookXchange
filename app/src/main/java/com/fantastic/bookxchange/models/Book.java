@@ -33,57 +33,7 @@ public class Book {
     private String urlPicture;
 
 
-    public long getCreatedAt() {
-        return createdAt;
-    }
-
-    public void setCreatedAt(long createdAt) {
-        this.createdAt = createdAt;
-    }
-
-    public boolean isActive() {
-        return active;
-    }
-
-    public void setActive(boolean active) {
-        this.active = active;
-    }
-
-    public CATEGORY getCategory() {
-        return category;
-    }
-
-    public void setCategory(CATEGORY category) {
-        this.category = category;
-    }
-
-    public String getUserId() {
-        return userId;
-    }
-
-    public void setUserId(String userId) {
-        this.userId = userId;
-    }
-
-    public String getTitle() {
-        return title;
-    }
-
-    public void setTitle(String title) {
-        this.title = title;
-    }
-
-    public String getAuthor() {
-        return author;
-    }
-
-    // Get book cover from covers API
-    public String getCoverUrl() {
-        return "http://covers.openlibrary.org/b/isbn/" + isbn + ".jpg";
-    }
-
-    public void setCoverUrl(String cover){
-        this.cover = cover;
+    public Book() {
     }
 
     // Returns a Book given the expected JSON
@@ -138,7 +88,6 @@ public class Book {
         }
     }
 
-
     public static ArrayList<Book> fromJson(JSONArray jsonArray) {
         ArrayList<Book> books = new ArrayList<Book>(jsonArray.length());
 
@@ -158,9 +107,62 @@ public class Book {
         return books;
     }
 
-    public Book() {
+    public long getCreatedAt() {
+        return createdAt;
     }
 
+    public void setCreatedAt(long createdAt) {
+        this.createdAt = createdAt;
+    }
+
+    public boolean isActive() {
+        return active;
+    }
+
+    public void setActive(boolean active) {
+        this.active = active;
+    }
+
+    public CATEGORY getCategory() {
+        return category;
+    }
+
+    public void setCategory(CATEGORY category) {
+        this.category = category;
+    }
+
+    public String getUserId() {
+        return userId;
+    }
+
+    public void setUserId(String userId) {
+        this.userId = userId;
+    }
+
+    public String getTitle() {
+        return title;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
+    }
+
+    public String getAuthor() {
+        return author;
+    }
+
+    public void setAuthor(String author) {
+        this.author = author;
+    }
+
+    // Get book cover from covers API
+    public String getCoverUrl() {
+        return "http://covers.openlibrary.org/b/isbn/" + isbn + ".jpg";
+    }
+
+    public void setCoverUrl(String cover) {
+        this.cover = cover;
+    }
 
     public String getShortDescription() {
         return this.shortDescription;
@@ -168,10 +170,6 @@ public class Book {
 
     public void setShortDescription(String shortDescription) {
         this.shortDescription = shortDescription;
-    }
-
-    public void setAuthor(String author) {
-        this.author = author;
     }
 
     public String getPublisher() {

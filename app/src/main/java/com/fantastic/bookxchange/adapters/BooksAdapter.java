@@ -14,8 +14,6 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
-import com.bumptech.glide.Priority;
-import com.bumptech.glide.request.RequestOptions;
 import com.fantastic.bookxchange.R;
 import com.fantastic.bookxchange.models.Book;
 
@@ -28,57 +26,19 @@ import java.util.ArrayList;
 public class BooksAdapter extends RecyclerView.Adapter<BooksAdapter.ViewHolder> {
 
     private static final String TAG = BooksAdapter.class.getSimpleName();
-    private ArrayList<Book> books;
-    public Context context;
-
     private final static String EXTRA_BOOK = "book";
-
+    public Context context;
     BookClickListener listener;
-
     int rowSelectedIndex = -1;
-
-    public interface BookClickListener {
-        void onBookClickListener(Book book);
-    }
-
-    public void setListener(BookClickListener listener) {
-        this.listener = listener;
-    }
-
-    public class ViewHolder extends RecyclerView.ViewHolder {
-
-        LinearLayout llBook;
-        TextView tvTitle;
-        TextView tvAuthor;
-        ImageView ivCover;
-
-        public ViewHolder(View itemView) {
-            super(itemView);
-
-            tvTitle = itemView.findViewById(R.id.tvTitle);
-            tvAuthor = itemView.findViewById(R.id.tvAuthor);
-            llBook = itemView.findViewById(R.id.llBook);
-            ivCover = itemView.findViewById(R.id.ivBookCover);
-        }
-
-        public void bind(Book book) {
-            Log.i(TAG, "bind: book.getCoverUrl()" + book.getCoverUrl());
-            tvTitle.setText(book.getTitle());
-            tvAuthor.setText(book.getAuthor());
-            RequestOptions options = new RequestOptions()
-                    .centerCrop()
-                    .placeholder(R.drawable.ic_nocover)
-                    .priority(Priority.HIGH);
-            Glide.with(context)
-                    .load(book.getIsbn() != null ? Uri.parse(book.getCoverUrl()) : R.drawable.ic_nocover)
-                    .apply(options)
-                    .into(ivCover);
-        }
-    }
+    private ArrayList<Book> books;
 
     public BooksAdapter(Context context, ArrayList<Book> books) {
         this.context = context;
         this.books = books;
+    }
+
+    public void setListener(BookClickListener listener) {
+        this.listener = listener;
     }
 
     @Override
@@ -111,6 +71,38 @@ public class BooksAdapter extends RecyclerView.Adapter<BooksAdapter.ViewHolder> 
     @Override
     public int getItemCount() {
         return books.size();
+    }
+
+    public interface BookClickListener {
+        void onBookClickListener(Book book);
+    }
+
+    public class ViewHolder extends RecyclerView.ViewHolder {
+
+        LinearLayout llBook;
+        TextView tvTitle;
+        TextView tvAuthor;
+        ImageView ivCover;
+
+        public ViewHolder(View itemView) {
+            super(itemView);
+
+            tvTitle = itemView.findViewById(R.id.tvTitle);
+            tvAuthor = itemView.findViewById(R.id.tvAuthor);
+            llBook = itemView.findViewById(R.id.llBook);
+            ivCover = itemView.findViewById(R.id.ivBookCover);
+        }
+
+        public void bind(Book book) {
+            Log.i(TAG, "bind: book.getCoverUrl()" + book.getCoverUrl());
+            tvTitle.setText(book.getTitle());
+            tvAuthor.setText(book.getAuthor());
+            Glide.with(context)
+                    .load(book.getIsbn() != null ? Uri.parse(book.getCoverUrl()) : R.drawable.ic_nocover)
+                    .centerCrop()
+                    .placeholder(R.drawable.ic_nocover)
+                    .into(ivCover);
+        }
     }
 
 }

@@ -2,7 +2,7 @@ package com.fantastic.bookxchange.fragments;
 
 import android.os.Bundle;
 
-public class ShareListFragment extends BaseBookListFragment{
+public class ShareListFragment extends BaseBookListFragment {
 
     public ShareListFragment() {
         // Required empty public constructor

@@ -12,11 +12,6 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
-import com.bumptech.glide.Priority;
-import com.bumptech.glide.load.resource.bitmap.CenterCrop;
-import com.bumptech.glide.load.resource.bitmap.CircleCrop;
-import com.bumptech.glide.load.resource.bitmap.RoundedCorners;
-import com.bumptech.glide.request.RequestOptions;
 import com.bumptech.glide.request.target.BitmapImageViewTarget;
 import com.fantastic.bookxchange.R;
 import com.fantastic.bookxchange.models.Message;
@@ -27,42 +22,12 @@ import java.util.List;
  * Created by m3libea on 10/13/17.
  */
 
-public class BubbleAdapter extends RecyclerView.Adapter<BubbleAdapter.ViewHolder>{
+public class BubbleAdapter extends RecyclerView.Adapter<BubbleAdapter.ViewHolder> {
 
     private List<Message> messages;
     private Context context;
 
 
-    public class ViewHolder extends RecyclerView.ViewHolder {
-
-        TextView tvDate;
-        TextView tvMessage;
-        ImageView ivProfile;
-
-        public ViewHolder(View itemView) {
-            super(itemView);
-
-            tvDate = itemView.findViewById(R.id.tvDate);
-            tvMessage = itemView.findViewById(R.id.tvMessage);
-            ivProfile = itemView.findViewById(R.id.ivProfile);
-        }
-
-        public void bind(Message message){
-            tvDate.setText(message.getRelativeDate());
-            tvMessage.setText(message.getText());
-
-
-            if(message.getSenderUser().getUrlProfileImage()!= null) {
-                ivProfile.setVisibility(View.VISIBLE);
-                Glide.with(context)
-                        .load(message.getSenderUser().getUrlProfileImage())
-                        .apply(new RequestOptions().transforms(new CenterCrop(), new CircleCrop()))
-                        .into(ivProfile);
-            }else{
-                ivProfile.setVisibility(View.GONE);
-            }
-        }
-    }
     public BubbleAdapter(Context context, List<Message> m) {
         this.context = context;
         this.messages = m;
@@ -87,5 +52,46 @@ public class BubbleAdapter extends RecyclerView.Adapter<BubbleAdapter.ViewHolder
     @Override
     public int getItemCount() {
         return messages.size();
+    }
+
+    public class ViewHolder extends RecyclerView.ViewHolder {
+
+        TextView tvDate;
+        TextView tvMessage;
+        ImageView ivProfile;
+
+        public ViewHolder(View itemView) {
+            super(itemView);
+
+            tvDate = itemView.findViewById(R.id.tvDate);
+            tvMessage = itemView.findViewById(R.id.tvMessage);
+            ivProfile = itemView.findViewById(R.id.ivProfile);
+        }
+
+        public void bind(Message message) {
+            tvDate.setText(message.getRelativeDate());
+            tvMessage.setText(message.getText());
+
+
+            if (message.getSenderUser().getUrlProfileImage() != null) {
+                ivProfile.setVisibility(View.VISIBLE);
+                Glide.with(context)
+                        .load(message.getSenderUser().getUrlProfileImage())
+                        .asBitmap()
+                        .centerCrop()
+                        .placeholder(R.drawable.ic_person_24dp)
+                        .into(new BitmapImageViewTarget(ivProfile) {
+                            @Override
+                            protected void setResource(Bitmap resource) {
+                                RoundedBitmapDrawable circularBitmapDrawable =
+                                        RoundedBitmapDrawableFactory.create(context.getResources(), resource);
+                                circularBitmapDrawable.setCircular(true);
+                                ivProfile.setImageDrawable(circularBitmapDrawable);
+                            }
+                        });
+            } else {
+                ivProfile.setVisibility(View.GONE);
+            }
+        }
     }
 }

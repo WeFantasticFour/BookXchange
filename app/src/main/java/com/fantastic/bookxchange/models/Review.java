@@ -1,5 +1,8 @@
 package com.fantastic.bookxchange.models;
 
+import com.google.firebase.database.Exclude;
+import com.google.firebase.database.IgnoreExtraProperties;
+
 import org.json.JSONObject;
 import org.parceler.Parcel;
 
@@ -14,6 +17,7 @@ import java.util.Locale;
  */
 
 @Parcel
+@IgnoreExtraProperties
 public class Review {
 
     public String id;
@@ -21,6 +25,7 @@ public class Review {
     public float stars;
     public String review;
     public Date date;
+    public Long time = new Date().getTime();
 
     public Review() {
         this.date = Calendar.getInstance().getTime();
@@ -32,6 +37,25 @@ public class Review {
         this.stars = stars;
         this.review = review;
         this.date = Calendar.getInstance().getTime();
+    }
+
+    @Exclude
+    public static Review fromJSON(JSONObject jsonObject) {
+        //TODO Complete the method to get info from JSON
+        return new Review();
+    }
+
+    @Exclude
+    public static void toJSON(Review review) {
+        //TODO Complete the method to send the info tho Firebase
+    }
+
+    public Long getTime() {
+        return time;
+    }
+
+    public void setTime(Long time) {
+        this.time = time;
     }
 
     public String getId() {
@@ -54,12 +78,13 @@ public class Review {
         return stars;
     }
 
-    public Date getDate() {
-        return date;
-    }
-
     public void setStars(float stars) {
         this.stars = stars;
+    }
+
+    @Exclude
+    public Date getDate() {
+        return date;
     }
 
     public String getReview() {
@@ -70,6 +95,7 @@ public class Review {
         this.review = review;
     }
 
+    @Exclude
     public String getFormattedDate() {
         String twitterFormat = "EEE MMM dd HH:mm:ss ZZZZZ yyyy";
         SimpleDateFormat sf = new SimpleDateFormat(twitterFormat, Locale.ENGLISH);
@@ -80,14 +106,5 @@ public class Review {
 
 
         return formattedDate;
-    }
-
-    public static Review fromJSON(JSONObject jsonObject){
-        //TODO Complete the method to get info from JSON
-        return new Review();
-    }
-
-    public static void toJSON(Review review){
-        //TODO Complete the method to send the info tho Firebase
     }
 }

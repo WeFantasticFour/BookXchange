@@ -67,17 +67,15 @@ public class NearMeActivity extends BaseActivity implements BaseBookListFragment
         BaseBookListFragment.BookListReadyListener,
         NavigationView.OnNavigationItemSelectedListener {
 
+    private final static String KEY_LOCATION = "location";
+    private final static int CONNECTION_FAILURE_RESOLUTION_REQUEST = 9000;
+    Location mCurrentLocation;
     //Map BaseFragment related
     private SupportMapFragment mapFragment;
     private GoogleMap map;
     private LocationRequest mLocationRequest;
-    Location mCurrentLocation;
     private long UPDATE_INTERVAL = 10000;  /* 60 secs */
     private long FASTEST_INTERVAL = 5000; /* 5 secs */
-
-    private final static String KEY_LOCATION = "location";
-    private final static int CONNECTION_FAILURE_RESOLUTION_REQUEST = 9000;
-
     private List<User> users;
     private HashMap<Book, List<Marker>> books;
     private String TAG = "NearMeActivity";

@@ -19,13 +19,66 @@ import java.util.Locale;
 @Parcel
 public class Message {
 
-    private String id;
     User recipientUser;
     User senderUser;
     String text;
     String relativeDate;
+    private String id;
 
-    public Message(){}
+    public Message() {
+    }
+
+    public static Message fromJSON(JSONObject jsonObject) {
+        //TODO Complete the method to get info from JSON
+        return new Message();
+    }
+
+    public static void toJSON(Message message) {
+        //TODO Complete the method to send the info tho Firebase
+    }
+
+    public static String getRelativeTimeAgo(String rawJsonDate) {
+        String twitterFormat = "EEE MMM dd HH:mm:ss ZZZZZ yyyy";
+        SimpleDateFormat sf = new SimpleDateFormat(twitterFormat, Locale.ENGLISH);
+        sf.setLenient(true);
+
+        String relativeDate = "";
+        try {
+            long dateMillis = sf.parse(rawJsonDate).getTime();
+            relativeDate = Utils.getTimeString(dateMillis);
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+
+        return relativeDate;
+    }
+
+    public static HashMap<User, List<Message>> getMap(List<Message> messages) {
+        HashMap<User, List<Message>> mess = new HashMap<>();
+
+        for (Message m : messages) {
+            User user = m.getSenderUser();
+            if (mess.containsKey(user)) {
+                mess.get(user).add(m);
+            } else {
+                List<Message> mList = new ArrayList<>();
+                mList.add(m);
+                mess.put(user, mList);
+            }
+        }
+        return mess;
+    }
+
+    public static List<Message> getLastUnique(HashMap<User, List<Message>> messages) {
+
+        ArrayList<Message> mList = new ArrayList<>();
+
+        for (User u : messages.keySet()) {
+            mList.add(messages.get(u).get(0));
+        }
+
+        return mList;
+    }
 
     public User getRecipientUser() {
         return recipientUser;
@@ -57,57 +110,5 @@ public class Message {
 
     public void setRelativeDate(String relativeDate) {
         this.relativeDate = relativeDate;
-    }
-
-    public static Message fromJSON(JSONObject jsonObject){
-        //TODO Complete the method to get info from JSON
-        return new Message();
-    }
-
-    public static void toJSON(Message message){
-        //TODO Complete the method to send the info tho Firebase
-    }
-
-    public static String getRelativeTimeAgo(String rawJsonDate) {
-        String twitterFormat = "EEE MMM dd HH:mm:ss ZZZZZ yyyy";
-        SimpleDateFormat sf = new SimpleDateFormat(twitterFormat, Locale.ENGLISH);
-        sf.setLenient(true);
-
-        String relativeDate = "";
-        try {
-            long dateMillis = sf.parse(rawJsonDate).getTime();
-            relativeDate = Utils.getTimeString(dateMillis);
-        } catch (ParseException e) {
-            e.printStackTrace();
-        }
-
-        return relativeDate;
-    }
-
-    public static HashMap<User, List<Message>> getMap(List<Message> messages){
-        HashMap<User, List<Message>> mess = new HashMap<>();
-
-        for(Message m:messages) {
-            User user = m.getSenderUser();
-            if (mess.containsKey(user)){
-                mess.get(user).add(m);
-            }else{
-                List<Message> mList = new ArrayList<>();
-                mList.add(m);
-                mess.put(user, mList);
-            }
-        }
-        return mess;
-    }
-
-    public static List<Message> getLastUnique(HashMap<User, List<Message>> messages){
-
-        ArrayList<Message> mList = new ArrayList<>();
-
-        for(User u:messages.keySet()){
-            mList.add(messages.get(u).get(0));
-        }
-
-        return mList;
     }
 }

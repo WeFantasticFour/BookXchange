@@ -101,12 +101,8 @@ public class AddBookActivity extends BaseActivity {
         etBookTitle = findViewById(R.id.etBookTitle);
         etBookAuthor = findViewById(R.id.etBookAuthor);
         etISBNNumber = findViewById(R.id.etISBNNumber);
-        etISBNNumber.setOnFocusChangeListener(new View.OnFocusChangeListener() {
-            @Override
-            public void onFocusChange(View view, boolean b) {
-                Log.i(TAG, "onFocusChange: b " + b);
-                fetchBooks(getText((EditText) view));
-            }
+        etISBNNumber.setOnFocusChangeListener((view, b) -> {
+            fetchBooks(getText((EditText) view));
         });
         etDescription = findViewById(R.id.etDescription);
         btnAddPhoto = findViewById(R.id.btnAddPhoto);

@@ -21,10 +21,8 @@ import org.parceler.Parcels;
 
 public class BookDetailFragment extends DialogFragment {
 
-    static final String TAG = BookDetailFragment.class.getSimpleName();
     public static final String EXTRA_BOOK = "book";
-
-
+    static final String TAG = BookDetailFragment.class.getSimpleName();
     Book mBook;
 
     private ImageView ivBookCover;
@@ -62,11 +60,11 @@ public class BookDetailFragment extends DialogFragment {
 
 
         Bundle bundle = this.getArguments();
-        if(bundle != null){
+        if (bundle != null) {
             mBook = Parcels.unwrap(getArguments().getParcelable(EXTRA_BOOK));
         }
 
-        View view =  inflater.inflate(R.layout.fragment_book_detail, container, false);
+        View view = inflater.inflate(R.layout.fragment_book_detail, container, false);
 
 
         ivBookCover = view.findViewById(R.id.ivBookCover);
@@ -77,7 +75,7 @@ public class BookDetailFragment extends DialogFragment {
 
         getDialog().setTitle(tvTitle.getText().toString());
 
-        if(mBook != null){
+        if (mBook != null) {
             setupView();
 
         }
@@ -86,7 +84,7 @@ public class BookDetailFragment extends DialogFragment {
     }
 
 
-    private void setupView(){
+    private void setupView() {
         Glide.with(getContext())
                 .load(mBook.getCoverUrl())
                 //.asBitmap()

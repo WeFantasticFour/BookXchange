@@ -1,9 +1,12 @@
 package com.fantastic.bookxchange.adapters;
 
 import android.content.Context;
+import android.graphics.Bitmap;
 import android.graphics.PorterDuff;
 import android.graphics.drawable.LayerDrawable;
 import android.support.v4.content.res.ResourcesCompat;
+import android.support.v4.graphics.drawable.RoundedBitmapDrawable;
+import android.support.v4.graphics.drawable.RoundedBitmapDrawableFactory;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -13,9 +16,7 @@ import android.widget.RatingBar;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
-import com.bumptech.glide.load.resource.bitmap.CenterCrop;
-import com.bumptech.glide.load.resource.bitmap.CircleCrop;
-import com.bumptech.glide.request.RequestOptions;
+import com.bumptech.glide.request.target.BitmapImageViewTarget;
 import com.fantastic.bookxchange.R;
 import com.fantastic.bookxchange.models.Review;
 import com.fantastic.bookxchange.models.User;
@@ -28,14 +29,39 @@ import java.util.List;
 
 public class ReviewsAdapter extends RecyclerView.Adapter<ReviewsAdapter.ViewHolder> {
 
+    ReviewListener mListener;
     private List<Review> reviews;
     private Context context;
+
+    public ReviewsAdapter(Context context, List<Review> r) {
+        this.context = context;
+        this.reviews = r;
+    }
 
     public void setListener(ReviewListener mListener) {
         this.mListener = mListener;
     }
 
-    ReviewListener mListener;
+    @Override
+    public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+        Context context = parent.getContext();
+        LayoutInflater inflater = LayoutInflater.from(context);
+
+        View tweetView = inflater.inflate(R.layout.item_review, parent, false);
+
+        return new ViewHolder(tweetView);
+    }
+
+    @Override
+    public void onBindViewHolder(ViewHolder holder, int position) {
+        final Review review = reviews.get(position);
+        holder.bind(review);
+    }
+
+    @Override
+    public int getItemCount() {
+        return reviews.size();
+    }
 
     public interface ReviewListener {
         void onUsernameClickListener(User user);
@@ -78,37 +104,21 @@ public class ReviewsAdapter extends RecyclerView.Adapter<ReviewsAdapter.ViewHold
                 ivProfile.setVisibility(View.VISIBLE);
                 Glide.with(context)
                         .load(review.getAuthor().getUrlProfileImage())
-                        .apply(new RequestOptions().transforms(new CenterCrop(), new CircleCrop()))
-                        .into(ivProfile);
+                        .asBitmap()
+                        .centerCrop()
+                        .placeholder(R.drawable.ic_person_24dp)
+                        .into(new BitmapImageViewTarget(ivProfile) {
+                            @Override
+                            protected void setResource(Bitmap resource) {
+                                RoundedBitmapDrawable circularBitmapDrawable =
+                                        RoundedBitmapDrawableFactory.create(context.getResources(), resource);
+                                circularBitmapDrawable.setCircular(true);
+                                ivProfile.setImageDrawable(circularBitmapDrawable);
+                            }
+                        });
             } else {
                 ivProfile.setVisibility(View.GONE);
             }
         }
-    }
-
-    public ReviewsAdapter(Context context, List<Review> r) {
-        this.context = context;
-        this.reviews = r;
-    }
-
-    @Override
-    public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        Context context = parent.getContext();
-        LayoutInflater inflater = LayoutInflater.from(context);
-
-        View tweetView = inflater.inflate(R.layout.item_review, parent, false);
-
-        return new ViewHolder(tweetView);
-    }
-
-    @Override
-    public void onBindViewHolder(ViewHolder holder, int position) {
-        final Review review = reviews.get(position);
-        holder.bind(review);
-    }
-
-    @Override
-    public int getItemCount() {
-        return reviews.size();
     }
 }

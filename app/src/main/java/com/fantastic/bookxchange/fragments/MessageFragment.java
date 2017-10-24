@@ -24,26 +24,15 @@ public class MessageFragment extends BottomSheetDialogFragment {
 
 
     private static final int TOTAL_CHARS = 50;
-
+    User user;
     private EditText etMessage;
     private Button btnGoToSendMessage;
     private Button btnCancel;
     private TextView tvCharsRemaining;
-
-    User user;
     private MessageListener mListener;
-
-    public interface MessageListener{
-        void onAddMessage(String s);
-    }
 
     public MessageFragment() {
         //Empty constructor is required for DialogFragment
-    }
-
-    @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState){
-        return inflater.inflate(R.layout.fragment_message, container);
     }
 
     public static MessageFragment newInstance() {
@@ -53,7 +42,12 @@ public class MessageFragment extends BottomSheetDialogFragment {
     }
 
     @Override
-    public void onViewCreated(View view, @Nullable Bundle savedInstanceState){
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        return inflater.inflate(R.layout.fragment_message, container);
+    }
+
+    @Override
+    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
         etMessage = view.findViewById(R.id.etMessage);
@@ -64,7 +58,7 @@ public class MessageFragment extends BottomSheetDialogFragment {
         getDialog().setTitle("Message");
         // Hide soft keyboard automatically and request focus to field
         etMessage.requestFocus();
-        if(view != null){
+        if (view != null) {
             InputMethodManager imm = (InputMethodManager) getContext().getApplicationContext().getSystemService(Context.INPUT_METHOD_SERVICE);
             imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
         }
@@ -78,10 +72,9 @@ public class MessageFragment extends BottomSheetDialogFragment {
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
                 tvCharsRemaining.setText(String.valueOf(TOTAL_CHARS - s.length()) + " / " + TOTAL_CHARS);
-                if(s.length()> 0 && s.length() <= TOTAL_CHARS){
+                if (s.length() > 0 && s.length() <= TOTAL_CHARS) {
                     btnGoToSendMessage.setEnabled(true);
-                }
-                else{
+                } else {
                     btnGoToSendMessage.setEnabled(false);
                 }
 
@@ -94,9 +87,9 @@ public class MessageFragment extends BottomSheetDialogFragment {
         });
 
         btnGoToSendMessage.setOnClickListener(v -> {
-            if(etMessage.getText().toString().replaceAll("\\s+","").length() == 0) {
+            if (etMessage.getText().toString().replaceAll("\\s+", "").length() == 0) {
                 Toast.makeText(getContext(), "Empty message", Toast.LENGTH_SHORT);
-            }else {
+            } else {
                 addMessage(etMessage.getText().toString());
                 dismiss();
             }
@@ -127,5 +120,9 @@ public class MessageFragment extends BottomSheetDialogFragment {
         if (mListener != null) {
             mListener.onAddMessage(s);
         }
+    }
+
+    public interface MessageListener {
+        void onAddMessage(String s);
     }
 }
