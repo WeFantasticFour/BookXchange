@@ -13,7 +13,7 @@ import com.fantastic.bookxchange.R;
  * Created by m3libea on 10/13/17.
  */
 
-public class ListDivider extends RecyclerView.ItemDecoration  {
+public class ListDivider extends RecyclerView.ItemDecoration {
     private Drawable mDivider;
 
     public ListDivider(Context context) {

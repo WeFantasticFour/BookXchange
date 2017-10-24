@@ -25,27 +25,10 @@ public class BaseBookListFragment extends Fragment implements BooksAdapter.BookC
     public ArrayList<Book> books;
 
     public BooksAdapter aBooks;
+    protected BookListReadyListener readyListener;
     private RecyclerView rvBooks;
     private LinearLayoutManager lyManager;
     private BookListClickListener clickListener;
-    protected BookListReadyListener readyListener;
-
-
-    public interface BookListClickListener {
-        void onClickListener(Book book);
-    }
-
-    public enum FragmentType {
-        SHARE,
-        EXCHANGE,
-        WISHLIST,
-        NEAR,
-        SEARCH
-    }
-
-    public interface BookListReadyListener{
-        void onReadyListener(FragmentType type);
-    }
 
 
     public BaseBookListFragment() {
@@ -69,7 +52,7 @@ public class BaseBookListFragment extends Fragment implements BooksAdapter.BookC
                              Bundle savedInstanceState) {
 
         View view = inflater.inflate(R.layout.fragment_base_book_list, container, false);
-        if (books == null){
+        if (books == null) {
             books = new ArrayList<>();
         }
 
@@ -102,14 +85,14 @@ public class BaseBookListFragment extends Fragment implements BooksAdapter.BookC
         super.onAttach(context);
         if (context instanceof BookListClickListener) {
             clickListener = (BookListClickListener) context;
-        }else {
+        } else {
             throw new ClassCastException(context.toString()
                     + " must implement onBookClickListener");
         }
 
         if (context instanceof BookListReadyListener) {
             readyListener = (BookListReadyListener) context;
-        }else {
+        } else {
             throw new ClassCastException(context.toString()
                     + " must implement onReadyListener");
         }
@@ -119,5 +102,21 @@ public class BaseBookListFragment extends Fragment implements BooksAdapter.BookC
         this.books.clear();
         this.books.addAll(books);
         aBooks.notifyDataSetChanged();
+    }
+
+    public enum FragmentType {
+        SHARE,
+        EXCHANGE,
+        WISHLIST,
+        NEAR,
+        SEARCH
+    }
+
+    public interface BookListClickListener {
+        void onClickListener(Book book);
+    }
+
+    public interface BookListReadyListener {
+        void onReadyListener(FragmentType type);
     }
 }

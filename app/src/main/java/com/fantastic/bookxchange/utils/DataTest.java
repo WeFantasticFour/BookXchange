@@ -10,21 +10,19 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 
-import static com.fantastic.bookxchange.R.drawable.ic_nocover;
-
 /**
  * Created by m3libea on 10/12/17.
  */
 
 public class DataTest {
 
-    public static User getCurrent(){
+    public static User getCurrent() {
 
         User user = new User();
 
         user.setName("Rocio");
         user.setUsername("rommor");
-        user.setLocation(new LatLng(37.7749,-122.419));
+        user.setLocation(new LatLng(37.7749, -122.419));
 
         List<Book> lshare1 = new ArrayList<>();
 
@@ -52,40 +50,41 @@ public class DataTest {
         return user;
     }
 
-    public static List<User> fakeData(){
+    public static List<User> fakeData() {
         User user = new User();
         User user1 = new User();
         User user2 = new User();
 
         user.setName("Maria");
         user.setUsername("rommor");
-        user.setLocation(new LatLng(37.7749,-122.419));
+        user.setLocation(new LatLng(37.7749, -122.419));
 
         user1.setName("Gretel");
         user1.setUsername("ghilbing");
-        user1.setLocation(new LatLng(37.77841491,-122.4209547));
+        user1.setLocation(new LatLng(37.77841491, -122.4209547));
 
         user2.setName("Dharmesh");
         user2.setUsername("dgohil");
-        user2.setLocation(new LatLng(37.77661714,-122.40840197));
+        user2.setLocation(new LatLng(37.77661714, -122.40840197));
 
 
         //Create books
         Book b1 = new Book();
         b1.setTitle("Harry Potter");
-        b1.setShortDescription("Harry Potter JKRowling Harry Potter JKRowling Harry Potter JKRowling Harry Potter JKRowling Harry Potter JKRowling" +"Harry Potter JKRowling");
+        b1.setShortDescription("Harry Potter JKRowling Harry Potter JKRowling Harry Potter JKRowling Harry Potter JKRowling Harry Potter JKRowling" + "Harry Potter JKRowling");
         b1.setAuthor("JKRowling");
         b1.setCoverUrl("@drawable/ic_nocover");
+        b1.setIsbn("9780563533184");
 
         Book b2 = new Book();
         b2.setTitle("Harry Potter 2");
-        b2.setShortDescription("Harry Potter 2 JKRowling Harry Potter 2 JKRowling Harry Potter 2 JKRowling Harry Potter 2 JKRowling Harry Potter 2 JKRowling" +"Harry Potter 2 JKRowling");
+        b2.setShortDescription("Harry Potter 2 JKRowling Harry Potter 2 JKRowling Harry Potter 2 JKRowling Harry Potter 2 JKRowling Harry Potter 2 JKRowling" + "Harry Potter 2 JKRowling");
         b2.setAuthor("JKRowling");
         b2.setCoverUrl("@drawable/ic_nocover");
 
         Book b = new Book();
         b.setTitle("Harry Potter 3");
-        b.setShortDescription("Harry Potter 3 JKRowling Harry Potter 3 JKRowling Harry Potter 3 JKRowling Harry Potter 3 JKRowling Harry Potter 3 JKRowling" +"Harry Potter 3 JKRowling");
+        b.setShortDescription("Harry Potter 3 JKRowling Harry Potter 3 JKRowling Harry Potter 3 JKRowling Harry Potter 3 JKRowling Harry Potter 3 JKRowling" + "Harry Potter 3 JKRowling");
         b.setAuthor("JKRowling");
         b.setCoverUrl("@drawable/ic_nocover");
 
@@ -98,6 +97,7 @@ public class DataTest {
         b4.setTitle("Pride and Prejuice");
         b4.setAuthor("Jane Austen");
         b4.setCoverUrl("@drawable/ic_nocover");
+        b4.setIsbn("9780061863134");
 
         Book b5 = new Book();
         b5.setTitle("Alice In Wonderland");
@@ -158,26 +158,26 @@ public class DataTest {
         return users;
     }
 
-    public static List<Book> getFakeBook(){
+    public static List<Book> getFakeBook() {
 
         Book book1 = new Book();
         book1.setTitle("Harry Potter");
         book1.setAuthor("JKRowling");
-        book1.setShortDescription("Harry Potter JKRowling Harry Potter JKRowling Harry Potter JKRowling Harry Potter JKRowling Harry Potter JKRowling" +"Harry Potter JKRowling");
+        book1.setShortDescription("Harry Potter JKRowling Harry Potter JKRowling Harry Potter JKRowling Harry Potter JKRowling Harry Potter JKRowling" + "Harry Potter JKRowling");
         book1.setPublisher("Publisher");
         book1.setCoverUrl("@drawable/ic_nocover");
 
         Book book2 = new Book();
         book2.setTitle("Harry Potter 2");
         book2.setAuthor("JKRowling");
-        book2.setShortDescription("Harry Potter 2 JKRowling Harry Potter 2 JKRowling Harry Potter 2 JKRowling Harry Potter 2 JKRowling Harry Potter 2 JKRowling" +"Harry Potter 2 JKRowling");
+        book2.setShortDescription("Harry Potter 2 JKRowling Harry Potter 2 JKRowling Harry Potter 2 JKRowling Harry Potter 2 JKRowling Harry Potter 2 JKRowling" + "Harry Potter 2 JKRowling");
         book2.setPublisher("Publisher");
         book2.setCoverUrl("@drawable/ic_nocover");
 
         Book book3 = new Book();
         book3.setTitle("Harry Potter 3");
         book3.setAuthor("JKRowling");
-        book3.setShortDescription("Harry Potter 3 JKRowling Harry Potter 3 JKRowling Harry Potter 3 JKRowling Harry Potter 3 JKRowling Harry Potter 3 JKRowling" +"Harry Potter 3 JKRowling");
+        book3.setShortDescription("Harry Potter 3 JKRowling Harry Potter 3 JKRowling Harry Potter 3 JKRowling Harry Potter 3 JKRowling Harry Potter 3 JKRowling" + "Harry Potter 3 JKRowling");
         book3.setPublisher("Publisher");
         book3.setCoverUrl("@drawable/ic_nocover");
 
@@ -189,7 +189,7 @@ public class DataTest {
         return books;
     }
 
-    public static List<Message> getMessages(){
+    public static List<Message> getMessages() {
 
         List<Message> messages = new ArrayList<>();
 

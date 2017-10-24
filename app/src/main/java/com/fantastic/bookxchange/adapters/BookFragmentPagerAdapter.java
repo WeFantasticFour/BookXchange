@@ -14,42 +14,42 @@ import com.fantastic.bookxchange.utils.SmartFragmentStatePagerAdapter;
  */
 
 public class BookFragmentPagerAdapter extends SmartFragmentStatePagerAdapter {
-        final int PAGE_COUNT = 3;
-        private String tabTitles[] = new String[] { "Share", "Exchange", "Wishlist" };
-        private Context context;
+    final int PAGE_COUNT = 3;
+    private String tabTitles[] = new String[]{"Share", "Exchange", "Wishlist"};
+    private Context context;
 
-        public BookFragmentPagerAdapter(FragmentManager fm, Context context) {
-            super(fm);
-            this.context = context;
-        }
-
-        @Override
-        public int getCount() {
-            return PAGE_COUNT;
-        }
-
-        @Override
-        public Fragment getItem(int position) {
-
-            Fragment fm;
-            switch (position){
-                case 0:
-                    fm = ShareListFragment.newInstance();
-                    break;
-                case 1:
-                    fm = ExchangeListFragment.newInstance();
-                    break;
-                case 2:
-                    fm = WishListFragment.newInstance();
-                    break;
-                default:
-                    fm = null;
-            }
-            return fm;
-        }
-
-        @Override
-        public CharSequence getPageTitle(int position) {
-            return tabTitles[position];
-        }
+    public BookFragmentPagerAdapter(FragmentManager fm, Context context) {
+        super(fm);
+        this.context = context;
     }
+
+    @Override
+    public int getCount() {
+        return PAGE_COUNT;
+    }
+
+    @Override
+    public Fragment getItem(int position) {
+
+        Fragment fm;
+        switch (position) {
+            case 0:
+                fm = ShareListFragment.newInstance();
+                break;
+            case 1:
+                fm = ExchangeListFragment.newInstance();
+                break;
+            case 2:
+                fm = WishListFragment.newInstance();
+                break;
+            default:
+                fm = null;
+        }
+        return fm;
+    }
+
+    @Override
+    public CharSequence getPageTitle(int position) {
+        return tabTitles[position];
+    }
+}

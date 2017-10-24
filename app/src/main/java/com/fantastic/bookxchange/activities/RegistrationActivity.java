@@ -26,13 +26,13 @@ public class RegistrationActivity extends BaseActivity {
 
 
     private static final String TAG = RegistrationActivity.class.getSimpleName();
+    public LatLng latLng;
     private EditText etFirstName;
     private EditText etLastName;
     private EditText etEmail;
     private EditText etPassword;
     private FirebaseAuth auth;
     private EditText etZip;
-    public LatLng latLng;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -57,7 +57,7 @@ public class RegistrationActivity extends BaseActivity {
         FusedLocationProviderClient locationClient = getFusedLocationProviderClient(this);
         locationClient.getLastLocation()
                 .addOnSuccessListener(location -> {
-                    if(location!=null) {
+                    if (location != null) {
                         latLng = new LatLng(location.getLatitude(), location.getLongitude());
                     }
                 })
@@ -110,7 +110,7 @@ public class RegistrationActivity extends BaseActivity {
         user.setName(getText(etFirstName) + " " + getText(etLastName));
         user.setZip(getText(etZip));
         user.setId(auth.getCurrentUser().getUid());
-        user.setLocation(latLng);
+        //user.setLocation(latLng);
         FirebaseDatabase.getInstance()
                 .getReference("users")
                 .child(auth.getCurrentUser().getUid())

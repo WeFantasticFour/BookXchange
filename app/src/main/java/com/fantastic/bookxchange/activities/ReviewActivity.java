@@ -15,7 +15,7 @@ import org.parceler.Parcels;
 
 import java.util.List;
 
-public class ReviewActivity extends BaseActivity implements ReviewsAdapter.ReviewListener{
+public class ReviewActivity extends BaseActivity implements ReviewsAdapter.ReviewListener {
 
     private RecyclerView rvReviews;
     private ReviewsAdapter aReviews;

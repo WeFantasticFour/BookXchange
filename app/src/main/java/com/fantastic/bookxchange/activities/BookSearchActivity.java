@@ -33,9 +33,8 @@ import static com.fantastic.bookxchange.R.id.container;
 
 public class BookSearchActivity extends BaseActivity implements SearchListFragment.BookListClickListener, SearchListFragment.BookListReadyListener {
 
-    BookClient client;
     public static final String EXTRA_BOOK = "book";
-
+    BookClient client;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,8 +46,6 @@ public class BookSearchActivity extends BaseActivity implements SearchListFragme
         setupToolbar();
 
     }
-
-
 
 
     @Override
@@ -63,7 +60,7 @@ public class BookSearchActivity extends BaseActivity implements SearchListFragme
     }
 
 
-    private void loadFragment(String query){
+    private void loadFragment(String query) {
 
         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
         Fragment newFragment = new SearchListFragment();
@@ -86,7 +83,6 @@ public class BookSearchActivity extends BaseActivity implements SearchListFragme
     }
 
 
-
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
@@ -97,7 +93,7 @@ public class BookSearchActivity extends BaseActivity implements SearchListFragme
 
         final SearchView searchView = (SearchView) searchMenuItem.getActionView();
 
-        if(null!=searchManager){
+        if (null != searchManager) {
             searchView.setSearchableInfo(searchManager.getSearchableInfo(getComponentName()));
         }
         int searchEditId = android.support.v7.appcompat.R.id.search_src_text;
@@ -131,11 +127,11 @@ public class BookSearchActivity extends BaseActivity implements SearchListFragme
 
         int id = item.getItemId();
 
-        if(id==R.id.action_search){
+        if (id == R.id.action_search) {
             return true;
         }
 
-        if(id==R.id.action_scan){
+        if (id == R.id.action_scan) {
 
             final Activity activity = this;
 
@@ -160,7 +156,7 @@ public class BookSearchActivity extends BaseActivity implements SearchListFragme
                 Toast.makeText(this, "Canceled", Toast.LENGTH_LONG).show();
             } else {
                 Log.d("BookSearchActivity", "Scanned");
-                
+
                 Toast.makeText(this, "Scanned: " + result.getContents(), Toast.LENGTH_LONG).show();
 
             }

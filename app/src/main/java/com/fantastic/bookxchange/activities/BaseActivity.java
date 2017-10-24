@@ -2,6 +2,8 @@ package com.fantastic.bookxchange.activities;
 
 import android.content.Intent;
 import android.os.Build;
+import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.annotation.StringRes;
 import android.support.design.widget.Snackbar;
 import android.support.v4.content.ContextCompat;
@@ -18,6 +20,8 @@ import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import com.fantastic.bookxchange.R;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 
 /**
  * Created by dgohil on 10/12/17.
@@ -28,6 +32,13 @@ public class BaseActivity extends AppCompatActivity {
     protected Toolbar toolbar;
     protected ActionBar actionBar;
     protected ProgressBar progressBar;
+    protected FirebaseUser me;
+
+    @Override
+    protected void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        me = FirebaseAuth.getInstance().getCurrentUser();
+    }
 
     @Override
     public void setContentView(int layoutResId) {

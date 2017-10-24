@@ -38,7 +38,7 @@ public class MessagesActivity extends BaseActivity implements MessageAdapter.Mes
     private void fetchData() {
         //TODO Call to endpoint on firebase, we assume that the last one came first.
 
-        List<Message> mMessages =DataTest.getMessages();
+        List<Message> mMessages = DataTest.getMessages();
         messages = Message.getMap(mMessages);
     }
 

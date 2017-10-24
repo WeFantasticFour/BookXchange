@@ -23,11 +23,11 @@ public class SearchListFragment extends BaseBookListFragment {
 
     private BookClient client;
 
-    public SearchListFragment(){
+    public SearchListFragment() {
 
     }
 
-    public static SearchListFragment newInstance(String query){
+    public static SearchListFragment newInstance(String query) {
 
         Bundle args = new Bundle();
 
@@ -51,24 +51,25 @@ public class SearchListFragment extends BaseBookListFragment {
         fetchBooks(query);
     }
 
-    public void fetchBooks(String query){
+    public void fetchBooks(String query) {
         client = new BookClient();
-        client.getBooks(query, new JsonHttpResponseHandler(){
+        client.getBooks(query, new JsonHttpResponseHandler() {
             @Override
-            public void onSuccess(int statusCode, Header[] headers, JSONObject response){
-                try{
+            public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
+                try {
                     JSONArray docs;
-                    if(response != null){
+                    if (response != null) {
                         docs = response.getJSONArray(JsonKeys.DOCS);
                         final ArrayList<Book> books = Book.fromJson(docs);
                         pushData(books);
                     }
-                }catch (JSONException e){
+                } catch (JSONException e) {
                     e.printStackTrace();
                 }
             }
+
             @Override
-            public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable){
+            public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
                 super.onFailure(statusCode, headers, responseString, throwable);
             }
 

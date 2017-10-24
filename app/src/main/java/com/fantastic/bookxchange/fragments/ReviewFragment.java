@@ -28,21 +28,16 @@ import com.fantastic.bookxchange.models.Review;
  */
 public class ReviewFragment extends DialogFragment {
 
-    private ReviewDialogListener mListener;
-
     Button btnAddReview;
     RatingBar ratingBar;
     EditText etReview;
+    private ReviewDialogListener mListener;
 
     public ReviewFragment() {
         // Required empty public constructor
     }
 
-    public interface ReviewDialogListener {
-        void onAddReview(Review review);
-    }
-
-    public static ReviewFragment newInstance(){
+    public static ReviewFragment newInstance() {
         ReviewFragment fragment = new ReviewFragment();
         return fragment;
     }
@@ -59,9 +54,9 @@ public class ReviewFragment extends DialogFragment {
         ratingBar = v.findViewById(R.id.rbStars);
 
         btnAddReview.setOnClickListener(view -> {
-            if(etReview.getText().length() == 0) {
+            if (etReview.getText().length() == 0) {
                 Toast.makeText(getContext(), "Write a review", Toast.LENGTH_SHORT).show();
-            }else{
+            } else {
                 Review review = new Review();
                 review.setStars(ratingBar.getRating());
                 review.setReview(etReview.getText().toString());
@@ -96,7 +91,6 @@ public class ReviewFragment extends DialogFragment {
         mListener = null;
     }
 
-
     @Override
     public void onResume() {
         // Store access variables for window and blank point
@@ -110,5 +104,10 @@ public class ReviewFragment extends DialogFragment {
         window.setGravity(Gravity.CENTER);
         // Call super onResume after sizing
         super.onResume();
+    }
+
+
+    public interface ReviewDialogListener {
+        void onAddReview(Review review);
     }
 }
