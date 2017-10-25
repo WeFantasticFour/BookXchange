@@ -1,34 +1,42 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical" android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    style="?pageBackground">
 
     <ImageView
         android:id="@+id/ivBookCover"
-        android:layout_marginTop="8dp"
         android:layout_width="280dp"
         android:layout_height="280dp"
-        android:layout_gravity="center"/>
+        android:layout_gravity="center"
+        android:layout_marginTop="8dp"
+        app:srcCompat="@drawable/ic_nocover" />
 
     <TextView
         android:id="@+id/tvTitle"
+        style="?textLarge"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textSize="28sp"
+        android:layout_gravity="center"
         android:layout_marginTop="8dp"
+        android:ellipsize="end"
+        android:maxLines="1"
         android:paddingLeft="10dp"
         android:paddingRight="10dp"
-        android:layout_gravity="center"
-        android:maxLines="1"
-        android:ellipsize="end"/>
+        android:text="@string/book_title"
+        android:textSize="28sp" />
 
     <TextView
         android:id="@+id/tvAuthor"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textSize="22sp"
+        android:layout_gravity="center"
+        style="?textRegular"
         android:layout_marginTop="8dp"
-        android:layout_gravity="center"/>
+        android:text="@string/book_author"
+        android:textSize="22sp" />
 
     <View
         android:layout_width="match_parent"
@@ -39,10 +47,12 @@
         android:id="@+id/tvPublisher"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textSize="18sp"
-        android:layout_marginTop="8dp"
         android:layout_gravity="center"
-        android:textStyle="italic"/>
+        android:layout_marginTop="8dp"
+        style="?textSubheader"
+        android:text="@string/book_publisher"
+        android:textSize="18sp"
+        android:textStyle="italic" />
 
 
 </LinearLayout>

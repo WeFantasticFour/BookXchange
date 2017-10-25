@@ -31,6 +31,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="@string/message"
+            style="?textLarge"
             android:inputType="text" />
     </android.support.design.widget.TextInputLayout>
 
@@ -39,48 +40,54 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@+id/container_message"
-        android:layout_marginBottom="8dp"
-        android:layout_marginTop="8dp">
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true">
 
         <TextView
+            android:id="@+id/tvCharactersRemaining"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="2dp"
+            android:layout_gravity="left"
             android:layout_margin="8dp"
-            android:layout_gravity="right"
-            android:id="@+id/tvCharactersRemaining"
-            android:text="34 / 50"/>
+            style="?textRegular"
+            android:layout_marginTop="2dp"
+            android:text="34 / 50" />
 
     </android.support.design.widget.TextInputLayout>
+
+    <!--<android.support.v7.widget.AppCompatButton-->
+        <!--android:id="@+id/btnGoToSendMessage"-->
+        <!--android:text="@string/send"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:layout_width="wrap_content"-->
+        <!--style="@style/FlatButton" />-->
 
     <android.support.v7.widget.AppCompatButton
         android:id="@+id/btnGoToSendMessage"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:backgroundTint="@color/colorAccent"
         android:text="@string/send"
-        android:textColor="@android:color/white"
-        android:layout_marginLeft="58dp"
-        android:layout_marginStart="58dp"
-        android:layout_below="@id/container_message"
+        android:textColor="@color/colorAccent"
+        style="?android:attr/borderlessButtonStyle"
         android:layout_alignBaseline="@+id/btnCancel"
         android:layout_alignBottom="@+id/btnCancel"
-        android:layout_toRightOf="@+id/btnCancel"
-        android:layout_toEndOf="@+id/btnCancel" />
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true" />
+
+
 
     <android.support.v7.widget.AppCompatButton
         android:id="@+id/btnCancel"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="21dp"
-        android:backgroundTint="@color/colorAccent"
+        style="?android:attr/borderlessButtonStyle"
         android:text="@string/cancel"
-        android:textColor="@android:color/white"
-        android:layout_marginLeft="61dp"
-        android:layout_marginStart="61dp"
-        android:layout_below="@+id/container_message"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true" />
+        android:textColor="@color/colorAccent"
+        android:layout_marginRight="17dp"
+        android:layout_marginEnd="17dp"
+        android:layout_below="@+id/container_chars"
+        android:layout_toLeftOf="@+id/btnGoToSendMessage"
+        android:layout_toStartOf="@+id/btnGoToSendMessage" />
 
 
     />

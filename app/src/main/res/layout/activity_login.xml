@@ -10,7 +10,7 @@
         android:id="@+id/spacer_top"
         android:layout_width="match_parent"
         android:layout_height="250dp"
-        android:background="@color/colorAccent"
+        android:background="@color/colorPrimary"
         android:orientation="vertical">
 
         <android.support.v7.widget.AppCompatTextView
@@ -18,10 +18,12 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="48dp"
             android:text="@string/bookxchange"
+            style="?textLargeWhite"
             android:textAlignment="center"
             android:textColor="@android:color/white"
             android:textSize="36sp"
             android:textStyle="bold|italic" />
+
     </RelativeLayout>
 
     <RelativeLayout
@@ -39,30 +41,32 @@
         android:id="@+id/tvOr"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/container"
-        android:layout_marginTop="16dp"
+        style="?textLargePrimary"
         android:text="OR"
-        android:textAlignment="center" />
+        android:textAlignment="center"
+        android:layout_above="@+id/btnRegister"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true" />
 
     <android.support.v7.widget.AppCompatButton
         android:id="@+id/btnRegister"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/tvOr"
-        android:layout_marginBottom="8dp"
-        android:layout_marginTop="16dp"
-        android:layout_marginLeft="32dp"
-        android:layout_marginRight="32dp"
-        android:backgroundTint="@color/colorAccent"
+        android:layout_marginBottom="11dp"
+        style="?button"
         android:onClick="openRegistration"
         android:text="@string/register"
-        android:textColor="@android:color/white" />
+        android:layout_alignParentBottom="true"
+        android:layout_alignLeft="@+id/container"
+        android:layout_alignStart="@+id/container"
+        android:layout_alignRight="@+id/container"
+        android:layout_alignEnd="@+id/container" />
 
 
     <android.support.v7.widget.CardView
         android:id="@+id/container"
         android:layout_width="wrap_content"
-        android:layout_height="300dp"
+        android:layout_height="350dp"
         android:layout_centerHorizontal="true"
         android:layout_centerVertical="true"
         android:layout_marginEnd="32dp"
@@ -74,7 +78,7 @@
 
         <RelativeLayout
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_height="351dp"
             android:padding="16dp">
 
             <android.support.v7.widget.AppCompatTextView
@@ -85,9 +89,7 @@
                 android:layout_marginTop="8dp"
                 android:gravity="center"
                 android:text="@string/login"
-                android:textColor="@color/colorAccent"
-                android:textSize="20sp"
-                android:textStyle="bold" />
+                style="?textLargePrimary" />
 
             <android.support.design.widget.TextInputLayout
                 android:id="@+id/container_email"
@@ -97,10 +99,15 @@
                 android:layout_marginBottom="8dp"
                 android:layout_marginTop="8dp">
 
-                <EditText
+                <android.support.v7.widget.AppCompatEditText
                     android:id="@+id/etEmail"
+                    style="?textLarge"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:layout_alignParentLeft="true"
+                    android:layout_alignParentStart="true"
+                    android:layout_below="@+id/tvSignupTitle"
+                    android:layout_weight="1"
                     android:hint="@string/email"
                     android:inputType="textEmailAddress" />
             </android.support.design.widget.TextInputLayout>
@@ -113,25 +120,50 @@
                 android:layout_marginBottom="8dp"
                 android:layout_marginTop="8dp">
 
-                <EditText
+                <android.support.v7.widget.AppCompatEditText
                     android:id="@+id/etPassword"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
+                    android:layout_height="53dp"
                     android:hint="@string/password"
+                    style="?textLarge"
                     android:inputType="textPassword" />
             </android.support.design.widget.TextInputLayout>
 
             <android.support.v7.widget.AppCompatButton
-                android:id="@+id/btnLogin"
+                android:id="@+id/appCompatButton"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_below="@+id/container_password"
-                android:layout_marginBottom="8dp"
-                android:layout_marginTop="16dp"
-                android:backgroundTint="@color/colorAccent"
+                android:layout_marginBottom="12dp"
                 android:onClick="login"
                 android:text="@string/login"
-                android:textColor="@android:color/white" />
+                style="?button"
+                android:layout_above="@+id/imageButton4"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentStart="true" />
+
+            <ImageButton
+                android:id="@+id/imageButton4"
+                android:layout_width="@android:dimen/notification_large_icon_height"
+                android:layout_height="@android:dimen/notification_large_icon_width"
+                android:layout_marginEnd="35dp"
+                android:layout_marginRight="35dp"
+                android:scaleType="fitXY"
+                app:srcCompat="@drawable/facebook"
+                android:layout_alignParentBottom="true"
+                android:layout_alignParentRight="true"
+                android:layout_alignParentEnd="true" />
+
+            <ImageButton
+                android:id="@+id/imageButton6"
+                android:layout_width="@android:dimen/notification_large_icon_height"
+                android:layout_height="@android:dimen/notification_large_icon_width"
+                android:layout_marginLeft="48dp"
+                android:layout_marginStart="48dp"
+                android:scaleType="fitXY"
+                app:srcCompat="@drawable/google"
+                android:layout_alignParentBottom="true"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentStart="true" />
 
         </RelativeLayout>
 
