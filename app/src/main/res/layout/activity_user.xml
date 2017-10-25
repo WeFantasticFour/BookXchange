@@ -27,6 +27,7 @@
             android:background="@drawable/bk_user_profile"/>
         <TextView
             android:id="@+id/tvLocation"
+            style="?textLarge"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="5dp"
@@ -45,6 +46,7 @@
             android:id="@+id/tvReviewNumber"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            style="?textRegular"
             android:textColor="@color/colorAccent"
             android:onClick="openReviewActivity"
             tools:text="10 Reviews"/>

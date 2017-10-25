@@ -49,5 +49,7 @@
     <string name="book_publisher">Publisher</string>
     <string name="zip">Zip</string>
     <string name="book_not_found">Book not found for ISBN</string>
+    <string name="error_login">Please, enter your email</string>
+    <string name="enter_isbn">Enter ISBN</string>
 
 </resources>
