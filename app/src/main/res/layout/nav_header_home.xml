@@ -12,12 +12,12 @@
     android:paddingTop="@dimen/activity_vertical_margin"
     android:theme="@style/ThemeOverlay.AppCompat.Dark">
 
-    <android.support.v7.widget.AppCompatImageView
+    <de.hdodenhof.circleimageview.CircleImageView
         android:id="@+id/imageView"
         android:layout_width="64dp"
         android:layout_height="64dp"
         android:padding="8dp"
-        android:scaleType="fitCenter"
+        android:scaleType="centerCrop"
         android:src="@drawable/photo_test" />
 
     <TextView
