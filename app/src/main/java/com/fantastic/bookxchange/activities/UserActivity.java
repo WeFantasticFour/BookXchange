@@ -111,11 +111,9 @@ public class UserActivity extends BaseActivity implements BaseBookListFragment.B
             ReviewFragment reviewCompose = ReviewFragment.newInstance();
             reviewCompose.show(fm, "fragment_review");
         });
-
-        //TODO setup real Profile image
-
+        
         Glide.with(this)
-                .load(R.drawable.photo_test)
+                .load(user.getUrlProfileImage())
                 .asBitmap()
                 .centerCrop()
                 .placeholder(R.drawable.ic_person_24dp)
