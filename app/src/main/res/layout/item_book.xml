@@ -14,8 +14,7 @@
 
         <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            style="?pageBackground">
+            android:layout_height="wrap_content">
 
             <ImageView
                 android:id="@+id/ivBookCover"
@@ -26,7 +25,7 @@
 
             <TextView
                 android:id="@+id/tvTitle"
-                style="?textRegular"
+                style="?textSubheader"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_margin="8dp"
@@ -36,7 +35,7 @@
 
             <TextView
                 android:id="@+id/tvAuthor"
-                style="?textSubheader"
+                style="?textRegular"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="8dp"
