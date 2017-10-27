@@ -1,39 +1,44 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="190dp"
     xmlns:tools="http://schemas.android.com/tools"
     android:background="@drawable/open_book"
-    android:gravity="bottom"
-    android:orientation="vertical"
-    android:paddingBottom="@dimen/activity_vertical_margin"
-    android:paddingLeft="@dimen/activity_horizontal_margin"
-    android:paddingRight="@dimen/activity_horizontal_margin"
-    android:paddingTop="@dimen/activity_vertical_margin"
     android:theme="@style/ThemeOverlay.AppCompat.Dark">
 
-    <android.support.v7.widget.AppCompatImageView
-        android:id="@+id/imageView"
+    <ImageView
+        android:id="@+id/ivProfile"
         android:layout_width="64dp"
         android:layout_height="64dp"
-        android:padding="8dp"
-        android:scaleType="centerCrop"
-        android:src="@drawable/photo_test" />
+        android:layout_marginTop="30dp"
+        android:layout_marginLeft="16dp"
+        android:padding="5dp"
+        tools:src="@drawable/photo_test"
+        android:layout_gravity="top"
+        android:background="@drawable/bk_user_profile"/>
 
-    <TextView
-        android:id="@+id/tv_name"
-        style="?textLargeWhite"
+    <LinearLayout
         android:layout_width="match_parent"
+        android:orientation="vertical"
         android:layout_height="wrap_content"
-        android:paddingTop="16dp"
-        android:text="@string/welcome" />
+        android:paddingLeft="16dp"
+        android:paddingBottom="16dp"
 
-    <TextView
-        android:id="@+id/tv_email"
-        style="?textRegularWhite"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/app_name"
-        android:textStyle="bold" />
+        android:background="@drawable/gradient_nav_header"
+        android:layout_gravity="bottom">
+        <TextView
+            android:id="@+id/tv_name"
+            style="?textLargeWhite"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            tools:text="@string/welcome" />
 
-</LinearLayout>
+        <TextView
+            android:id="@+id/tv_email"
+            style="?textRegularWhite"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/app_name"
+            android:textStyle="bold" />
+    </LinearLayout>
+</FrameLayout>

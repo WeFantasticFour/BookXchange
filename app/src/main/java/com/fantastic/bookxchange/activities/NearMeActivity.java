@@ -2,11 +2,14 @@ package com.fantastic.bookxchange.activities;
 
 import android.annotation.SuppressLint;
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.location.Location;
 import android.os.Bundle;
 import android.os.Looper;
 import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
+import android.support.v4.graphics.drawable.RoundedBitmapDrawable;
+import android.support.v4.graphics.drawable.RoundedBitmapDrawableFactory;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
@@ -17,6 +20,8 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.target.BitmapImageViewTarget;
 import com.fantastic.bookxchange.Manifest;
 import com.fantastic.bookxchange.R;
 import com.fantastic.bookxchange.fragments.BaseBookListFragment;
@@ -41,6 +46,7 @@ import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.FirebaseDatabase;
@@ -60,6 +66,7 @@ import cz.msebera.android.httpclient.Header;
 import permissions.dispatcher.NeedsPermission;
 import permissions.dispatcher.RuntimePermissions;
 
+import static com.fantastic.bookxchange.R.id.ivProfile;
 import static com.google.android.gms.location.LocationServices.getFusedLocationProviderClient;
 
 @RuntimePermissions
@@ -115,12 +122,40 @@ public class NearMeActivity extends BaseActivity implements BaseBookListFragment
     }
 
     private void prepareHeader(View navigationView) {
-        if (auth.getCurrentUser() != null) {
+        FirebaseUser current = auth.getCurrentUser();
+        if (current != null) {
             TextView tvEmail = navigationView.findViewById(R.id.tv_email);
-            tvEmail.setText(auth.getCurrentUser().getEmail());
+            tvEmail.setText(current.getEmail());
             TextView tvName = navigationView.findViewById(R.id.tv_name);
-            tvName.setText(auth.getCurrentUser().getDisplayName());
-            ImageView imoji = navigationView.findViewById(R.id.imageView);
+            tvName.setText(current.getDisplayName());
+            ImageView imoji = navigationView.findViewById(ivProfile);
+
+            FirebaseDatabase.getInstance().getReference("users").child(current.getUid()).addValueEventListener(new ValueEventListener() {
+                @Override
+                public void onDataChange(DataSnapshot dataSnapshot) {
+
+                    User user = dataSnapshot.getValue(User.class);
+                    Glide.with(NearMeActivity.this)
+                            .load(user.getUrlProfileImage())
+                            .asBitmap()
+                            .centerCrop()
+                            .placeholder(R.drawable.ic_person_24dp)
+                            .into(new BitmapImageViewTarget(imoji) {
+                                @Override
+                                protected void setResource(Bitmap resource) {
+                                    RoundedBitmapDrawable circularBitmapDrawable =
+                                            RoundedBitmapDrawableFactory.create(getResources(), resource);
+                                    circularBitmapDrawable.setCircular(true);
+                                    imoji.setImageDrawable(circularBitmapDrawable);
+                                }
+                            });
+                }
+
+                @Override
+                public void onCancelled(DatabaseError databaseError) {
+
+                }
+            });
         }
     }
 
