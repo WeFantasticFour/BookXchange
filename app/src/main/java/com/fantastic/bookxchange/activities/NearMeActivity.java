@@ -239,7 +239,7 @@ public class NearMeActivity extends BaseActivity implements BaseBookListFragment
             map.moveCamera(cameraUpdate);
             map.animateCamera(CameraUpdateFactory.zoomTo(10), 2000, null);
         } else {
-            toast(R.string.current_location_null);
+//            toast(R.string.current_location_null);
         }
         NearMeActivityPermissionsDispatcher.startLocationUpdatesWithCheck(this);
     }
