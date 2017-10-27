@@ -98,7 +98,8 @@
                 android:id="@+id/container_password"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_below="@+id/container_email">
+                android:layout_below="@+id/container_email"
+                android:layout_marginTop="10dp">
 
                 <android.support.v7.widget.AppCompatEditText
                     android:id="@+id/etPassword"

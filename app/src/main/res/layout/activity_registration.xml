@@ -13,16 +13,12 @@
         android:background="@color/colorPrimary"
         android:orientation="vertical">
 
-        <android.support.v7.widget.AppCompatTextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
-            android:text="@string/bookxchange"
-            style="?textLargeWhite"
-            android:textAlignment="center"
-            android:textColor="@android:color/white"
-            android:textSize="25sp"
-            android:textStyle="bold|italic" />
+        <ImageView
+            android:layout_width="200dp"
+            android:layout_height="100dp"
+            android:layout_marginTop="10dp"
+            android:layout_centerHorizontal="true"
+            android:src="@drawable/logo" />
     </RelativeLayout>
 
     <RelativeLayout
@@ -49,7 +45,7 @@
     <android.support.v7.widget.AppCompatButton
         android:id="@+id/btnGoToLogin"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_height="40dp"
         android:layout_below="@+id/tvOr"
         android:layout_marginBottom="8dp"
         android:layout_marginLeft="32dp"
@@ -80,27 +76,15 @@
             android:layout_height="wrap_content"
             android:padding="16dp">
 
-            <android.support.v7.widget.AppCompatTextView
-                android:id="@+id/tvSignupTitle"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="8dp"
-                android:layout_marginTop="8dp"
-                android:gravity="center"
-                android:text="@string/register"
-                style="?textLargePrimary" />
-
             <android.support.design.widget.TextInputLayout
                 android:id="@+id/container_first"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_below="@+id/tvSignupTitle"
-                android:layout_marginBottom="8dp"
-                android:layout_marginTop="8dp">
+                android:layout_below="@+id/tvSignupTitle">
 
                 <EditText
                     android:id="@+id/etFirstName"
-                    style="?textLarge"
+                    style="?textRegular"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:hint="@string/first_name"
@@ -111,13 +95,11 @@
                 android:id="@+id/container_last"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_below="@+id/container_first"
-                android:layout_marginBottom="8dp"
-                android:layout_marginTop="8dp">
+                android:layout_below="@+id/container_first">
 
                 <EditText
                     android:id="@+id/etLastName"
-                    style="?textLarge"
+                    style="?textRegular"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:hint="@string/last_name"
@@ -128,13 +110,11 @@
                 android:id="@+id/container_email"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_below="@+id/container_last"
-                android:layout_marginBottom="8dp"
-                android:layout_marginTop="8dp">
+                android:layout_below="@+id/container_last">
 
                 <EditText
                     android:id="@+id/etEmail"
-                    style="?textLarge"
+                    style="?textRegular"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:hint="@string/email"
@@ -145,13 +125,11 @@
                 android:id="@+id/container_password"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_below="@+id/container_email"
-                android:layout_marginBottom="8dp"
-                android:layout_marginTop="8dp">
+                android:layout_below="@+id/container_email">
 
                 <EditText
                     android:id="@+id/etPassword"
-                    style="?textLarge"
+                    style="?textRegular"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:hint="@string/password"
@@ -162,13 +140,11 @@
                 android:id="@+id/zip_container"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_below="@+id/container_password"
-                android:layout_marginBottom="8dp"
-                android:layout_marginTop="8dp">
+                android:layout_below="@+id/container_password">
 
                 <EditText
                     android:id="@+id/etZip"
-                    style="?textLarge"
+                    style="?textRegular"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:hint="@string/zip"
@@ -178,7 +154,7 @@
             <android.support.v7.widget.AppCompatButton
                 android:id="@+id/btnRegister"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="40dp"
                 android:layout_below="@+id/zip_container"
                 android:layout_marginBottom="8dp"
                 android:layout_marginTop="16dp"

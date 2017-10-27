@@ -37,7 +37,6 @@ public class RegistrationActivity extends BaseActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        matchStatusBarColor();
         setContentView(R.layout.activity_registration);
         init();
         auth = FirebaseAuth.getInstance();
