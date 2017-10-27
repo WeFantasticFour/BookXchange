@@ -3,6 +3,7 @@ package com.fantastic.bookxchange.activities;
 import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.graphics.Color;
 import android.location.Location;
 import android.os.Bundle;
 import android.os.Looper;
@@ -41,7 +42,6 @@ import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.SupportMapFragment;
-import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.firebase.auth.FirebaseAuth;
@@ -66,6 +66,7 @@ import permissions.dispatcher.NeedsPermission;
 import permissions.dispatcher.RuntimePermissions;
 
 import static com.fantastic.bookxchange.R.id.ivProfile;
+import static com.fantastic.bookxchange.utils.MapUtils.addMarker;
 import static com.google.android.gms.location.LocationServices.getFusedLocationProviderClient;
 
 @RuntimePermissions
@@ -162,14 +163,7 @@ public class NearMeActivity extends BaseActivity implements BaseBookListFragment
         //TODO Query to firebase, get the closest users to your position
 
         books = new HashMap<>();
-        /*
-        for (User u : users) {
-            if (!u.getShareBooks().isEmpty()) {
-                Marker marker = MapUtils.addMarker(map, u);
-                Flow.of(u.getShareBooks()).forEach(b -> saveMarker(marker, b));
-                Flow.of(u.getExchangeBooks()).forEach(b -> saveMarker(marker, b));
-            }
-        }*/
+
         getUsers();
         fragment = NearListFragment.newInstance();
         getSupportFragmentManager()
@@ -280,7 +274,7 @@ public class NearMeActivity extends BaseActivity implements BaseBookListFragment
         }
         mCurrentLocation = location;
         LatLng latLng = new LatLng(mCurrentLocation.getLatitude(), mCurrentLocation.getLongitude());
-        CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngZoom(latLng, 15);
+        CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngZoom(latLng, 10);
         map.moveCamera(cameraUpdate);
     }
 
@@ -292,12 +286,22 @@ public class NearMeActivity extends BaseActivity implements BaseBookListFragment
     @Override
     public void onClickListener(Book book) {
 
-        Flow.of(previousMarkers).forEach(m -> m.setIcon(BitmapDescriptorFactory
-                .defaultMarker(BitmapDescriptorFactory.HUE_ORANGE)));
+        for(Marker m : previousMarkers){
+            User userTag = (User) m.getTag();
+
+            MapUtils.modifyMarker(this, m, userTag, Color.parseColor("#009688"));
+        }
+
         List<Marker> bookMarkers = books.get(book);
         previousMarkers = bookMarkers;
-        Flow.of(bookMarkers).forEach(m -> m.setIcon(BitmapDescriptorFactory
-                .defaultMarker(BitmapDescriptorFactory.HUE_RED)));
+
+        for(Marker m : bookMarkers){
+            User userTag = (User) m.getTag();
+            MapUtils.modifyMarker(this, m, userTag, Color.parseColor("#FF5522"));
+            CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngZoom(userTag.getLocation(), 10);
+            map.moveCamera(cameraUpdate);
+
+        }
 
     }
 
@@ -440,8 +444,8 @@ public class NearMeActivity extends BaseActivity implements BaseBookListFragment
                     JSONObject object = (JSONObject) response.getJSONArray("results").get(0);
                     JSONObject locObject = object.getJSONObject("geometry").getJSONObject("location");
                     user.setLocation(new LatLng(locObject.getDouble("lat"), locObject.getDouble("lng")));
-                    Marker marker = MapUtils.addMarker(map, user);
-                    getUserBooks(user, marker);
+                    addMarker(NearMeActivity.this, map, user, Color.parseColor("#009688"), marker -> getUserBooks(user, marker));
+
                 } catch (JSONException e) {
                     Log.e(TAG, e.getMessage(), e);
                 }
