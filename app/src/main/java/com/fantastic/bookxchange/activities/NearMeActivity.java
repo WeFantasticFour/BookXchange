@@ -2,11 +2,15 @@ package com.fantastic.bookxchange.activities;
 
 import android.annotation.SuppressLint;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.Color;
 import android.location.Location;
 import android.os.Bundle;
 import android.os.Looper;
 import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
+import android.support.v4.graphics.drawable.RoundedBitmapDrawable;
+import android.support.v4.graphics.drawable.RoundedBitmapDrawableFactory;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
@@ -17,6 +21,8 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.target.BitmapImageViewTarget;
 import com.fantastic.bookxchange.Manifest;
 import com.fantastic.bookxchange.R;
 import com.fantastic.bookxchange.fragments.BaseBookListFragment;
@@ -24,7 +30,6 @@ import com.fantastic.bookxchange.fragments.NearListFragment;
 import com.fantastic.bookxchange.models.Book;
 import com.fantastic.bookxchange.models.User;
 import com.fantastic.bookxchange.rest.BookClient;
-import com.fantastic.bookxchange.utils.DataTest;
 import com.fantastic.bookxchange.utils.MapUtils;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationCallback;
@@ -37,10 +42,10 @@ import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.SupportMapFragment;
-import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.FirebaseDatabase;
@@ -60,6 +65,8 @@ import cz.msebera.android.httpclient.Header;
 import permissions.dispatcher.NeedsPermission;
 import permissions.dispatcher.RuntimePermissions;
 
+import static com.fantastic.bookxchange.R.id.ivProfile;
+import static com.fantastic.bookxchange.utils.MapUtils.addMarker;
 import static com.google.android.gms.location.LocationServices.getFusedLocationProviderClient;
 
 @RuntimePermissions
@@ -112,32 +119,51 @@ public class NearMeActivity extends BaseActivity implements BaseBookListFragment
         toggle.syncState();
         navigationView.getMenu().getItem(0).setChecked(true);
         navigationView.setNavigationItemSelectedListener(this);
-        //getUsers();
-
     }
 
     private void prepareHeader(View navigationView) {
-        if (auth.getCurrentUser() != null) {
+        FirebaseUser current = auth.getCurrentUser();
+        if (current != null) {
             TextView tvEmail = navigationView.findViewById(R.id.tv_email);
-            tvEmail.setText(auth.getCurrentUser().getEmail());
+            tvEmail.setText(current.getEmail());
             TextView tvName = navigationView.findViewById(R.id.tv_name);
-            tvName.setText(auth.getCurrentUser().getDisplayName());
-            ImageView imoji = navigationView.findViewById(R.id.imageView);
+            tvName.setText(current.getDisplayName());
+            ImageView imoji = navigationView.findViewById(ivProfile);
+
+            FirebaseDatabase.getInstance().getReference("users").child(current.getUid()).addValueEventListener(new ValueEventListener() {
+                @Override
+                public void onDataChange(DataSnapshot dataSnapshot) {
+
+                    User user = dataSnapshot.getValue(User.class);
+                    Glide.with(NearMeActivity.this)
+                            .load(user.getUrlProfileImage())
+                            .asBitmap()
+                            .centerCrop()
+                            .placeholder(R.drawable.ic_person_24dp)
+                            .into(new BitmapImageViewTarget(imoji) {
+                                @Override
+                                protected void setResource(Bitmap resource) {
+                                    RoundedBitmapDrawable circularBitmapDrawable =
+                                            RoundedBitmapDrawableFactory.create(getResources(), resource);
+                                    circularBitmapDrawable.setCircular(true);
+                                    imoji.setImageDrawable(circularBitmapDrawable);
+                                }
+                            });
+                }
+
+                @Override
+                public void onCancelled(DatabaseError databaseError) {
+
+                }
+            });
         }
     }
 
     private void populateData() {
         //TODO Query to firebase, get the closest users to your position
-        //users = DataTest.fakeData();
+
         books = new HashMap<>();
-        /*
-        for (User u : users) {
-            if (!u.getShareBooks().isEmpty()) {
-                Marker marker = MapUtils.addMarker(map, u);
-                Flow.of(u.getShareBooks()).forEach(b -> saveMarker(marker, b));
-                Flow.of(u.getExchangeBooks()).forEach(b -> saveMarker(marker, b));
-            }
-        }*/
+
         getUsers();
         fragment = NearListFragment.newInstance();
         getSupportFragmentManager()
@@ -194,8 +220,10 @@ public class NearMeActivity extends BaseActivity implements BaseBookListFragment
     @NeedsPermission({Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION})
     @SuppressLint("MissingPermission")
     void getMyLocation() {
+        //noinspection MissingPermission
         map.setMyLocationEnabled(true);
         FusedLocationProviderClient locationClient = getFusedLocationProviderClient(this);
+        //noinspection MissingPermission
         locationClient.getLastLocation()
                 .addOnSuccessListener(this::onLocationChanged)
                 .addOnFailureListener(e -> Log.e(TAG, e.getMessage(), e));
@@ -211,7 +239,7 @@ public class NearMeActivity extends BaseActivity implements BaseBookListFragment
             map.moveCamera(cameraUpdate);
             map.animateCamera(CameraUpdateFactory.zoomTo(10), 2000, null);
         } else {
-            toast(R.string.current_location_null);
+//            toast(R.string.current_location_null);
         }
         NearMeActivityPermissionsDispatcher.startLocationUpdatesWithCheck(this);
     }
@@ -230,6 +258,7 @@ public class NearMeActivity extends BaseActivity implements BaseBookListFragment
 
         SettingsClient settingsClient = LocationServices.getSettingsClient(this);
         settingsClient.checkLocationSettings(locationSettingsRequest);
+        //noinspection MissingPermission
         getFusedLocationProviderClient(this)
                 .requestLocationUpdates(mLocationRequest, new LocationCallback() {
                     @Override
@@ -245,7 +274,7 @@ public class NearMeActivity extends BaseActivity implements BaseBookListFragment
         }
         mCurrentLocation = location;
         LatLng latLng = new LatLng(mCurrentLocation.getLatitude(), mCurrentLocation.getLongitude());
-        CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngZoom(latLng, 15);
+        CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngZoom(latLng, 10);
         map.moveCamera(cameraUpdate);
     }
 
@@ -257,12 +286,22 @@ public class NearMeActivity extends BaseActivity implements BaseBookListFragment
     @Override
     public void onClickListener(Book book) {
 
-        Flow.of(previousMarkers).forEach(m -> m.setIcon(BitmapDescriptorFactory
-                .defaultMarker(BitmapDescriptorFactory.HUE_ORANGE)));
+        for(Marker m : previousMarkers){
+            User userTag = (User) m.getTag();
+
+            MapUtils.modifyMarker(this, m, userTag, Color.parseColor("#009688"));
+        }
+
         List<Marker> bookMarkers = books.get(book);
         previousMarkers = bookMarkers;
-        Flow.of(bookMarkers).forEach(m -> m.setIcon(BitmapDescriptorFactory
-                .defaultMarker(BitmapDescriptorFactory.HUE_RED)));
+
+        for(Marker m : bookMarkers){
+            User userTag = (User) m.getTag();
+            MapUtils.modifyMarker(this, m, userTag, Color.parseColor("#FF5522"));
+            CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngZoom(userTag.getLocation(), 10);
+            map.moveCamera(cameraUpdate);
+
+        }
 
     }
 
@@ -277,9 +316,25 @@ public class NearMeActivity extends BaseActivity implements BaseBookListFragment
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
         switch (item.getItemId()) {
             case R.id.nav_profile:
-                Intent iUser = new Intent(this, UserActivity.class);
-                iUser.putExtra("user", Parcels.wrap(DataTest.getCurrent()));
-                startActivity(iUser);
+                FirebaseDatabase.getInstance()
+                        .getReference("users")
+                        .child(auth.getCurrentUser().getUid()).addValueEventListener(new ValueEventListener() {
+                            @Override
+                            public void onDataChange(DataSnapshot dataSnapshot) {
+
+                                User user = dataSnapshot.getValue(User.class);
+                                loadUserLocation(user);
+                                Intent iUser = new Intent(NearMeActivity.this, UserActivity.class);
+                                iUser.putExtra("user", Parcels.wrap(user));
+                                startActivity(iUser);
+                            }
+
+                            @Override
+                            public void onCancelled(DatabaseError databaseError) {
+
+                            }
+                         }
+                );
                 break;
             case R.id.nav_messages:
                 Intent iMessage = new Intent(this, MessagesActivity.class);
@@ -368,6 +423,7 @@ public class NearMeActivity extends BaseActivity implements BaseBookListFragment
                             book.setCategory(category);
                             user.addBook(book);
                             saveMarker(marker, book);
+                            fragment.pushData(new ArrayList<>(books.keySet()));
                         }
                     }
 
@@ -380,22 +436,25 @@ public class NearMeActivity extends BaseActivity implements BaseBookListFragment
     }
 
     private void loadUserLocation(User user) {
-        BookClient client = new BookClient();
-        client.getLocation(user.getZip(), new JsonHttpResponseHandler() {
+        if(!user.getId().equals(auth.getUid())){
+            BookClient client = new BookClient();
+            client.getLocation(user.getZip(), new JsonHttpResponseHandler() {
 
-            @Override
-            public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
-                try {
-                    JSONObject object = (JSONObject) response.getJSONArray("results").get(0);
-                    JSONObject locObject = object.getJSONObject("geometry").getJSONObject("location");
-                    user.setLocation(new LatLng(locObject.getDouble("lat"), locObject.getDouble("lng")));
-                    Marker marker = MapUtils.addMarker(map, user);
-                    getUserBooks(user, marker);
-                } catch (JSONException e) {
-                    Log.e(TAG, e.getMessage(), e);
+                @Override
+                public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
+                    try {
+                        JSONObject object = (JSONObject) response.getJSONArray("results").get(0);
+                        JSONObject locObject = object.getJSONObject("geometry").getJSONObject("location");
+                        user.setLocation(new LatLng(locObject.getDouble("lat"), locObject.getDouble("lng")));
+                        addMarker(NearMeActivity.this, map, user, Color.parseColor("#009688"), marker -> getUserBooks(user, marker));
+
+                    } catch (JSONException e) {
+                        Log.e(TAG, e.getMessage(), e);
+                    }
                 }
-            }
-        });
+            });
+        }
+
     }
 }
 

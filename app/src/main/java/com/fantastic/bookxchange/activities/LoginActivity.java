@@ -9,8 +9,6 @@ import android.text.TextWatcher;
 import android.util.Log;
 import android.util.Patterns;
 import android.view.View;
-import android.widget.EditText;
-import android.widget.TextView;
 
 import com.crashlytics.android.Crashlytics;
 import com.fantastic.bookxchange.R;
@@ -31,7 +29,6 @@ public class LoginActivity extends BaseActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        matchStatusBarColor();
         setContentView(R.layout.activity_login);
         init();
 

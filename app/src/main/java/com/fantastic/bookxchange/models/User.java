@@ -63,7 +63,20 @@ public class User {
 
     @Exclude
     public void addBook(Book book) {
-        books.add(book);
+
+        switch (book.getCategory()){
+            case SHARE:
+                shareBooks.add(book);
+                break;
+            case EXCHANGE:
+                exchangeBooks.add(book);
+                break;
+            case WISH:
+                wishListBooks.add(book);
+                break;
+            default:
+                break;
+        }
     }
 
     public String getId() {
