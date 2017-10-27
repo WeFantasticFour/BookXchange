@@ -13,6 +13,7 @@ import android.support.v4.content.res.ResourcesCompat;
 import android.support.v4.graphics.drawable.RoundedBitmapDrawable;
 import android.support.v4.graphics.drawable.RoundedBitmapDrawableFactory;
 import android.support.v4.view.ViewPager;
+import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.RatingBar;
@@ -32,15 +33,22 @@ import com.fantastic.bookxchange.fragments.WishListFragment;
 import com.fantastic.bookxchange.models.Book;
 import com.fantastic.bookxchange.models.Review;
 import com.fantastic.bookxchange.models.User;
+import com.fantastic.bookxchange.rest.BookClient;
 import com.fantastic.bookxchange.utils.FirebaseUtils;
 import com.github.clans.fab.FloatingActionMenu;
+import com.google.android.gms.maps.model.LatLng;
 import com.google.firebase.auth.FirebaseAuth;
+import com.loopj.android.http.JsonHttpResponseHandler;
 
+import org.json.JSONException;
+import org.json.JSONObject;
 import org.parceler.Parcels;
 
 import java.io.IOException;
 import java.util.List;
 import java.util.Locale;
+
+import cz.msebera.android.httpclient.Header;
 
 public class UserActivity extends BaseActivity implements BaseBookListFragment.BookListClickListener,
         BaseBookListFragment.BookListReadyListener,
@@ -75,15 +83,24 @@ public class UserActivity extends BaseActivity implements BaseBookListFragment.B
 
     private void setupView() {
 
-        Geocoder geocoder;
-        List<Address> addresses;
-        geocoder = new Geocoder(UserActivity.this, Locale.getDefault());
-        try {
-            addresses = geocoder.getFromLocation(user.getLocation().latitude, user.getLocation().longitude, 1);
-            tvLocation.setText(addresses.get(0).getLocality() + ", " + addresses.get(0).getAdminArea());
-        } catch (IOException e) {
-            tvLocation.setVisibility(View.GONE);
-            e.printStackTrace();
+        if(user.getLocation() != null) {
+            setLocation(user);
+        }else{
+            BookClient client = new BookClient();
+            client.getLocation(user.getZip(), new JsonHttpResponseHandler() {
+
+                @Override
+                public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
+                    try {
+                        JSONObject object = (JSONObject) response.getJSONArray("results").get(0);
+                        JSONObject locObject = object.getJSONObject("geometry").getJSONObject("location");
+                        user.setLocation(new LatLng(locObject.getDouble("lat"), locObject.getDouble("lng")));
+                        setLocation(user);
+                    } catch (JSONException e) {
+                        Log.e(TAG, e.getMessage(), e);
+                    }
+                }
+            });
         }
 
         ratingBar.setRating(user.getRating());
@@ -100,17 +117,25 @@ public class UserActivity extends BaseActivity implements BaseBookListFragment.B
         faMessage = findViewById(R.id.menu_message);
         faReview = findViewById(R.id.menu_review);
 
-        faMessage.setOnClickListener(view -> {
-            FragmentManager fm = getSupportFragmentManager();
-            MessageFragment messageCompose = MessageFragment.newInstance();
-            messageCompose.show(fm, "fragment_message");
-        });
+        String uid = FirebaseAuth.getInstance().getCurrentUser().getUid();
+        if (user.getId().equals(FirebaseAuth.getInstance().getCurrentUser().getUid())){
+            FloatingActionMenu faM = findViewById(R.id.faMenu);
 
-        faReview.setOnClickListener(view -> {
-            FragmentManager fm = getSupportFragmentManager();
-            ReviewFragment reviewCompose = ReviewFragment.newInstance();
-            reviewCompose.show(fm, "fragment_review");
-        });
+            faM.setVisibility(View.GONE);
+        }else{
+            faMessage.setOnClickListener(view -> {
+                FragmentManager fm = getSupportFragmentManager();
+                MessageFragment messageCompose = MessageFragment.newInstance();
+                messageCompose.show(fm, "fragment_message");
+            });
+
+            faReview.setOnClickListener(view -> {
+                FragmentManager fm = getSupportFragmentManager();
+                ReviewFragment reviewCompose = ReviewFragment.newInstance();
+                reviewCompose.show(fm, "fragment_review");
+            });
+        }
+
         
         Glide.with(this)
                 .load(user.getUrlProfileImage())
@@ -126,6 +151,20 @@ public class UserActivity extends BaseActivity implements BaseBookListFragment.B
                         ivProfile.setImageDrawable(circularBitmapDrawable);
                     }
                 });
+    }
+
+    public void setLocation(User user){
+        Geocoder geocoder;
+        List<Address> addresses;
+        geocoder = new Geocoder(UserActivity.this, Locale.getDefault());
+        try {
+            addresses = geocoder.getFromLocation(user.getLocation().latitude, user.getLocation().longitude, 1);
+            tvLocation.setText(addresses.get(0).getLocality() + ", " + addresses.get(0).getAdminArea());
+
+        } catch (IOException e) {
+            tvLocation.setVisibility(View.GONE);
+            e.printStackTrace();
+        }
     }
 
     private void setReviewNumber() {

@@ -29,7 +29,6 @@ import com.fantastic.bookxchange.fragments.NearListFragment;
 import com.fantastic.bookxchange.models.Book;
 import com.fantastic.bookxchange.models.User;
 import com.fantastic.bookxchange.rest.BookClient;
-import com.fantastic.bookxchange.utils.DataTest;
 import com.fantastic.bookxchange.utils.MapUtils;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationCallback;
@@ -313,9 +312,25 @@ public class NearMeActivity extends BaseActivity implements BaseBookListFragment
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
         switch (item.getItemId()) {
             case R.id.nav_profile:
-                Intent iUser = new Intent(this, UserActivity.class);
-                iUser.putExtra("user", Parcels.wrap(DataTest.getCurrent()));
-                startActivity(iUser);
+                FirebaseDatabase.getInstance()
+                        .getReference("users")
+                        .child(auth.getCurrentUser().getUid()).addValueEventListener(new ValueEventListener() {
+                            @Override
+                            public void onDataChange(DataSnapshot dataSnapshot) {
+
+                                User user = dataSnapshot.getValue(User.class);
+                                loadUserLocation(user);
+                                Intent iUser = new Intent(NearMeActivity.this, UserActivity.class);
+                                iUser.putExtra("user", Parcels.wrap(user));
+                                startActivity(iUser);
+                            }
+
+                            @Override
+                            public void onCancelled(DatabaseError databaseError) {
+
+                            }
+                         }
+                );
                 break;
             case R.id.nav_messages:
                 Intent iMessage = new Intent(this, MessagesActivity.class);
