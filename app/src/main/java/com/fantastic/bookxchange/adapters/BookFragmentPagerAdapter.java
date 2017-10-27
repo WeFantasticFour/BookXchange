@@ -15,7 +15,7 @@ import com.fantastic.bookxchange.utils.SmartFragmentStatePagerAdapter;
 
 public class BookFragmentPagerAdapter extends SmartFragmentStatePagerAdapter {
     final int PAGE_COUNT = 3;
-    private String tabTitles[] = new String[]{"Share", "Exchange", "Wishlist"};
+    private String tabTitles[] = new String[]{"Exchange", "Share", "Wishlist"};
     private Context context;
 
     public BookFragmentPagerAdapter(FragmentManager fm, Context context) {
@@ -34,10 +34,10 @@ public class BookFragmentPagerAdapter extends SmartFragmentStatePagerAdapter {
         Fragment fm;
         switch (position) {
             case 0:
-                fm = ShareListFragment.newInstance();
+                fm = ExchangeListFragment.newInstance();
                 break;
             case 1:
-                fm = ExchangeListFragment.newInstance();
+                fm = ShareListFragment.newInstance();
                 break;
             case 2:
                 fm = WishListFragment.newInstance();

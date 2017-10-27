@@ -436,22 +436,25 @@ public class NearMeActivity extends BaseActivity implements BaseBookListFragment
     }
 
     private void loadUserLocation(User user) {
-        BookClient client = new BookClient();
-        client.getLocation(user.getZip(), new JsonHttpResponseHandler() {
+        if(!user.getId().equals(auth.getUid())){
+            BookClient client = new BookClient();
+            client.getLocation(user.getZip(), new JsonHttpResponseHandler() {
 
-            @Override
-            public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
-                try {
-                    JSONObject object = (JSONObject) response.getJSONArray("results").get(0);
-                    JSONObject locObject = object.getJSONObject("geometry").getJSONObject("location");
-                    user.setLocation(new LatLng(locObject.getDouble("lat"), locObject.getDouble("lng")));
-                    addMarker(NearMeActivity.this, map, user, Color.parseColor("#009688"), marker -> getUserBooks(user, marker));
+                @Override
+                public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
+                    try {
+                        JSONObject object = (JSONObject) response.getJSONArray("results").get(0);
+                        JSONObject locObject = object.getJSONObject("geometry").getJSONObject("location");
+                        user.setLocation(new LatLng(locObject.getDouble("lat"), locObject.getDouble("lng")));
+                        addMarker(NearMeActivity.this, map, user, Color.parseColor("#009688"), marker -> getUserBooks(user, marker));
 
-                } catch (JSONException e) {
-                    Log.e(TAG, e.getMessage(), e);
+                    } catch (JSONException e) {
+                        Log.e(TAG, e.getMessage(), e);
+                    }
                 }
-            }
-        });
+            });
+        }
+
     }
 }
 

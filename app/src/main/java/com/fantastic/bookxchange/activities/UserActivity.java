@@ -210,13 +210,13 @@ public class UserActivity extends BaseActivity implements BaseBookListFragment.B
     public void onReadyListener(BaseBookListFragment.FragmentType type) {
 
         switch (type) {
-            case SHARE:
-                ShareListFragment fmSh = (ShareListFragment) aPager.getRegisteredFragment(0);
-                fmSh.pushData(user.getShareBooks());
-                break;
             case EXCHANGE:
-                ExchangeListFragment fmEx = (ExchangeListFragment) aPager.getRegisteredFragment(1);
+                ExchangeListFragment fmEx = (ExchangeListFragment) aPager.getRegisteredFragment(0);
                 fmEx.pushData(user.getExchangeBooks());
+                break;
+            case SHARE:
+                ShareListFragment fmSh = (ShareListFragment) aPager.getRegisteredFragment(1);
+                fmSh.pushData(user.getShareBooks());
                 break;
             case WISHLIST:
                 WishListFragment fmWs = (WishListFragment) aPager.getRegisteredFragment(2);
