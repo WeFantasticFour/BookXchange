@@ -112,8 +112,6 @@ public class NearMeActivity extends BaseActivity implements BaseBookListFragment
         toggle.syncState();
         navigationView.getMenu().getItem(0).setChecked(true);
         navigationView.setNavigationItemSelectedListener(this);
-        //getUsers();
-
     }
 
     private void prepareHeader(View navigationView) {
@@ -128,7 +126,7 @@ public class NearMeActivity extends BaseActivity implements BaseBookListFragment
 
     private void populateData() {
         //TODO Query to firebase, get the closest users to your position
-        //users = DataTest.fakeData();
+
         books = new HashMap<>();
         /*
         for (User u : users) {
@@ -194,8 +192,10 @@ public class NearMeActivity extends BaseActivity implements BaseBookListFragment
     @NeedsPermission({Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION})
     @SuppressLint("MissingPermission")
     void getMyLocation() {
+        //noinspection MissingPermission
         map.setMyLocationEnabled(true);
         FusedLocationProviderClient locationClient = getFusedLocationProviderClient(this);
+        //noinspection MissingPermission
         locationClient.getLastLocation()
                 .addOnSuccessListener(this::onLocationChanged)
                 .addOnFailureListener(e -> Log.e(TAG, e.getMessage(), e));
@@ -230,6 +230,7 @@ public class NearMeActivity extends BaseActivity implements BaseBookListFragment
 
         SettingsClient settingsClient = LocationServices.getSettingsClient(this);
         settingsClient.checkLocationSettings(locationSettingsRequest);
+        //noinspection MissingPermission
         getFusedLocationProviderClient(this)
                 .requestLocationUpdates(mLocationRequest, new LocationCallback() {
                     @Override
