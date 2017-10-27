@@ -83,7 +83,9 @@ public class NearMeActivity extends BaseActivity implements BaseBookListFragment
     private LocationRequest mLocationRequest;
     private long UPDATE_INTERVAL = 10000;  /* 60 secs */
     private long FASTEST_INTERVAL = 5000; /* 5 secs */
+
     private List<User> users;
+    private User currentUser;
     private HashMap<Book, List<Marker>> books;
     private String TAG = "NearMeActivity";
 
@@ -316,25 +318,31 @@ public class NearMeActivity extends BaseActivity implements BaseBookListFragment
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
         switch (item.getItemId()) {
             case R.id.nav_profile:
-                FirebaseDatabase.getInstance()
-                        .getReference("users")
-                        .child(auth.getCurrentUser().getUid()).addValueEventListener(new ValueEventListener() {
-                            @Override
-                            public void onDataChange(DataSnapshot dataSnapshot) {
+                if (currentUser != null) {
+                    Intent iUser = new Intent(NearMeActivity.this, UserActivity.class);
+                    iUser.putExtra("user", Parcels.wrap(currentUser));
+                    startActivity(iUser);
+                } else {
+                    FirebaseDatabase.getInstance()
+                            .getReference("users")
+                            .child(auth.getCurrentUser().getUid()).addValueEventListener(new ValueEventListener() {
+                                 @Override
+                                 public void onDataChange(DataSnapshot dataSnapshot) {
 
-                                User user = dataSnapshot.getValue(User.class);
-                                loadUserLocation(user);
-                                Intent iUser = new Intent(NearMeActivity.this, UserActivity.class);
-                                iUser.putExtra("user", Parcels.wrap(user));
-                                startActivity(iUser);
-                            }
+                                     User user = dataSnapshot.getValue(User.class);
+                                     loadUserLocation(user);
+                                     Intent iUser = new Intent(NearMeActivity.this, UserActivity.class);
+                                     iUser.putExtra("user", Parcels.wrap(currentUser));
+                                     startActivity(iUser);
+                                 }
 
-                            @Override
-                            public void onCancelled(DatabaseError databaseError) {
+                                 @Override
+                                 public void onCancelled(DatabaseError databaseError) {
 
-                            }
-                         }
-                );
+                                 }
+                             }
+                    );
+                }
                 break;
             case R.id.nav_messages:
                 Intent iMessage = new Intent(this, MessagesActivity.class);
@@ -432,28 +440,73 @@ public class NearMeActivity extends BaseActivity implements BaseBookListFragment
 
                     }
                 });
+    }
+
+    private void getBook(User user, String isbn, Book.CATEGORY category) {
+        FirebaseDatabase.getInstance()
+                .getReference("books")
+                .child(isbn)
+                .addValueEventListener(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(DataSnapshot dataSnapshot) {
+                        Book book = dataSnapshot.getValue(Book.class);
+                        Log.i(TAG, "onDataChange: isbn " + isbn + " : " + book);
+                        if (book != null) {
+                            book.setCategory(category);
+                            user.addBook(book);
+                        }
+                    }
+
+                    @Override
+                    public void onCancelled(DatabaseError databaseError) {
+
+                    }
+                });
 
     }
 
     private void loadUserLocation(User user) {
-        if(!user.getId().equals(auth.getUid())){
-            BookClient client = new BookClient();
-            client.getLocation(user.getZip(), new JsonHttpResponseHandler() {
+        BookClient client = new BookClient();
+        client.getLocation(user.getZip(), new JsonHttpResponseHandler() {
 
-                @Override
-                public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
-                    try {
-                        JSONObject object = (JSONObject) response.getJSONArray("results").get(0);
-                        JSONObject locObject = object.getJSONObject("geometry").getJSONObject("location");
-                        user.setLocation(new LatLng(locObject.getDouble("lat"), locObject.getDouble("lng")));
+            @Override
+            public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
+                try {
+                    JSONObject object = (JSONObject) response.getJSONArray("results").get(0);
+                    JSONObject locObject = object.getJSONObject("geometry").getJSONObject("location");
+                    user.setLocation(new LatLng(locObject.getDouble("lat"), locObject.getDouble("lng")));
+                    if(!user.getId().equals(auth.getUid())) {
                         addMarker(NearMeActivity.this, map, user, Color.parseColor("#009688"), marker -> getUserBooks(user, marker));
+                    }else{
+                        FirebaseDatabase.getInstance()
+                                .getReference("user_book")
+                                .child(user.getId())
+                                .addValueEventListener(new ValueEventListener() {
+                                    @Override
+                                    public void onDataChange(DataSnapshot dataSnapshot) {
+                                        Flow.of(dataSnapshot
+                                                .getChildren())
+                                                .forEach(data -> {
+                                                    getBook(user,
+                                                            data.child("isbn").getValue(String.class),
+                                                            Book.CATEGORY.valueOf(data.child("category").getValue(String.class)));
+                                                });
+                                        currentUser = user;
+                                    }
 
-                    } catch (JSONException e) {
-                        Log.e(TAG, e.getMessage(), e);
+                                    @Override
+                                    public void onCancelled(DatabaseError databaseError) {
+
+                                    }
+                                });
                     }
+
+                } catch (JSONException e) {
+                    Log.e(TAG, e.getMessage(), e);
                 }
-            });
-        }
+            }
+        });
+
 
     }
 }
