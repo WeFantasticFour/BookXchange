@@ -221,6 +221,7 @@ public class UserActivity extends BaseActivity implements BaseBookListFragment.B
     public void onAddMessage(String s) {
         //TODO send message
         toast(s);
+        FirebaseUtils.saveMessage("-KxMXsuQWDZ4AXRFz7MK", user, me, s);
     }
 
 

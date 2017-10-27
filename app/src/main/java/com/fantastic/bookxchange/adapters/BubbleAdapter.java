@@ -16,6 +16,7 @@ import com.bumptech.glide.request.target.BitmapImageViewTarget;
 import com.fantastic.bookxchange.R;
 import com.fantastic.bookxchange.models.Message;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -30,7 +31,7 @@ public class BubbleAdapter extends RecyclerView.Adapter<BubbleAdapter.ViewHolder
 
     public BubbleAdapter(Context context, List<Message> m) {
         this.context = context;
-        this.messages = m;
+        this.messages = new ArrayList<>();
     }
 
     @Override

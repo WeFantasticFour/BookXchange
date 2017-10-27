@@ -368,6 +368,7 @@ public class NearMeActivity extends BaseActivity implements BaseBookListFragment
                             book.setCategory(category);
                             user.addBook(book);
                             saveMarker(marker, book);
+                            fragment.pushData(new ArrayList<>(books.keySet()));
                         }
                     }
 
