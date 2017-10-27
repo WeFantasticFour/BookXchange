@@ -8,6 +8,7 @@ import com.fantastic.bookxchange.models.User;
 import com.fantastic.bookxchange.rest.BookClient;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.FirebaseDatabase;
@@ -19,7 +20,10 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import cz.msebera.android.httpclient.Header;
 
@@ -30,11 +34,11 @@ import cz.msebera.android.httpclient.Header;
 public class FirebaseUtils {
 
     private static final String TAG = FirebaseUtils.class.getSimpleName();
+    private static final FirebaseDatabase fDatabase = FirebaseDatabase.getInstance();
 
 
     public static void loadOneUser(String userId, Consumer<User> producer) {
-        FirebaseDatabase.getInstance()
-                .getReference("users")
+        fDatabase.getReference("users")
                 .child(userId)
                 .addValueEventListener(new ValueEventListener() {
                     @Override
@@ -51,8 +55,7 @@ public class FirebaseUtils {
     }
 
     private static void loadBooks(User user, String isbn, Book.CATEGORY category) {
-        FirebaseDatabase.getInstance()
-                .getReference("books")
+        fDatabase.getReference("books")
                 .child(isbn)
                 .addValueEventListener(new ValueEventListener() {
                     @Override
@@ -74,8 +77,7 @@ public class FirebaseUtils {
     }
 
     public static void loadUserBooks(User user) {
-        FirebaseDatabase.getInstance()
-                .getReference("user_book")
+        fDatabase.getReference("user_book")
                 .child(user.getId())
                 .addValueEventListener(new ValueEventListener() {
                     @Override
@@ -115,8 +117,7 @@ public class FirebaseUtils {
     }
 
     public static void saveReview(User reviewFor, Review review, Consumer<Task> consumer) {
-        FirebaseDatabase.getInstance()
-                .getReference("reviews")
+        fDatabase.getReference("reviews")
                 .child(reviewFor.getId())
                 .child(review.getAuthor().getId())
                 .setValue(review)
@@ -124,8 +125,7 @@ public class FirebaseUtils {
     }
 
     private void loadUsers(Consumer<List<User>> producer) {
-        FirebaseDatabase.getInstance()
-                .getReference("users")
+        fDatabase.getReference("users")
                 .addValueEventListener(new ValueEventListener() {
                     @Override
                     public void onDataChange(DataSnapshot dataSnapshot) {
@@ -147,5 +147,41 @@ public class FirebaseUtils {
                     }
                 });
 
+    }
+
+
+    public static void saveMessage(String room, User user1, FirebaseUser me, String lastMessage) {
+
+
+        Map<String, Object> values = new HashMap<>();
+        values.put(user1.getId(), true);
+        values.put(user1.getId() + "~" + user1.getName(), true);
+        values.put(me.getUid(), true);
+        values.put(me.getUid() + "~" + me.getDisplayName(), true);
+        values.put("from", me.getUid());
+        values.put("time", new Date().getTime());
+        values.put("lastMessage", lastMessage);
+        if (room == null) {
+            room = FirebaseDatabase.getInstance()
+                    .getReference("rooms")
+                    .push().getKey();
+        }
+        values.put("roomId", room);
+
+        fDatabase.getReference("rooms").child(room).updateChildren(values);
+
+        Map<String, Object> message = new HashMap<>();
+        message.put("from", me.getUid());
+        message.put("fromName", me.getDisplayName());
+        message.put("createdAt", new Date().getTime());
+        message.put("message", lastMessage);
+
+        fDatabase.getReference("messages")
+                .child(room).push().setValue(message)
+                .addOnCompleteListener(task -> {
+                    Log.i(TAG, "Exception: " + task.getException());
+                    Log.i(TAG, "getResult: " + task.getResult());
+                    Log.i(TAG, "task: " + task);
+                });
     }
 }

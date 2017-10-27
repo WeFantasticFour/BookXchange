@@ -1,9 +1,6 @@
 package com.fantastic.bookxchange.adapters;
 
 import android.content.Context;
-import android.graphics.Bitmap;
-import android.support.v4.graphics.drawable.RoundedBitmapDrawable;
-import android.support.v4.graphics.drawable.RoundedBitmapDrawableFactory;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -12,12 +9,14 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import com.bumptech.glide.Glide;
-import com.bumptech.glide.request.target.BitmapImageViewTarget;
 import com.fantastic.bookxchange.R;
 import com.fantastic.bookxchange.models.Message;
+import com.fantastic.bookxchange.models.Room;
 import com.fantastic.bookxchange.models.User;
 
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -28,12 +27,14 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.ViewHold
 
     MessageListListener mListener;
     private List<Message> messages;
+    private List<Room> rooms;
     private Context context;
 
 
     public MessageAdapter(Context context, List<Message> m) {
         this.context = context;
         this.messages = m;
+        this.rooms = new ArrayList<>();
     }
 
     public void setListener(MessageListListener mListener) {
@@ -42,27 +43,28 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.ViewHold
 
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        Context context = parent.getContext();
-        LayoutInflater inflater = LayoutInflater.from(context);
-
-        View tweetView = inflater.inflate(R.layout.item_message, parent, false);
-
+        View tweetView = LayoutInflater.from(context).inflate(R.layout.item_message, parent, false);
         return new ViewHolder(tweetView);
     }
 
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
-        final Message message = messages.get(position);
-        holder.bind(message);
+        final Room room = rooms.get(position);
+        holder.bind(room);
     }
 
     @Override
     public int getItemCount() {
-        return messages.size();
+        return rooms.size();
+    }
+
+    public void add(Room room) {
+        rooms.add(room);
+        notifyDataSetChanged();
     }
 
     public interface MessageListListener {
-        void onClickListener(User user);
+        void onClickListener(String  roomId);
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder {
@@ -83,18 +85,15 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.ViewHold
             llMessage = itemView.findViewById(R.id.llMessage);
         }
 
-        public void bind(Message message) {
-            tvUsername.setText(message.getSenderUser().getName());
-            tvDate.setText(message.getRelativeDate());
-            tvMessage.setText(message.getText());
 
-            llMessage.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    mListener.onClickListener(message.getSenderUser());
-                }
-            });
+        public void bind(Room room) {
+            tvUsername.setText(room.getYou());
+            tvDate.setText(new SimpleDateFormat("MM/dd/yyyy HH:mm").format(new Date(room.getTime())));
+            tvMessage.setText(room.getLastMessage());
+            llMessage.setOnClickListener(view -> mListener.onClickListener(room.getRoomId()));
+            ivProfile.setVisibility(View.GONE);
 
+            /*
             if (message.getSenderUser().getUrlProfileImage() != null) {
                 ivProfile.setVisibility(View.VISIBLE);
                 Glide.with(context)
@@ -114,6 +113,7 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.ViewHold
             } else {
                 ivProfile.setVisibility(View.GONE);
             }
+            */
         }
     }
 }
