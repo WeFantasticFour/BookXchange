@@ -38,7 +38,12 @@ import com.fantastic.bookxchange.utils.FirebaseUtils;
 import com.github.clans.fab.FloatingActionMenu;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 import com.loopj.android.http.JsonHttpResponseHandler;
+import com.vistrav.flow.Flow;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -108,11 +113,34 @@ public class UserActivity extends BaseActivity implements BaseBookListFragment.B
         LayerDrawable stars = (LayerDrawable) ratingBar.getProgressDrawable();
         stars.getDrawable(2).setColorFilter(ResourcesCompat.getColor(getResources(), R.color.colorPrimary, null), PorterDuff.Mode.SRC_ATOP);
 
-        if (!user.getReviews().isEmpty()) {
-            setReviewNumber();
-        } else {
-            tvRN.setVisibility(View.GONE);
-        }
+        FirebaseDatabase.getInstance()
+                .getReference("reviews")
+                .child(user.getId())
+                .addValueEventListener(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(DataSnapshot dataSnapshot) {
+                        Flow.of(dataSnapshot
+                                .getChildren())
+                                .forEach(data -> {
+                                    Review review = data.getValue(Review.class);
+
+                                    user.addReview(review);
+                                });
+
+                        ratingBar.setRating(user.getRating());
+
+                        if (!user.getReviews().isEmpty()) {
+                            setReviewNumber();
+                        } else {
+                            tvRN.setVisibility(View.GONE);
+                        }
+                    }
+
+                    @Override
+                    public void onCancelled(DatabaseError databaseError) {
+
+                    }
+                });
 
         faMessage = findViewById(R.id.menu_message);
         faReview = findViewById(R.id.menu_review);
@@ -235,6 +263,7 @@ public class UserActivity extends BaseActivity implements BaseBookListFragment.B
     @Override
     public void onAddReview(Review review) {
         user.addReview(review);
+        tvRN.setVisibility(View.VISIBLE);
         setReviewNumber();
         ratingBar.setRating(user.getRating());
         FirebaseUtils.loadOneUser(FirebaseAuth.getInstance().getCurrentUser().getUid(), me -> {

@@ -1,11 +1,16 @@
 package com.fantastic.bookxchange.fragments;
 
+import android.graphics.Point;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
 import android.util.Log;
+import android.view.Display;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.Window;
+import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -29,6 +34,8 @@ public class BookDetailFragment extends DialogFragment {
     private TextView tvTitle;
     private TextView tvAuthor;
     private TextView tvPublisher;
+    private TextView tvIsbn;
+    private TextView tvReview;
 
 
     public BookDetailFragment() {
@@ -57,6 +64,7 @@ public class BookDetailFragment extends DialogFragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+        getDialog().requestWindowFeature(Window.FEATURE_NO_TITLE);
 
 
         Bundle bundle = this.getArguments();
@@ -71,6 +79,9 @@ public class BookDetailFragment extends DialogFragment {
         tvTitle = view.findViewById(R.id.tvTitle);
         tvAuthor = view.findViewById(R.id.tvAuthor);
         tvPublisher = view.findViewById(R.id.tvPublisher);
+        tvIsbn = view.findViewById(R.id.tvBookIsbn);
+        tvReview = view.findViewById(R.id.tvEditorialReview);
+
 
 
         getDialog().setTitle(tvTitle.getText().toString());
@@ -87,13 +98,18 @@ public class BookDetailFragment extends DialogFragment {
     private void setupView() {
         Glide.with(getContext())
                 .load(mBook.getCoverUrl())
-                //.asBitmap()
-                //.centerCrop()
                 .into(ivBookCover);
 
         tvTitle.setText(mBook.getTitle());
         tvAuthor.setText(mBook.getAuthor());
-        tvPublisher.setText(mBook.getPublisher());
+        if(mBook.getPublisher() == null){
+            tvPublisher.setVisibility(View.GONE);
+        } else {
+            tvPublisher.setText(mBook.getPublisher());
+        }
+
+        tvIsbn.setText("ISBN: " + mBook.getIsbn());
+        tvReview.setText(mBook.getShortDescription());
 
     }
 
@@ -101,6 +117,21 @@ public class BookDetailFragment extends DialogFragment {
     public void onDetach() {
         super.onDetach();
 
+    }
+
+    @Override
+    public void onResume() {
+        // Store access variables for window and blank point
+        Window window = getDialog().getWindow();
+        Point size = new Point();
+        // Store dimensions of the screen in `size`
+        Display display = window.getWindowManager().getDefaultDisplay();
+        display.getSize(size);
+        // Set the width of the dialog proportional to 75% of the screen width
+        window.setLayout((int) (size.x * 0.75), WindowManager.LayoutParams.WRAP_CONTENT);
+        window.setGravity(Gravity.CENTER);
+        // Call super onResume after sizing
+        super.onResume();
     }
 
 }

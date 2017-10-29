@@ -3,15 +3,8 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical"
     android:layout_width="match_parent"
+    android:layout_margin="10dp"
     android:layout_height="match_parent">
-
-    <ImageView
-        android:id="@+id/ivBookCover"
-        android:layout_width="280dp"
-        android:layout_height="280dp"
-        android:layout_gravity="center"
-        android:layout_marginTop="8dp"
-        app:srcCompat="@drawable/ic_nocover" />
 
     <TextView
         android:id="@+id/tvTitle"
@@ -19,39 +12,55 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
-        android:layout_marginTop="8dp"
         android:ellipsize="end"
-        android:maxLines="1"
-        android:paddingLeft="10dp"
-        android:paddingRight="10dp"
+        android:maxLines="2"
+        android:textColor="@color/colorPrimary"
         android:text="@string/book_title"
-        android:textSize="28sp" />
+        android:textSize="20sp" />
 
-    <TextView
-        android:id="@+id/tvAuthor"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        style="?textRegular"
-        android:layout_marginTop="8dp"
-        android:text="@string/book_author"
-        android:textSize="22sp" />
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:orientation="vertical"
+        android:gravity="center"
+        android:layout_margin="10dp"
+        android:layout_height="wrap_content" >
+        <ImageView
+            android:id="@+id/ivBookCover"
+            android:layout_width="200dp"
+            android:layout_height="200dp"
+            android:src="@drawable/ic_nocover" />
+
+        <TextView
+            android:id="@+id/tvAuthor"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/author"
+            style="?textLargeAccent"/>
+
+        <TextView
+            android:id="@+id/tvPublisher"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:text="@string/publisher" />
+        <TextView
+            android:id="@+id/tvBookIsbn"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:text="@string/isbn_number" />
+    </LinearLayout>
 
     <View
         android:layout_width="match_parent"
         android:layout_height="1dp"
         android:background="@android:color/darker_gray"/>
-
     <TextView
-        android:id="@+id/tvPublisher"
+        android:id="@+id/tvEditorialReview"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:layout_marginTop="8dp"
-        style="?textSubheader"
-        android:text="@string/book_publisher"
-        android:textSize="18sp"
-        android:textStyle="italic" />
+        android:layout_margin="@dimen/activity_horizontal_margin"
+        android:text="@string/editorial_review" />
 
 
 </LinearLayout>
