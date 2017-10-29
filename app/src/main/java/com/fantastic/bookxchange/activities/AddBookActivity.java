@@ -14,6 +14,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.Spinner;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
@@ -60,6 +61,7 @@ public class AddBookActivity extends BaseActivity {
     private EditText etPublisher;
     private Button btnScan;
     private Button btnAddPhoto;
+    private Spinner sCategory;
 
     private static String getAuthor(final JSONObject jsonObject) {
         try {
@@ -113,6 +115,7 @@ public class AddBookActivity extends BaseActivity {
             AddBookActivityPermissionsDispatcher.addPhotoWithCheck(this);
         });
 
+        sCategory = findViewById(R.id.sCategory);
         //addBook.setOnClickListener(view -> fetchBooks(getText(etISBNNumber)));
         btnScan.setOnClickListener(view -> openScanner());
 
@@ -242,6 +245,21 @@ public class AddBookActivity extends BaseActivity {
         String isbn = getText(etISBNNumber);
         String description = getText(etDescription);
 
+        Book.CATEGORY category = null;
+
+        switch (sCategory.getSelectedItem().toString()){
+            case "Share":
+                category = Book.CATEGORY.SHARE;
+                break;
+            case "Wishlist":
+                category = Book.CATEGORY.WISH;
+                break;
+            default:
+                category = Book.CATEGORY.EXCHANGE;
+        }
+
+        Log.d(TAG, "Category: " + category.toString());
+
 
         Book book = Book.Builder.get()
                 .title(title)
@@ -250,10 +268,11 @@ public class AddBookActivity extends BaseActivity {
                 .description(description)
                 .isbn(isbn)
                 .active(true)
-                .category(Book.CATEGORY.EXCHANGE)
+                .category(category)
                 .user(FirebaseAuth.getInstance().getCurrentUser().getUid())
                 .build();
         startProgress();
+        Book.CATEGORY finalCategory = category;
         FirebaseDatabase.getInstance()
                 .getReference("books")
                 .child(isbn)
@@ -263,7 +282,7 @@ public class AddBookActivity extends BaseActivity {
                         doneProgress();
                         snakebar(etBookTitle, task.getException().getMessage());
                     } else {
-                        saveUserBookRelation(isbn, Book.CATEGORY.EXCHANGE);
+                        saveUserBookRelation(isbn, finalCategory);
                         //snakebar(etBookTitle, "Your Content has been saved!");
                     }
                 });
