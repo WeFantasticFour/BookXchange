@@ -258,9 +258,6 @@ public class AddBookActivity extends BaseActivity {
                 category = Book.CATEGORY.EXCHANGE;
         }
 
-        Log.d(TAG, "Category: " + category.toString());
-
-
         Book book = Book.Builder.get()
                 .title(title)
                 .author(author)
