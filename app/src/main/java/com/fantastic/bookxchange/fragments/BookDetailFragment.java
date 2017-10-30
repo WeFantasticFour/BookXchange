@@ -76,8 +76,8 @@ public class BookDetailFragment extends DialogFragment {
 
 
         ivBookCover = view.findViewById(R.id.ivBookCover);
-        tvTitle = view.findViewById(R.id.tvTitle);
-        tvAuthor = view.findViewById(R.id.tvAuthor);
+        tvTitle = view.findViewById(R.id.tvAuthor);
+        tvAuthor = view.findViewById(R.id.tvTitle);
         tvPublisher = view.findViewById(R.id.tvPublisher);
         tvIsbn = view.findViewById(R.id.tvBookIsbn);
         tvReview = view.findViewById(R.id.tvEditorialReview);

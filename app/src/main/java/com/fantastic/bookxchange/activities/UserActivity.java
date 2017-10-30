@@ -7,12 +7,14 @@ import android.graphics.drawable.LayerDrawable;
 import android.location.Address;
 import android.location.Geocoder;
 import android.os.Bundle;
+import android.support.constraint.ConstraintLayout;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.content.res.ResourcesCompat;
 import android.support.v4.graphics.drawable.RoundedBitmapDrawable;
 import android.support.v4.graphics.drawable.RoundedBitmapDrawableFactory;
 import android.support.v4.view.ViewPager;
+import android.support.v7.graphics.Palette;
 import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
@@ -24,7 +26,6 @@ import com.bumptech.glide.request.target.BitmapImageViewTarget;
 import com.fantastic.bookxchange.R;
 import com.fantastic.bookxchange.adapters.BookFragmentPagerAdapter;
 import com.fantastic.bookxchange.fragments.BaseBookListFragment;
-import com.fantastic.bookxchange.fragments.BookDetailFragment;
 import com.fantastic.bookxchange.fragments.ExchangeListFragment;
 import com.fantastic.bookxchange.fragments.MessageFragment;
 import com.fantastic.bookxchange.fragments.ReviewFragment;
@@ -44,6 +45,7 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.loopj.android.http.JsonHttpResponseHandler;
 import com.vistrav.flow.Flow;
+import com.vistrav.pop.Pop;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -88,9 +90,9 @@ public class UserActivity extends BaseActivity implements BaseBookListFragment.B
 
     private void setupView() {
 
-        if(user.getLocation() != null) {
+        if (user.getLocation() != null) {
             setLocation(user);
-        }else{
+        } else {
             BookClient client = new BookClient();
             client.getLocation(user.getZip(), new JsonHttpResponseHandler() {
 
@@ -146,11 +148,11 @@ public class UserActivity extends BaseActivity implements BaseBookListFragment.B
         faReview = findViewById(R.id.menu_review);
 
         String uid = FirebaseAuth.getInstance().getCurrentUser().getUid();
-        if (user.getId().equals(FirebaseAuth.getInstance().getCurrentUser().getUid())){
+        if (user.getId().equals(FirebaseAuth.getInstance().getCurrentUser().getUid())) {
             FloatingActionMenu faM = findViewById(R.id.faMenu);
 
             faM.setVisibility(View.GONE);
-        }else{
+        } else {
             faMessage.setOnClickListener(view -> {
                 FragmentManager fm = getSupportFragmentManager();
                 MessageFragment messageCompose = MessageFragment.newInstance();
@@ -164,7 +166,7 @@ public class UserActivity extends BaseActivity implements BaseBookListFragment.B
             });
         }
 
-        
+
         Glide.with(this)
                 .load(user.getUrlProfileImage())
                 .asBitmap()
@@ -181,7 +183,7 @@ public class UserActivity extends BaseActivity implements BaseBookListFragment.B
                 });
     }
 
-    public void setLocation(User user){
+    public void setLocation(User user) {
         Geocoder geocoder;
         List<Address> addresses;
         geocoder = new Geocoder(UserActivity.this, Locale.getDefault());
@@ -225,6 +227,8 @@ public class UserActivity extends BaseActivity implements BaseBookListFragment.B
     @Override
     public void onClickListener(Book book) {
 
+        showBookDetail(book);
+        /*
         Bundle bundle = new Bundle();
         bundle.putParcelable("book", Parcels.wrap(book));
 
@@ -232,6 +236,7 @@ public class UserActivity extends BaseActivity implements BaseBookListFragment.B
         BookDetailFragment dialog = BookDetailFragment.newInstance(book);
         dialog.setArguments(bundle);
         dialog.show(manager, "Dialog");
+        */
     }
 
     @Override
@@ -290,5 +295,39 @@ public class UserActivity extends BaseActivity implements BaseBookListFragment.B
         FirebaseUtils.saveMessage("-KxMXsuQWDZ4AXRFz7MK", user, me, s);
     }
 
+    private void showBookDetail(Book book) {
+        Pop.on(this)
+                .layout(R.layout.model_book_detail)
+                .cancelable(true)
+                .show(view -> {
+                    ImageView ivCover = view.findViewById(R.id.ivCover);
+                    TextView tvTitle = view.findViewById(R.id.tvAuthor);
+                    TextView tvAuthor = view.findViewById(R.id.tvTitle);
+                    TextView tvIsbn = view.findViewById(R.id.tvIsbn);
+                    ConstraintLayout clBookDetail = view.findViewById(R.id.clBookDetail);
 
+                    tvTitle.setText("Title : " + book.getTitle());
+                    tvAuthor.setText("Author : " + book.getAuthor());
+                    tvIsbn.setText("ISBN : " + book.getIsbn());
+                    Glide.with(UserActivity.this)
+                            .load(book.getUrlPicture())
+                            .asBitmap()
+                            .into(new BitmapImageViewTarget(ivCover) {
+                                @Override
+                                protected void setResource(Bitmap resource) {
+                                    ivCover.setImageBitmap(resource);
+                                    serBackground(clBookDetail, resource);
+                                }
+                            });
+                });
+    }
+
+    private void serBackground(View view, Bitmap bitmap) {
+        Palette.from(bitmap).maximumColorCount(10).generate(palette -> {
+            Palette.Swatch vibrant = palette.getVibrantSwatch();
+            if (vibrant != null) {
+                view.setBackgroundColor(vibrant.getRgb());
+            }
+        });
+    }
 }
