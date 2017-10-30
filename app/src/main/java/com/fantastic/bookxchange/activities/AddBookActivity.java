@@ -22,6 +22,7 @@ import com.fantastic.bookxchange.R;
 import com.fantastic.bookxchange.models.Book;
 import com.fantastic.bookxchange.rest.BookClient;
 import com.fantastic.bookxchange.rest.JsonKeys;
+import com.fantastic.bookxchange.utils.DefaultValueEventListener;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -222,19 +223,11 @@ public class AddBookActivity extends BaseActivity {
         FirebaseDatabase.getInstance()
                 .getReference("books")
                 .child(isbn)
-                .addValueEventListener(new ValueEventListener() {
-                    @Override
-                    public void onDataChange(DataSnapshot dataSnapshot) {
-                        if (dataSnapshot.getValue() == null) {
-                            uploadCoverPage(ivCover.getDrawingCache(), isbn);
-                        } else {
-                            saveUserBookRelation(isbn, Book.CATEGORY.EXCHANGE);
-                        }
-                    }
-
-                    @Override
-                    public void onCancelled(DatabaseError databaseError) {
-                        Log.e(TAG, "databaseError: " + databaseError);
+                .addValueEventListener((DefaultValueEventListener) dataSnapshot -> {
+                    if (dataSnapshot.getValue() == null) {
+                        uploadCoverPage(ivCover.getDrawingCache(), isbn);
+                    } else {
+                        saveUserBookRelation(isbn, Book.CATEGORY.EXCHANGE);
                     }
                 });
     }
@@ -280,7 +273,6 @@ public class AddBookActivity extends BaseActivity {
                         snakebar(etBookTitle, task.getException().getMessage());
                     } else {
                         saveUserBookRelation(isbn, finalCategory);
-                        //snakebar(etBookTitle, "Your Content has been saved!");
                     }
                 });
     }

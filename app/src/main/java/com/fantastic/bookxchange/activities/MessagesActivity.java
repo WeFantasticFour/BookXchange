@@ -56,6 +56,9 @@ public class MessagesActivity extends BaseActivity implements MessageAdapter.Mes
             public void onChildAdded(DataSnapshot dataSnapshot, String s) {
                 Log.i(TAG, "onChildAdded: SS: " + s + " dataSnapshot :: " + dataSnapshot.getValue());
                 Room room = dataSnapshot.getValue(Room.class);
+                if(!room.getRoomId().contains(me.getUid())){
+                    return;
+                }
                 //room.setRoomId(s);
                 for(DataSnapshot data: dataSnapshot.getChildren()){
                     if(data.getValue() instanceof Boolean && !data.getKey().startsWith(me.getUid())){

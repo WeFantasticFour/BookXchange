@@ -1,9 +1,6 @@
 package com.fantastic.bookxchange.adapters;
 
 import android.content.Context;
-import android.graphics.Bitmap;
-import android.support.v4.graphics.drawable.RoundedBitmapDrawable;
-import android.support.v4.graphics.drawable.RoundedBitmapDrawableFactory;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -11,10 +8,13 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.bumptech.glide.Glide;
-import com.bumptech.glide.request.target.BitmapImageViewTarget;
 import com.fantastic.bookxchange.R;
+import com.fantastic.bookxchange.models.Chat;
 import com.fantastic.bookxchange.models.Message;
+import com.fantastic.bookxchange.models.User;
+import com.fantastic.bookxchange.utils.DefaultValueEventListener;
+import com.fantastic.bookxchange.utils.GlideUtils;
+import com.google.firebase.database.FirebaseDatabase;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -25,34 +25,35 @@ import java.util.List;
 
 public class BubbleAdapter extends RecyclerView.Adapter<BubbleAdapter.ViewHolder> {
 
-    private List<Message> messages;
+    private List<Chat> chats;
     private Context context;
 
-
-    public BubbleAdapter(Context context, List<Message> m) {
+    public BubbleAdapter(Context context, ArrayList<Message> messages) {
         this.context = context;
-        this.messages = new ArrayList<>();
+        this.chats = new ArrayList<>();
     }
 
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        Context context = parent.getContext();
-        LayoutInflater inflater = LayoutInflater.from(context);
-
-        View tweetView = inflater.inflate(R.layout.item_bubble, parent, false);
-
+        View tweetView = LayoutInflater.from(context)
+                .inflate(R.layout.item_bubble, parent, false);
         return new ViewHolder(tweetView);
     }
 
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
-        final Message message = messages.get(position);
-        holder.bind(message);
+        final Chat chat = chats.get(position);
+        holder.bind(chat);
+    }
+
+    public void addChat(Chat chat) {
+        chats.add(chat);
+        notifyDataSetChanged();
     }
 
     @Override
     public int getItemCount() {
-        return messages.size();
+        return chats.size();
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder {
@@ -69,30 +70,18 @@ public class BubbleAdapter extends RecyclerView.Adapter<BubbleAdapter.ViewHolder
             ivProfile = itemView.findViewById(R.id.ivProfile);
         }
 
-        public void bind(Message message) {
-            tvDate.setText(message.getRelativeDate());
-            tvMessage.setText(message.getText());
-
-
-            if (message.getSenderUser().getUrlProfileImage() != null) {
-                ivProfile.setVisibility(View.VISIBLE);
-                Glide.with(context)
-                        .load(message.getSenderUser().getUrlProfileImage())
-                        .asBitmap()
-                        .centerCrop()
-                        .placeholder(R.drawable.ic_person_24dp)
-                        .into(new BitmapImageViewTarget(ivProfile) {
-                            @Override
-                            protected void setResource(Bitmap resource) {
-                                RoundedBitmapDrawable circularBitmapDrawable =
-                                        RoundedBitmapDrawableFactory.create(context.getResources(), resource);
-                                circularBitmapDrawable.setCircular(true);
-                                ivProfile.setImageDrawable(circularBitmapDrawable);
-                            }
-                        });
-            } else {
-                ivProfile.setVisibility(View.GONE);
-            }
+        public void bind(Chat chat) {
+            tvDate.setText(chat.getDate());
+            tvMessage.setText(chat.getMessage());
+            FirebaseDatabase.getInstance().getReference("users")
+                    .child(chat.getFrom())
+                    .addValueEventListener((DefaultValueEventListener) dataSnapshot -> {
+                        User user = dataSnapshot.getValue(User.class);
+                        if (user == null || user.getUrlProfileImage() == null) {
+                            return;
+                        }
+                        GlideUtils.loadImageCircular(context, ivProfile, user.getUrlProfileImage());
+                    });
         }
     }
 }
