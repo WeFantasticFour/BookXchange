@@ -5,6 +5,7 @@ import android.graphics.Color;
 import android.net.Uri;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -95,6 +96,9 @@ public class BooksAdapter extends RecyclerView.Adapter<BooksAdapter.ViewHolder> 
         public void bind(Book book) {
             tvTitle.setText(book.getTitle());
             tvAuthor.setText(book.getAuthor());
+
+            Log.d(TAG, book.getCoverUrl());
+
             Glide.with(context)
                     .load(book.getIsbn() != null ? Uri.parse(book.getCoverUrl()) : R.drawable.ic_nocover)
                     .centerCrop()

@@ -1,7 +1,6 @@
 package com.fantastic.bookxchange.fragments;
 
 import android.graphics.Point;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
 import android.util.Log;
@@ -89,7 +88,6 @@ public class BookDetailFragment extends DialogFragment {
 
         if (mBook != null) {
             setupView();
-
         }
         return view;
 
@@ -100,8 +98,9 @@ public class BookDetailFragment extends DialogFragment {
 
         Log.d(TAG, mBook.getCoverUrl());
 
-        Glide.with(getContext())
-                .load(mBook.getIsbn() != null ? Uri.parse(mBook.getCoverUrl()) : R.drawable.ic_nocover)
+        Glide.with(getActivity())
+                .load(mBook.getCoverUrl())
+                .placeholder(R.drawable.ic_nocover)
                 .into(ivBookCover);
 
         tvTitle.setText(mBook.getTitle());
