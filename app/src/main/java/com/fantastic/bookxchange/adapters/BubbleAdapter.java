@@ -10,6 +10,7 @@ import android.widget.TextView;
 
 import com.fantastic.bookxchange.R;
 import com.fantastic.bookxchange.models.Chat;
+import com.fantastic.bookxchange.models.Message;
 import com.fantastic.bookxchange.models.User;
 import com.fantastic.bookxchange.utils.DefaultValueEventListener;
 import com.fantastic.bookxchange.utils.GlideUtils;
@@ -27,7 +28,7 @@ public class BubbleAdapter extends RecyclerView.Adapter<BubbleAdapter.ViewHolder
     private List<Chat> chats;
     private Context context;
 
-    public BubbleAdapter(Context context) {
+    public BubbleAdapter(Context context, ArrayList<Message> messages) {
         this.context = context;
         this.chats = new ArrayList<>();
     }
