@@ -88,7 +88,6 @@ public class BookDetailFragment extends DialogFragment {
 
         if (mBook != null) {
             setupView();
-
         }
         return view;
 
@@ -96,8 +95,12 @@ public class BookDetailFragment extends DialogFragment {
 
 
     private void setupView() {
-        Glide.with(getContext())
+
+        Log.d(TAG, mBook.getCoverUrl());
+
+        Glide.with(getActivity())
                 .load(mBook.getCoverUrl())
+                .placeholder(R.drawable.ic_nocover)
                 .into(ivBookCover);
 
         tvTitle.setText(mBook.getTitle());

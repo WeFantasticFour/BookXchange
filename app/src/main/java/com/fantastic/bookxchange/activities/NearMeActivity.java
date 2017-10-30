@@ -329,21 +329,20 @@ public class NearMeActivity extends BaseActivity implements BaseBookListFragment
                     FirebaseDatabase.getInstance()
                             .getReference("users")
                             .child(auth.getCurrentUser().getUid()).addValueEventListener(new ValueEventListener() {
-                                                                                             @Override
-                                                                                             public void onDataChange(DataSnapshot dataSnapshot) {
+                                 @Override
+                                 public void onDataChange(DataSnapshot dataSnapshot) {
 
-                                                                                                 User user = dataSnapshot.getValue(User.class);
-                                                                                                 loadUserLocation(user);
-                                                                                                 Intent iUser = new Intent(NearMeActivity.this, UserActivity.class);
-                                                                                                 iUser.putExtra("user", Parcels.wrap(currentUser));
-                                                                                                 startActivity(iUser);
-                                                                                             }
+                                     currentUser = dataSnapshot.getValue(User.class);
+                                     Intent iUser = new Intent(NearMeActivity.this, UserActivity.class);
+                                     iUser.putExtra("user", Parcels.wrap(currentUser));
+                                     startActivity(iUser);
+                                 }
 
-                                                                                             @Override
-                                                                                             public void onCancelled(DatabaseError databaseError) {
+                                     @Override
+                                     public void onCancelled(DatabaseError databaseError) {
 
-                                                                                             }
-                                                                                         }
+                                     }
+                                 }
                     );
                 }
                 break;

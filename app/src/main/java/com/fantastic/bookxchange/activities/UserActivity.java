@@ -57,6 +57,8 @@ import java.util.Locale;
 
 import cz.msebera.android.httpclient.Header;
 
+import static com.fantastic.bookxchange.R.array.category;
+
 public class UserActivity extends BaseActivity implements BaseBookListFragment.BookListClickListener,
         BaseBookListFragment.BookListReadyListener,
         ReviewFragment.ReviewDialogListener,
@@ -143,6 +145,29 @@ public class UserActivity extends BaseActivity implements BaseBookListFragment.B
 
                     }
                 });
+
+        if (user.getExchangeBooks().isEmpty() && user.getShareBooks().isEmpty() && user.getWishListBooks().isEmpty()){
+            FirebaseDatabase.getInstance()
+                .getReference("user_book")
+                .child(user.getId()).addValueEventListener(new ValueEventListener() {
+                   @Override
+                   public void onDataChange(DataSnapshot dataSnapshot) {
+                       Flow.of(dataSnapshot
+                               .getChildren())
+                               .forEach(data -> {
+                                   getBook(user,
+                                           data.child("isbn").getValue(String.class),
+                                           Book.CATEGORY.valueOf(data.child("category").getValue(String.class)));
+                               });
+                   }
+
+                   @Override
+                   public void onCancelled(DatabaseError databaseError) {
+
+                   }
+               }
+            );
+        }
 
         faMessage = findViewById(R.id.menu_message);
         faReview = findViewById(R.id.menu_review);
@@ -329,5 +354,26 @@ public class UserActivity extends BaseActivity implements BaseBookListFragment.B
                 view.setBackgroundColor(vibrant.getRgb());
             }
         });
+    }
+    private void getBook(User user, String isbn, Book.CATEGORY category) {
+        FirebaseDatabase.getInstance()
+                .getReference("books")
+                .child(isbn)
+                .addValueEventListener(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(DataSnapshot dataSnapshot) {
+                        Book book = dataSnapshot.getValue(Book.class);
+                        Log.i(TAG, "onDataChange: isbn " + isbn + " : " + book);
+                        if (book != null) {
+                            book.setCategory(category);
+                            user.addBook(book);
+                        }
+                    }
+
+                    @Override
+                    public void onCancelled(DatabaseError databaseError) {
+
+                    }
+                });
     }
 }
