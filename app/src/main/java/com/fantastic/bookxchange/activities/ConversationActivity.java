@@ -7,11 +7,11 @@ import android.util.Log;
 
 import com.fantastic.bookxchange.R;
 import com.fantastic.bookxchange.adapters.BubbleAdapter;
+import com.fantastic.bookxchange.models.Chat;
 import com.fantastic.bookxchange.models.Message;
 import com.fantastic.bookxchange.models.User;
-import com.google.firebase.database.ChildEventListener;
+import com.fantastic.bookxchange.utils.DefaultChildEventListener;
 import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.FirebaseDatabase;
 
 import java.util.ArrayList;
@@ -55,66 +55,13 @@ public class ConversationActivity extends BaseActivity {
     }
 
     private void loadChatData(String roomId) {
-        Log.i(TAG, "loadChatData: =====roomId " + roomId);
         FirebaseDatabase.getInstance()
                 .getReference("messages")
-                .child(roomId).addChildEventListener(new ChildEventListener() {
+                .child(roomId).addChildEventListener(new DefaultChildEventListener() {
             @Override
             public void onChildAdded(DataSnapshot dataSnapshot, String s) {
-                Log.i(TAG, "onChildAdded: SS: " + s + " dataSnapshot :: " + dataSnapshot.getValue());
-                /*
-                Room room = dataSnapshot.getValue(Room.class);
-                room.setRoomId(s);
-                for (DataSnapshot data : dataSnapshot.getChildren()) {
-                    if (data.getValue() instanceof Boolean && !data.getKey().startsWith(me.getUid())) {
-                        String[] yous = data.getKey().split("~");
-                        if (yous.length > 1) {
-                            Log.i(TAG, "onChildAdded: yous :: " + yous[1]);
-                            room.setYou(yous[1]);
-                        }
-                    }
-                }
-                */
-            }
-
-            @Override
-            public void onChildChanged(DataSnapshot dataSnapshot, String s) {
-                Log.i(TAG, "onChildChanged: SS: " + s + " dataSnapshot :: " + dataSnapshot.getValue());
-            }
-
-            @Override
-            public void onChildRemoved(DataSnapshot dataSnapshot) {
-
-            }
-
-            @Override
-            public void onChildMoved(DataSnapshot dataSnapshot, String s) {
-                Log.i(TAG, "onChildMoved: SS: " + s + " dataSnapshot :: " + dataSnapshot.getValue());
-
-            }
-
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-
+                aBubble.addChat(dataSnapshot.getValue(Chat.class));
             }
         });
-        /*
-        query.getRef().addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                Flow.of(dataSnapshot
-                        .getChildren())
-                        .forEach(data -> {
-                            Log.i(TAG, "onDataChange: data " + data);
-                        });
-            }
-
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-
-            }
-        })
-        */
-
     }
 }

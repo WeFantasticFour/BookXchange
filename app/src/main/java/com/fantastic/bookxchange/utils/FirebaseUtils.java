@@ -11,6 +11,7 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.loopj.android.http.JsonHttpResponseHandler;
@@ -149,26 +150,64 @@ public class FirebaseUtils {
 
     }
 
+    public static void sendMessage(User you, FirebaseUser me, String message) {
 
-    public static void saveMessage(String room, User user1, FirebaseUser me, String lastMessage) {
+        DatabaseReference ref = FirebaseDatabase.getInstance()
+                .getReference("rooms");
+        String key1 = me.getUid() + "_" + you.getId();
+        String key2 = you.getId() + "_" + me.getUid();
+        ref.child(key1).addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                Log.i(TAG, ">>>>onDataChange:0  :: " + dataSnapshot);
+                if (dataSnapshot.getValue() == null) {
+                    sendMessageUsingSecondKey(key2, you, me, message);
+                } else {
+                    saveMessage(key1, you, me, message);
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                Log.i(TAG, "onCancelled:  :: " + databaseError.getMessage());
+            }
+        });
 
 
+    }
+
+    private static void sendMessageUsingSecondKey(String key, User you, FirebaseUser me, String message) {
+        DatabaseReference ref = FirebaseDatabase.getInstance()
+                .getReference("rooms");
+
+        ref.child(key).addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                Log.i(TAG, ">>>>onDataChange: 1 :: " + dataSnapshot);
+                saveMessage(key, you, me, message);
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                Log.i(TAG, "onCancelled: 1 :: " + databaseError.getMessage());
+            }
+        });
+
+    }
+
+
+    public static void saveMessage(String key, User you, FirebaseUser me, String lastMessage) {
         Map<String, Object> values = new HashMap<>();
-        values.put(user1.getId(), true);
-        values.put(user1.getId() + "~" + user1.getName(), true);
+        values.put(you.getId(), true);
+        values.put(you.getId() + "~" + you.getName(), true);
         values.put(me.getUid(), true);
         values.put(me.getUid() + "~" + me.getDisplayName(), true);
         values.put("from", me.getUid());
         values.put("time", new Date().getTime());
         values.put("lastMessage", lastMessage);
-        if (room == null) {
-            room = FirebaseDatabase.getInstance()
-                    .getReference("rooms")
-                    .push().getKey();
-        }
-        values.put("roomId", room);
+        values.put("roomId", key);
 
-        fDatabase.getReference("rooms").child(room).updateChildren(values);
+        fDatabase.getReference("rooms").child(key).updateChildren(values);
 
         Map<String, Object> message = new HashMap<>();
         message.put("from", me.getUid());
@@ -177,11 +216,12 @@ public class FirebaseUtils {
         message.put("message", lastMessage);
 
         fDatabase.getReference("messages")
-                .child(room).push().setValue(message)
+                .child(key).push().setValue(message)
                 .addOnCompleteListener(task -> {
                     Log.i(TAG, "Exception: " + task.getException());
                     Log.i(TAG, "getResult: " + task.getResult());
                     Log.i(TAG, "task: " + task);
                 });
     }
+
 }
