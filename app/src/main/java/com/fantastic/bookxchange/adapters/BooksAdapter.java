@@ -86,8 +86,8 @@ public class BooksAdapter extends RecyclerView.Adapter<BooksAdapter.ViewHolder> 
         public ViewHolder(View itemView) {
             super(itemView);
 
-            tvTitle = itemView.findViewById(R.id.tvTitle);
-            tvAuthor = itemView.findViewById(R.id.tvAuthor);
+            tvTitle = itemView.findViewById(R.id.tvAuthor);
+            tvAuthor = itemView.findViewById(R.id.tvTitle);
             llBook = itemView.findViewById(R.id.llBook);
             ivCover = itemView.findViewById(R.id.ivBookCover);
         }

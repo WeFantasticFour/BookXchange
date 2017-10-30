@@ -137,6 +137,9 @@ public class NearMeActivity extends BaseActivity implements BaseBookListFragment
                 public void onDataChange(DataSnapshot dataSnapshot) {
 
                     User user = dataSnapshot.getValue(User.class);
+                    if (user == null || user.getUrlProfileImage() == null) {
+                        return;
+                    }
                     Glide.with(NearMeActivity.this)
                             .load(user.getUrlProfileImage())
                             .asBitmap()
@@ -288,7 +291,7 @@ public class NearMeActivity extends BaseActivity implements BaseBookListFragment
     @Override
     public void onClickListener(Book book) {
 
-        for(Marker m : previousMarkers){
+        for (Marker m : previousMarkers) {
             User userTag = (User) m.getTag();
 
             MapUtils.modifyMarker(this, m, userTag, Color.parseColor("#009688"));
@@ -297,7 +300,7 @@ public class NearMeActivity extends BaseActivity implements BaseBookListFragment
         List<Marker> bookMarkers = books.get(book);
         previousMarkers = bookMarkers;
 
-        for(Marker m : bookMarkers){
+        for (Marker m : bookMarkers) {
             User userTag = (User) m.getTag();
             MapUtils.modifyMarker(this, m, userTag, Color.parseColor("#FF5522"));
             CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngZoom(userTag.getLocation(), 10);
@@ -326,21 +329,21 @@ public class NearMeActivity extends BaseActivity implements BaseBookListFragment
                     FirebaseDatabase.getInstance()
                             .getReference("users")
                             .child(auth.getCurrentUser().getUid()).addValueEventListener(new ValueEventListener() {
-                                 @Override
-                                 public void onDataChange(DataSnapshot dataSnapshot) {
+                                                                                             @Override
+                                                                                             public void onDataChange(DataSnapshot dataSnapshot) {
 
-                                     User user = dataSnapshot.getValue(User.class);
-                                     loadUserLocation(user);
-                                     Intent iUser = new Intent(NearMeActivity.this, UserActivity.class);
-                                     iUser.putExtra("user", Parcels.wrap(currentUser));
-                                     startActivity(iUser);
-                                 }
+                                                                                                 User user = dataSnapshot.getValue(User.class);
+                                                                                                 loadUserLocation(user);
+                                                                                                 Intent iUser = new Intent(NearMeActivity.this, UserActivity.class);
+                                                                                                 iUser.putExtra("user", Parcels.wrap(currentUser));
+                                                                                                 startActivity(iUser);
+                                                                                             }
 
-                                 @Override
-                                 public void onCancelled(DatabaseError databaseError) {
+                                                                                             @Override
+                                                                                             public void onCancelled(DatabaseError databaseError) {
 
-                                 }
-                             }
+                                                                                             }
+                                                                                         }
                     );
                 }
                 break;
@@ -475,9 +478,9 @@ public class NearMeActivity extends BaseActivity implements BaseBookListFragment
                     JSONObject object = (JSONObject) response.getJSONArray("results").get(0);
                     JSONObject locObject = object.getJSONObject("geometry").getJSONObject("location");
                     user.setLocation(new LatLng(locObject.getDouble("lat"), locObject.getDouble("lng")));
-                    if(!user.getId().equals(auth.getUid())) {
+                    if (!user.getId().equals(auth.getUid())) {
                         addMarker(NearMeActivity.this, map, user, Color.parseColor("#009688"), marker -> getUserBooks(user, marker));
-                    }else{
+                    } else {
                         FirebaseDatabase.getInstance()
                                 .getReference("user_book")
                                 .child(user.getId())

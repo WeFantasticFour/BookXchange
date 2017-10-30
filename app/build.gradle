@@ -71,5 +71,7 @@ dependencies {
 
     compile 'com.github.clans:fab:1.6.4'
     compile 'com.firebaseui:firebase-ui-database:3.1.0'
+    compile 'com.vistrav:pop:2.3'
+    compile "com.android.support:palette-v7:${rootProject.ext.supportLibVersion}"
 }
 apply plugin: 'com.google.gms.google-services'

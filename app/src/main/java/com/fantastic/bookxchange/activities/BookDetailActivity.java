@@ -30,8 +30,8 @@ public class BookDetailActivity extends BaseActivity {
         book = Parcels.unwrap(getIntent().getParcelableExtra("book"));
 
         ivLargeImage = findViewById(R.id.ivLargeImage);
-        tvTitle = findViewById(R.id.tvTitle);
-        tvAuthor = findViewById(R.id.tvAuthor);
+        tvTitle = findViewById(R.id.tvAuthor);
+        tvAuthor = findViewById(R.id.tvTitle);
 //        tvDetailPage = findViewById(tvEdition);
         //tvDetailPage = findViewById(R.id.tvDetailPage);
         tvEditorialReview = findViewById(R.id.tvEditorialReview);
