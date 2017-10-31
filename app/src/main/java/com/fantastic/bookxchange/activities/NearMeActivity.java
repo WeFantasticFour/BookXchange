@@ -357,6 +357,11 @@ public class NearMeActivity extends BaseActivity implements BaseBookListFragment
             case R.id.nav_add_book:
                 startActivity(AddBookActivity.class);
                 break;
+            case R.id.nav_settings:
+                Intent iSettings = new Intent(this, SettingsActivity.class);
+                startActivity(iSettings);
+
+
             default:
                 toast(item.getTitle().toString());
         }

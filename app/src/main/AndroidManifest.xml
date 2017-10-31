@@ -53,7 +53,10 @@
         <activity android:name=".activities.MessageActivity" />
         <activity android:name=".activities.ReviewActivity" />
         <activity android:name=".activities.ConversationActivity" />
-        <activity android:name=".activities.MessagesActivity"></activity>
+        <activity android:name=".activities.MessagesActivity" />
+        <activity
+            android:name=".activities.SettingsActivity"
+            android:label="@string/title_activity_settings"></activity>
     </application>
 
 </manifest>
