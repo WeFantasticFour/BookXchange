@@ -130,7 +130,7 @@ public class UserActivity extends BaseActivity implements BaseBookListFragment.B
         faReview = findViewById(R.id.menu_review);
 
         String uid = FirebaseAuth.getInstance().getCurrentUser().getUid();
-        if (user.getId().equals(FirebaseAuth.getInstance().getCurrentUser().getUid())) {
+        if (user.getId().equals(me.getUid())) {
             FloatingActionMenu faM = findViewById(R.id.faMenu);
 
             faM.setVisibility(View.GONE);
