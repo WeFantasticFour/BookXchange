@@ -39,12 +39,7 @@ import com.fantastic.bookxchange.utils.FirebaseUtils;
 import com.github.clans.fab.FloatingActionMenu;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.ValueEventListener;
 import com.loopj.android.http.JsonHttpResponseHandler;
-import com.vistrav.flow.Flow;
 import com.vistrav.pop.Pop;
 
 import org.json.JSONException;
@@ -56,8 +51,6 @@ import java.util.List;
 import java.util.Locale;
 
 import cz.msebera.android.httpclient.Header;
-
-import static com.fantastic.bookxchange.R.array.category;
 
 public class UserActivity extends BaseActivity implements BaseBookListFragment.BookListClickListener,
         BaseBookListFragment.BookListReadyListener,
@@ -117,56 +110,20 @@ public class UserActivity extends BaseActivity implements BaseBookListFragment.B
         LayerDrawable stars = (LayerDrawable) ratingBar.getProgressDrawable();
         stars.getDrawable(2).setColorFilter(ResourcesCompat.getColor(getResources(), R.color.colorPrimary, null), PorterDuff.Mode.SRC_ATOP);
 
-        FirebaseDatabase.getInstance()
-                .getReference("reviews")
-                .child(user.getId())
-                .addValueEventListener(new ValueEventListener() {
-                    @Override
-                    public void onDataChange(DataSnapshot dataSnapshot) {
-                        Flow.of(dataSnapshot
-                                .getChildren())
-                                .forEach(data -> {
-                                    Review review = data.getValue(Review.class);
+        //Load User's reviews
+        FirebaseUtils.loadReviews(user, object -> {
+            ratingBar.setRating(user.getRating());
 
-                                    user.addReview(review);
-                                });
+            if (!user.getReviews().isEmpty()) {
+                setReviewNumber();
+            } else {
+                tvRN.setVisibility(View.GONE);
+            }
+        });
 
-                        ratingBar.setRating(user.getRating());
-
-                        if (!user.getReviews().isEmpty()) {
-                            setReviewNumber();
-                        } else {
-                            tvRN.setVisibility(View.GONE);
-                        }
-                    }
-
-                    @Override
-                    public void onCancelled(DatabaseError databaseError) {
-
-                    }
-                });
-
+        //User books
         if (user.getExchangeBooks().isEmpty() && user.getShareBooks().isEmpty() && user.getWishListBooks().isEmpty()){
-            FirebaseDatabase.getInstance()
-                .getReference("user_book")
-                .child(user.getId()).addValueEventListener(new ValueEventListener() {
-                   @Override
-                   public void onDataChange(DataSnapshot dataSnapshot) {
-                       Flow.of(dataSnapshot
-                               .getChildren())
-                               .forEach(data -> {
-                                   getBook(user,
-                                           data.child("isbn").getValue(String.class),
-                                           Book.CATEGORY.valueOf(data.child("category").getValue(String.class)));
-                               });
-                   }
-
-                   @Override
-                   public void onCancelled(DatabaseError databaseError) {
-
-                   }
-               }
-            );
+            FirebaseUtils.loadUserBooks(user);
         }
 
         faMessage = findViewById(R.id.menu_message);
@@ -292,10 +249,7 @@ public class UserActivity extends BaseActivity implements BaseBookListFragment.B
 
     @Override
     public void onAddReview(Review review) {
-        user.addReview(review);
         tvRN.setVisibility(View.VISIBLE);
-        setReviewNumber();
-        ratingBar.setRating(user.getRating());
         FirebaseUtils.loadOneUser(FirebaseAuth.getInstance().getCurrentUser().getUid(), me -> {
             if (me == null) {
                 me = new User();
@@ -353,26 +307,5 @@ public class UserActivity extends BaseActivity implements BaseBookListFragment.B
                 view.setBackgroundColor(vibrant.getRgb());
             }
         });
-    }
-    private void getBook(User user, String isbn, Book.CATEGORY category) {
-        FirebaseDatabase.getInstance()
-                .getReference("books")
-                .child(isbn)
-                .addValueEventListener(new ValueEventListener() {
-                    @Override
-                    public void onDataChange(DataSnapshot dataSnapshot) {
-                        Book book = dataSnapshot.getValue(Book.class);
-                        Log.i(TAG, "onDataChange: isbn " + isbn + " : " + book);
-                        if (book != null) {
-                            book.setCategory(category);
-                            user.addBook(book);
-                        }
-                    }
-
-                    @Override
-                    public void onCancelled(DatabaseError databaseError) {
-
-                    }
-                });
     }
 }

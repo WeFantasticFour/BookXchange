@@ -125,6 +125,31 @@ public class FirebaseUtils {
                 .addOnCompleteListener(consumer::accept);
     }
 
+    public static void loadReviews(User user,Consumer<User> consumer){
+        fDatabase.getReference("reviews")
+                .child(user.getId())
+                .addValueEventListener(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(DataSnapshot dataSnapshot) {
+                        user.getReviews().clear();
+                        Flow.of(dataSnapshot
+                                .getChildren())
+                                .forEach(data -> {
+                                    Review review = data.getValue(Review.class);
+
+                                    user.addReview(review);
+                                });
+
+                        consumer.accept(user);
+                    }
+
+                    @Override
+                    public void onCancelled(DatabaseError databaseError) {
+
+                    }
+                });
+    }
+
     private void loadUsers(Consumer<List<User>> producer) {
         fDatabase.getReference("users")
                 .addValueEventListener(new ValueEventListener() {
