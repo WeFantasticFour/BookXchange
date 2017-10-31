@@ -60,7 +60,12 @@ public class ConversationActivity extends BaseActivity {
                 .child(roomId).addChildEventListener(new DefaultChildEventListener() {
             @Override
             public void onChildAdded(DataSnapshot dataSnapshot, String s) {
-                aBubble.addChat(dataSnapshot.getValue(Chat.class));
+                Chat c = dataSnapshot.getValue(Chat.class);
+                aBubble.addChat(c);
+                //Set title
+                if(!me.getUid().equals(c.getFrom())) {
+                    setTitle(c.getFromName());
+                }
             }
         });
     }
