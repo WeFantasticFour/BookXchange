@@ -293,7 +293,6 @@ public class NearMeActivity extends BaseActivity implements BaseBookListFragment
 
         for (Marker m : previousMarkers) {
             User userTag = (User) m.getTag();
-
             MapUtils.modifyMarker(this, m, userTag, Color.parseColor("#009688"));
         }
 
@@ -328,22 +327,23 @@ public class NearMeActivity extends BaseActivity implements BaseBookListFragment
                 } else {
                     FirebaseDatabase.getInstance()
                             .getReference("users")
-                            .child(auth.getCurrentUser().getUid()).addValueEventListener(new ValueEventListener() {
-                                 @Override
-                                 public void onDataChange(DataSnapshot dataSnapshot) {
+                            .child(auth.getCurrentUser().getUid())
+                            .addValueEventListener(new ValueEventListener() {
+                                                       @Override
+                                                       public void onDataChange(DataSnapshot dataSnapshot) {
 
-                                     currentUser = dataSnapshot.getValue(User.class);
-                                     Intent iUser = new Intent(NearMeActivity.this, UserActivity.class);
-                                     iUser.putExtra("user", Parcels.wrap(currentUser));
-                                     startActivity(iUser);
-                                 }
+                                                           currentUser = dataSnapshot.getValue(User.class);
+                                                           Intent iUser = new Intent(NearMeActivity.this, UserActivity.class);
+                                                           iUser.putExtra("user", Parcels.wrap(currentUser));
+                                                           startActivity(iUser);
+                                                       }
 
-                                     @Override
-                                     public void onCancelled(DatabaseError databaseError) {
+                                                       @Override
+                                                       public void onCancelled(DatabaseError databaseError) {
 
-                                     }
-                                 }
-                    );
+                                                       }
+                                                   }
+                            );
                 }
                 break;
             case R.id.nav_messages:
@@ -428,7 +428,6 @@ public class NearMeActivity extends BaseActivity implements BaseBookListFragment
                     @Override
                     public void onDataChange(DataSnapshot dataSnapshot) {
                         Book book = dataSnapshot.getValue(Book.class);
-                        Log.i(TAG, "onDataChange: isbn " + isbn + " : " + book);
                         if (book != null) {
                             book.setCategory(category);
                             user.addBook(book);
@@ -452,7 +451,6 @@ public class NearMeActivity extends BaseActivity implements BaseBookListFragment
                     @Override
                     public void onDataChange(DataSnapshot dataSnapshot) {
                         Book book = dataSnapshot.getValue(Book.class);
-                        Log.i(TAG, "onDataChange: isbn " + isbn + " : " + book);
                         if (book != null) {
                             book.setCategory(category);
                             user.addBook(book);

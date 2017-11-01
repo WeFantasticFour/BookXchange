@@ -6,17 +6,26 @@
     android:layout_height="match_parent"
     tools:context="com.fantastic.bookxchange.activities.LoginActivity">
 
+    <ProgressBar
+        android:id="@+id/progressBar"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_centerVertical="true"
+        android:visibility="gone" />
+
     <RelativeLayout
         android:id="@+id/spacer_top"
         android:layout_width="match_parent"
         android:layout_height="250dp"
         android:background="@color/colorPrimary"
         android:orientation="vertical">
+
         <ImageView
             android:layout_width="300dp"
             android:layout_height="100dp"
-            android:layout_marginTop="20dp"
             android:layout_centerHorizontal="true"
+            android:layout_marginTop="20dp"
             android:src="@drawable/logo" />
 
     </RelativeLayout>
@@ -34,29 +43,29 @@
 
     <android.support.v7.widget.AppCompatTextView
         android:id="@+id/tvOr"
+        style="?textLargePrimary"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        style="?textLargePrimary"
-        android:text="OR"
-        android:layout_marginBottom="5dp"
-        android:textAlignment="center"
         android:layout_above="@+id/btnRegister"
         android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true" />
+        android:layout_alignParentStart="true"
+        android:layout_marginBottom="5dp"
+        android:text="OR"
+        android:textAlignment="center" />
 
     <android.support.v7.widget.AppCompatButton
         android:id="@+id/btnRegister"
+        style="?button"
         android:layout_width="match_parent"
         android:layout_height="40dp"
-        android:layout_marginBottom="30dp"
-        style="?button"
-        android:onClick="openRegistration"
-        android:text="@string/register"
-        android:layout_alignParentBottom="true"
+        android:layout_alignEnd="@+id/container"
         android:layout_alignLeft="@+id/container"
-        android:layout_alignStart="@+id/container"
+        android:layout_alignParentBottom="true"
         android:layout_alignRight="@+id/container"
-        android:layout_alignEnd="@+id/container" />
+        android:layout_alignStart="@+id/container"
+        android:layout_marginBottom="30dp"
+        android:onClick="openRegistration"
+        android:text="@string/register" />
 
 
     <android.support.v7.widget.CardView
@@ -103,47 +112,48 @@
 
                 <android.support.v7.widget.AppCompatEditText
                     android:id="@+id/etPassword"
+                    style="?textRegular"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:hint="@string/password"
-                    style="?textRegular"
                     android:inputType="textPassword" />
             </android.support.design.widget.TextInputLayout>
 
             <Button
                 android:id="@+id/appCompatButton"
+                style="?button"
                 android:layout_width="match_parent"
                 android:layout_height="40dp"
-                android:layout_marginTop="12dp"
-                android:layout_marginBottom="12dp"
-                android:onClick="login"
-                android:text="@string/login"
-                style="?button"
-                android:layout_above="@+id/imageButton4"
+                android:layout_above="@+id/ibLoginWithFacebook"
                 android:layout_alignParentLeft="true"
-                android:layout_alignParentStart="true" />
+                android:layout_alignParentStart="true"
+                android:layout_marginBottom="12dp"
+                android:layout_marginTop="12dp"
+                android:onClick="login"
+                android:text="@string/login" />
 
             <LinearLayout
                 android:layout_width="match_parent"
-                android:orientation="horizontal"
+                android:layout_height="wrap_content"
                 android:gravity="center_horizontal"
-                android:layout_height="wrap_content">
+                android:orientation="horizontal">
+
                 <ImageButton
-                    android:id="@+id/imageButton4"
+                    android:id="@+id/ibLoginWithFacebook"
                     android:layout_width="@android:dimen/notification_large_icon_height"
                     android:layout_height="@android:dimen/notification_large_icon_width"
                     android:scaleType="fitXY"
                     app:srcCompat="@drawable/facebook" />
 
                 <ImageButton
-                    android:id="@+id/imageButton6"
+                    android:id="@+id/ibLoginWithGoogle"
                     android:layout_width="@android:dimen/notification_large_icon_height"
                     android:layout_height="@android:dimen/notification_large_icon_width"
+                    android:onClick="loginWithGoogle"
                     android:scaleType="fitXY"
                     app:srcCompat="@drawable/google" />
             </LinearLayout>
         </LinearLayout>
 
     </android.support.v7.widget.CardView>
-
 </RelativeLayout>
